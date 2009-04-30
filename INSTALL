@@ -1,0 +1,6 @@
+How to install
+--------------
+    1. Untar the .tar.gz file
+    2. cd into the resulting directory
+    3. python setup.py install
+
