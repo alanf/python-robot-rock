@@ -1,0 +1,28 @@
+Robot Rock - interactive music
+http://assembla.com/wiki/show/cse403
+
+Dependencies
+------------
+    Qt >= ???
+    PyQt >= ???
+    Fluidsynth <http://www.fluidsynth.org> <= 1.0.9
+
+Compiling
+---------
+See the INSTALL document for build instructions.
+
+Documentation
+-------------
+Forthcoming.
+
+License
+-------
+TO DO
+
+RobotRock uses pyfluidsynth <http://code.google.com/p/pyfluidsynth> for binding
+to Fluidsynth. It is licensed under the LGPL.
+
+Contact
+-------
+website link here?
+
