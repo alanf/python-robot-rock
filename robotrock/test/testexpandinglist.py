@@ -54,6 +54,11 @@ class TestExpandingList(unittest.TestCase):
         self.assertEqual(self.expanding_list.previous(), None)
         self.assertEqual(self.expanding_list.next().id, 7)
         self.assertEqual(len(self.expanding_list), 1)
+    
+    def testSetParent(self):
+        self.expanding_list = ExpandingList(Stub, parent=self, foo='bar')
+        stub = self.expanding_list[100]
+        self.assertEqual(self, stub.parent)
             
 if __name__ == '__main__':
     sys.path.append('../robotrock/')
