@@ -1,0 +1,3 @@
+for f in $( ls test*\.py ); do
+	python $f
+done
