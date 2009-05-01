@@ -1,5 +1,7 @@
 #! /bin/bash
 
 for f in $( ls test*\.py ); do
+	echo Running $f...
 	python $f
+	echo Completed $f.
 done
