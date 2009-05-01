@@ -3,26 +3,31 @@ http://assembla.com/wiki/show/cse403
 
 Dependencies
 ------------
-    Qt >= ???
-    PyQt >= ???
+    Qt >= 4.5 (untested w/ earlier versions)
+    PyQt >= 4.4 (untested w/ earlier versions)
     Fluidsynth <http://www.fluidsynth.org> <= 1.0.9
 
-Compiling
----------
+Installing
+----------
 See the INSTALL document for build instructions.
 
 Documentation
 -------------
-Forthcoming.
+For users,
+  see http://assembla.com/wiki/show/cse403/UserDoc
+
+For developers,
+  see http://assembla.com/wiki/show/cse403/DeveloperDoc
 
 License
 -------
-TO DO
+(c) 2009 Team Robot Rock
+See the COPYING document for more information.
 
 RobotRock uses pyfluidsynth <http://code.google.com/p/pyfluidsynth> for binding
 to Fluidsynth. It is licensed under the LGPL.
 
 Contact
 -------
-website link here?
+Developer mailing list: cse403-robot-rock@cs.washington.edu
 
