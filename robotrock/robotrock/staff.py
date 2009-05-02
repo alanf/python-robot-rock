@@ -7,7 +7,7 @@
 from measure import Measure
 from expandinglist import ExpandingList
 
-class Staff:
+class Staff(object):
     ''' Any staff-specific traits such as instrument are specified with
         key-value arguments. Example: Staff(instrument='value').
     '''
