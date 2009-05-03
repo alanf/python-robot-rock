@@ -39,8 +39,12 @@ class ExpandingList(list):
     # Create the object using optional arguments, and set the object's parent. 
     def __default_object(self):
         obj = apply(self.object, self.default_object_args)
-        obj.__dict__.update(self.default_object_dict)
-        obj.parent = self.parent
+        try:
+            obj.__dict__.update(self.default_object_dict)
+            obj.parent = self.parent
+        except AttributeError:
+            pass # Not all objects have dictionaries (such as list).
+        
         return obj
     
     def next(self):
