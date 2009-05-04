@@ -7,7 +7,7 @@
 '''
 class Conductor(object):
     def __init__(self, ensemble):
-        self.ensemble = ensemble
+        self.ensemble = []
         self.order = list(ensemble)
     
     # Add a musician to the ensemble, and place it
@@ -25,7 +25,7 @@ class Conductor(object):
     
     def onPulse(self, elapsed):
         for musician in self.order:
-            musician.compose('duration')
+            musician.play(elapsed)
 
 if __name__ == '__main__':
     conductor = Conductor(['musician1', 'musician2'])
