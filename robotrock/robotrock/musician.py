@@ -8,17 +8,23 @@ class Musician(object):
     #Definition of what a Musician is
 
     def __init__(self, staff, energy=50, complexity=50):
-        #self.energy = energy
-        #self.complexity = complexity
-        #self.staff = staff
-        #self.__plans = []
-        #self.changed = false
+        self.energy = energy
+        self.complexity = complexity
+        self.staff = staff
+        self.current_measure = self.staff.measures.next()
+        self.key =  self.current_measure.key
+        self.time =  self.current_measure.time_signature
+        self.__plans = []
+        self.changed = true
+        self.__location = 0
         pass
 
     def play(self):
         #deciding if it needs to update plans        
         #writing to the score
-        pass
+        if self.__decide
+            self.__compose
+            #print __plans to measure
 
     #functions below are rewritten by individual musicians
 
