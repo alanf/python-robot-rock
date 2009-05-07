@@ -1,4 +1,8 @@
+''' metronome.py
+    Author: Michael Beenen <beenen34@cs.washington.edu>
+'''
 
+import metronome
 
 class CoreController():
     def __init__(self):
@@ -8,25 +12,25 @@ class CoreController():
     def play():
         #Start the play sequence
         print 'playing metronome'
-
+       
     def pause():
         #Pause the metronome
 	print 'pausing metronome'
 	
-    def set_tempo(tempo)
+    def setTempo(tempo)
         print 'setting metronome tempo'
 
-    def update_song_info(key_signature, time_signature):
+    def updateSongInfo(key_signature, time_signature):
         #Update the key and time signatures
         print 'updating song info'
 
-    def add_musician(musician):
+    def addMusician(musician):
         print 'calling Conductor to add musician'
         
-    def remove_musician(musician):
+    def removeMusician(musician):
         print 'calling Conductor to remove musician'
         
-    def filter_musician_list(tags)
+    def filterMusicianList(tags)
         print 'calling MusicianDirectory to filter musician list'
         
   
