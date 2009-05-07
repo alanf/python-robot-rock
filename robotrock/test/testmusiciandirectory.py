@@ -10,13 +10,16 @@ import sys
 
 class TestMusicianDirectory(unittest.TestCase):
 
-    def testfilter_musician_list(self):
-        list = MusicianDirectory.filter_musician_list(['acoustic'])
-        self.assertEqual(['acoustic guitar'], list)
-        list = MusicianDirectory.filter_musician_list(['percussion'])
-        self.assertEqual(['hand drum'], list)
+    def setUp(self):
+        self.musicDir = musiciandirectory.MusicianDirectory();
+
+    def testfilterMusicianList(self):
+        list = self.musicDir.filterMusicianList(frozenset(['acoustic']))
+        self.assertEqual(['acoustic_guitar'], list)
+        list = self.musicDir.filterMusicianList(frozenset(['percussion']))
+        self.assertEqual(['hand_drum', 'metronome'], list)
         
-    def testvalid_tags(self):
+    def testvalidTags(self):
         list = MusicianDirectory.valid_tags(['acoustic'])
         self.assertEqual(['string'], list)
         list = MusicianDirectory.valid_tags(['string'])
