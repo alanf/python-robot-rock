@@ -11,44 +11,57 @@ class HandDrum(Musician):
     #Definition of a HandDrum
 
     def __init__(self, staff, energy=50, complexity=50):
-        super.__init__(staff, energy, complexity)
-        self.id = handdrum
+        #Musician.__init__(staff, energy, complexity)
+        self.id = 'handdrum'
+        
+        self.energy = energy
+        self.complexity = complexity
+        self.staff = staff
+        #self.current_measure = self.staff.measures.next()
+        self.current_measure = []
+        #self.key =  self.current_measure.key
+        #self.time =  self.current_measure.time_signature
+        self.time = [4,4]
+        self.__plans = []
+        self.changed = 1 #if a change is made, set changed to 1
+                            #set to 0 by decide method when composing
 
     def __decide(self):
         #chooses if it needs to play new music
         #returns true when needs to compose new music
         if self.changed:
+            changed = 0
             return true
         else:
             return false
 
+    #assumes decide returned true
+    #new music is generated
     def __compose(self):
-        #assumes decide returned true
-        #new music is generated
-
-        #build a measure
-        
-        old = self.plans
+        #building a measure
+        #possibly common to all musicians:
         self.__plans = []
+        notes = __getNotes()
 
-        #find number of notes to play in the measure
+        #specific to HandDrum
+        __quarters(notes)
+        #__eigths(notes)
+
+    #find number of notes to play in the measure
+    def __getNotes(self):
         #assumes 4/4 and 16 notes in a measure (1,e,&,a...)
         notes = self.energy/12
         notes = notes+(self.complexity/(100/notes))
         notes = notes * self.time[0] / self.time[1]
         #self.time[0] is 2, self.time[1] is 4 for 2/4 time
-
-        quarters(notes)
-        #eigths(notes)
-
-        
+        return notes
 
     #fills in the main beats of the measure
     #if there are more notes to be played then beats, then all beats
     #   will have notes
     #if not, some beats will have notes, and no notes will be left for
     #   any other places in the measure (eigth notes, 16th notes, etc)
-    def quarters(self, notes): 
+    def __quarters(self, notes): 
 
         #more, or equal, notes then beats, fill the beats
         if notes>=self.time[0]:
@@ -73,7 +86,7 @@ class HandDrum(Musician):
                         notes-=1
 
 
-    #def eigths(self, notes):
+    #def __eigths(self, notes):
      #   fill = false
       #  if notes > self.time[0]:
        #     fill = true
