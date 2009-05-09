@@ -24,7 +24,7 @@ class Conductor(object):
         self.__chunks = 0
         # Fixme: These shouldn't be hardcoded. Load from a file.
         self.__chunk_values = {'tick': 1}
-        self.__chunks_per_beat = 192
+        self.chunks_per_beat = 192
     
     def addMusician(self, musician):
         ''' Adds a musician and associates them with a staff, mapped one-to-one. '''
@@ -57,7 +57,7 @@ class Conductor(object):
             for musician in self.ensemble:
                 self.__advanceMeasure(musician)
 
-        for (musician, measure) in self.current_musician_measures:
+        for (musician, measure) in self.current_musician_measures.iteritems():
             musician.compose(measure, elapsed)
     
     def __isNewMeasure(self, elapsed):
@@ -73,15 +73,15 @@ class Conductor(object):
         # might have modified.
         beatsInMeasure = self.measure_info['time_signature'][0]
         self.__chunks += self.__chunk_values[elapsed]
-        
-        if self.__chunks == self.__chunks_per_beat * beatsInMeasure:
+                
+        if self.__chunks == self.chunks_per_beat * beatsInMeasure:
             self.__chunks = 0
 
         return result
         
-    def __advanceMeasure(self):
+    def __advanceMeasure(self, musician):
         measure = self.current_musician_measures[musician]
-        self.current_musician_measures[musician] = measure.next()
+        self.current_musician_measures[musician] = measure.parent.measures.next()
 
     def __updateMeasureInfo(self, measure, measureInfo):
         measure.__dict__.update(measureInfo)

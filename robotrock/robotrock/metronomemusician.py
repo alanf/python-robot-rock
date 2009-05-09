@@ -6,7 +6,7 @@ metronomemusician.py
 Created by Alan Fineberg on 2009-05-03.
 """
 import sys
-import * from Note
+import note
 
 class MetronomeMusician(object):
     # HUGE PRECONDITION: The staff's measures list must have the
@@ -18,6 +18,5 @@ class MetronomeMusician(object):
         self.__duration_map = {'quarter': 1}
     
     def compose(self, measure, duration):
-        note = Note(tone=42, duration='quarter', rest=False)
-        
-        measure.notes.append(note)
+        myNote = note.Note(tone=42, duration='quarter', rest=False)
+        measure.notes.append(myNote)
