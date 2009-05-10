@@ -4,16 +4,10 @@
     Includes tone, octave, duration...
     Author: Alan Fineberg (af@cs.washington.edu)
 '''
-class Note(object):
-    ''' note_info is a dictionary with a Note's attributes fully described. '''
-    note_values = NoteValues()
-    def __init__(self, **note_info):
-        self.__dict__.update(note_info)
-
 class NoteValues(object):
         def __init__(self):
             self.SIXTYFOURTH_NOTE = 6
-            self.THIRTYSECOND_NOTE = 2 * self.SIXTY_FOURTHNOTE
+            self.THIRTYSECOND_NOTE = 2 * self.SIXTYFOURTH_NOTE
             self.SIXTEENTH_NOTE = 2 * self.THIRTYSECOND_NOTE
             self.EIGHT_NOTE = 2 * self.SIXTEENTH_NOTE
             self.QUARTER_NOTE = 2 * self.SIXTEENTH_NOTE
@@ -27,6 +21,13 @@ class NoteValues(object):
         
         def dotted(value):
             return 3 * value // 2
-            
+
+
+class Note(object):
+    ''' note_info is a dictionary with a Note's attributes fully described. '''
+    note_values = NoteValues()
+    def __init__(self, **note_info):
+        self.__dict__.update(note_info)
+                              
 if __name__ == '__main__':
     note = Note(tone=('A',5), duration=('quarter'), dynamic='mezzoforte')
