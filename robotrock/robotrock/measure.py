@@ -11,7 +11,17 @@ from note import Note
 class Measure(object):
     def __init__(self, **measure_info):
         self.__dict__.update(measure_info)
-        self.notes = ExpandingList(Note, self)
+        self.notes = []
 
+    def addNote(self, Note):
+        self.notes.append(Note)
+    
+    def orderedNotes(self):
+        def compareNotes(a, b):
+            ''' Returns the list of notes from earliest to latest.'''
+            return a.start - b.start
+        
+        return sorted(self.notes, compareNotes)
+        
 if __name__ == '__main__':
     measure = Measure(key=('C', '#', 'maj'), time=(4, 4), tempo=(120, 'bpm'))

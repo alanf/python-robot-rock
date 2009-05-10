@@ -13,7 +13,8 @@ class InstrumentHeirarchy(object):
     def loadInstrumentData(self, instrument_file):
         for line in instrument_file:
             (instrument, parent) = line.split('|||')
-        
+            self.instruments[instrument.strip()] = parent.strip()
+            
     def parent(self, instrument):
         return self.instruments[instrument]
 

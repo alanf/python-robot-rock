@@ -17,6 +17,28 @@ class TestMeasure(unittest.TestCase):
         # Compare tuples using string comparison.
         self.assertEquals(str(measure.key), str(('C', '#', 'maj')))
         self.assertEquals(str(measure.tempo), str((120, 'bpm')))
+    
+    def testNoteSorting(self):
+        measure = Measure()
+        class Note(object):
+            def __init__(self, start):
+                self.start = start
+
+        noteA = Note(start=5)
+        noteB = Note(start=6)
+        
+        measure.addNote(noteB)
+        measure.addNote(noteA)
+        
+        self.assertEqual([5, 6], [note.start for note in measure.orderedNotes()])
+        
+        noteC = Note(start=17)
+        noteD = Note(start=1)
+        measure.addNote(noteD)
+        measure.addNote(noteC)
+        measure.addNote(Note(start=5))
+        
+        self.assertEqual([1, 5, 5, 6, 17], [note.start for note in measure.orderedNotes()])
 
 if __name__ == '__main__':
     sys.path.append('../robotrock/')
