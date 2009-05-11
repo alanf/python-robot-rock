@@ -21,24 +21,23 @@ def main():
     # Create a score.
     score = Score()
 
-    # Create a musician.
-    musician = MetronomeMusician()
-    # Establish that the NEXT measure created is 4/4 time.
-
     class SyncopatedMetronome(object):
         def __init__(self):
             self.instrument = 'syncopated metronome'
-            self.__duration_map = {'quarter': 1}
             self.counter = 0
             
-        def compose(self, measure, duration):
+        def compose(self, measure, window_start, window_duration):
+            quarter = note.Note.note_values.QUARTER_NOTE
+            
             if self.counter % 4 == 1 or self.counter % 4 == 3:
-                myNote = note.Note(tone=38, duration='quarter', rest=False)
+                myNote = note.Note(tone=38, \
+                        start=window_start, duration=quarter, rest=False)
             else: # play a rest
-                myNote = note.Note(tone=0, duration='quarter', rest=True)
+                myNote = note.Note(tone=0,  \
+                        start=window_start, duration=quarter, rest=True)
             
             self.counter += 1
-            measure.notes.append(myNote)
+            measure.addNote(myNote)
             
     # Stubbed
     class SongInfo(object):
@@ -48,9 +47,8 @@ def main():
 
     # Create a conductor.
     conductor = Conductor(score, SongInfo())
-    conductor.addMusician(musician)
+    conductor.addMusician(MetronomeMusician())
     conductor.addMusician(SyncopatedMetronome())
-    conductor.chunks_per_beat = 1
     
     # Create a parser.
     import fluidsynth
@@ -65,13 +63,13 @@ def main():
     from time import time
     from time import sleep
     
-    conductor.onPulse('tick')
     # Here, the conductor and the parser have the same resolution.
+    noteValues = note.Note.note_values
     for i in xrange(1000):
-        print 'tick'
-        parser.onPulse('tick')
-        conductor.onPulse('tick')
-        sleep(.250)
+        print i % 4 + 1
+        conductor.onPulse(noteValues.QUARTER_NOTE)
+        parser.onPulse(noteValues.QUARTER_NOTE)
+        sleep(1.9)
 
 if __name__ == '__main__':
     main()

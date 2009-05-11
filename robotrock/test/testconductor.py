@@ -39,7 +39,7 @@ class TestConductor(unittest.TestCase):
     
     def testCompose(self):
         ''' Each musician should write to their log items when compose is called. '''
-        self.conductor.onPulse('tick')
+        self.conductor.onPulse(1)
         [self.assertEqual(i, log_item) for (i, log_item) in \
                 enumerate(self.test_log)]
     

@@ -6,6 +6,7 @@
     The onPulse() method is triggered for each metronome pulse.
 '''
 import staff
+import note
 
 class Conductor(object):
     def __init__(self, score, songInfo):
@@ -23,8 +24,7 @@ class Conductor(object):
         # Chunks allows us to keep our place within a measure.
         self.__chunks = 0
         # Fixme: These shouldn't be hardcoded. Load from a file.
-        self.__chunk_values = {'tick': 1}
-        self.chunks_per_beat = 192
+        self.chunks_per_beat = note.Note.note_values.QUARTER_NOTE
     
     def addMusician(self, musician):
         ''' Adds a musician and associates them with a staff, mapped one-to-one. '''
@@ -34,22 +34,18 @@ class Conductor(object):
     def __appendStaff(self, score, musician):
         score.staffs.append(staff.Staff(instrument=musician.instrument))
         # Assume no other entity adding or removing staffs (or single threaded).
-        self.current_musician_measures[musician] = \
-                self.__firstMeasureFromStaff(score.staffs[-1])
-        
-    def __firstMeasureFromStaff(self, staff):
-        return staff.measures.next()
+        self.current_musician_measures[musician] = score.staffs[-1].measures
         
     def removeMusician(self, musician):
         self.ensemble.remove(musician)
     
-    def onPulse(self, elapsed):
+    def onPulse(self, duration):
         ''' 
         On every metronome tick, we check to see if we have reached the end of
         our current measure, and tell each musician to performa a measure
         with its metadata up to date.
         '''
-        newMeasure = self.__isNewMeasure(elapsed)
+        newMeasure = self.__chunks == 0
         
         # Update the measure info to reflect what's currently in song info.
         if newMeasure:
@@ -58,26 +54,21 @@ class Conductor(object):
                 self.__advanceMeasure(musician)
 
         for (musician, measure) in self.current_musician_measures.iteritems():
-            musician.compose(measure, elapsed)
+            musician.compose(measure, self.__chunks, self.__chunks + duration)
     
-    def __isNewMeasure(self, elapsed):
+        self.__updateLocation(duration)
+        
+    def __updateLocation(self, duration):
         ''' 
         Keep track of how far along we are in each measure. If we've reached
         the last beat, then reset __chunks so that the next pulse triggers
         the start of a new measure.
         '''
-        result = self.__chunks == 0
-        
-        # Returns the numerator of the time signature. Use our own 
-        # internal copy of the measure_info, instead of what the user
-        # might have modified.
         beatsInMeasure = self.measure_info['time_signature'][0]
-        self.__chunks += self.__chunk_values[elapsed]
-                
+        self.__chunks += duration
+        
         if self.__chunks == self.chunks_per_beat * beatsInMeasure:
             self.__chunks = 0
-
-        return result
         
     def __advanceMeasure(self, musician):
         measure = self.current_musician_measures[musician]
