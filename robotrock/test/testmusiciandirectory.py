@@ -13,9 +13,9 @@ class TestMusicianDirectory(unittest.TestCase):
     def setUp(self):
         self.musicDir = musiciandirectory.MusicianDirectory();
         self.musicDir.musicians = dict(acoustic_guitar=frozenset(['acoustic', 'string']), \
-                                       electric_guitar=frozenset(['electric', 'string']), \
-                                       hand_drum=frozenset(['percussion']), \
-                                       metronome=frozenset(['percussion']))
+                electric_guitar=frozenset(['electric', 'string']), \
+                hand_drum=frozenset(['percussion']), \
+                metronome=frozenset(['percussion']))
 
 
     def testfilterMusicianList(self):

@@ -5,15 +5,22 @@
     Author: Michael Beenen <beenen34@cs.washington.edu>
 '''
 
+VALID_KEY = set(['A','B','C','D','E','F','G'])
+VALID_KEY_MODIFIERS = set(['Natural', 'Sharp', 'Flat'])
+VALID_KEY_TONALITIES = set(['Major', 'Minor'])
+
+VALID_TIME_NUMERATOR = set([2, 3, 4, 5, 6, 7])
+VALID_TIME_DENOMINATOR = set([2, 4, 8])
+
 class SongInfo(object):
     def __init__(self):
-	self.info = {
-	             'key_signature': ('C', 'Natural', 'Major'),
-	             'time_signature': (4, 4),
-		    }
-		     
+        self.info = {
+                     'key_signature': ('C', 'Natural', 'Major'),
+                     'time_signature': (4, 4),
+                    }
+                     
     
     # Returns a copy of the current song info
     def measureInfo(self):
-	measure_info = dict(self.info)
-	return measure_info
+        measure_info = dict(self.info)
+        return measure_info
