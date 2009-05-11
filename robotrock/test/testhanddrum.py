@@ -38,8 +38,8 @@ class TestMusician(unittest.TestCase):
         self.assertEqual(1, self.musician.changed)
 
     #tests that musician outputs to a measure
-    def testPlay(self):
-        self.drum.play()
+    def testCompose(self):
+        self.drum.compose()
         #self.asserNotEqual([], getCurrentMeasure(instrument))
         self.assertNotEqual([], self.drum.current_measure)
         
@@ -49,14 +49,14 @@ class TestMusician(unittest.TestCase):
     #reacts appropriately (ex. less notes for less energy)
     def testReactToChanges(self):
         #base case: energy = 50, complexity = 50
-        self.musician = Musician([])
-        self.musician.play()
+        self.musician = HandDrum([])
+        self.musician.compose()
         #self.base = getCurrentMeasure(instrument)
         self.base = self.musician.current_measure
 
         #case 1: energy = 80, complexity = 50
         self.musician.energy = 80
-        self.musician.play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareEnergy(self.current, self.base))
         #self.base2 = self.current
@@ -65,7 +65,7 @@ class TestMusician(unittest.TestCase):
         
         #case 2: energy = 20, complexity = 50
         self.musician.energy = 20
-        self.musician.play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareEnergy(self.base, self.current))
         #self.base3 = self.current
@@ -75,7 +75,7 @@ class TestMusician(unittest.TestCase):
         #case 3: energy = 50, complexity = 80
         self.musician.complexity = 80
         self.musician.energy = 50
-        self.musician.play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareComplexity(self.current, self.base))
         #self.last = self.current
@@ -84,7 +84,7 @@ class TestMusician(unittest.TestCase):
 
         #case 4: energy = 80, complexity = 80
         self.musician.energy = 80
-        self.musician.play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareEnergy(self.current, self.last))
         #self.assertTrue(self.compareComplexity(self.current, self.base2))
@@ -93,7 +93,7 @@ class TestMusician(unittest.TestCase):
 
         #case 5: energy = 20, complexity = 80
         self.musician.energy = 20
-        self.musician.play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareEnergy(self.last, self.current))
         #self.assertTrue(self.compareComplexity(self.current, self.base3))
@@ -103,7 +103,7 @@ class TestMusician(unittest.TestCase):
         #case 6: energy = 50, complexity = 20
         self.musician.complexity = 20
         self.musican.energy = 50
-        self.musician,play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareComplexity(self.base, self.current))
         #self.last = self.current
@@ -112,7 +112,7 @@ class TestMusician(unittest.TestCase):
 
         #case 7: energy = 80, complexity = 20
         self.musician.energy = 80
-        self.musician.play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareEnergy(self.current, self.last))
         #self.assertTrue(self.compareComplexity(self.base2, self.current))
@@ -121,7 +121,7 @@ class TestMusician(unittest.TestCase):
         
         #case 8: energy = 20, complexity = 20
         self.musician.energy = 20
-        self.musician.play()
+        self.musician.compose()
         #self.current = getCurrentMeasure(instrument)
         #self.assertTrue(self.compareEnergy(self.last, self.current))
         #self.assertTrue(self.compareComplexity(self.base3, self.current))

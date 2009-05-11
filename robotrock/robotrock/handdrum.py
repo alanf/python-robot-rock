@@ -4,10 +4,13 @@
     Author: Rich Snider <mrsoviet@cs.washington.edu
 '''
 
-from musician import Musician
+from musicianStructured import MusicianStructured
 import random
 
-class HandDrum(Musician):
+
+#incomplete HandDrum. Only plays quarter notes, should vary with time signature
+#note: shoould fail testReactToChanges
+class HandDrum(MusicianStructured):
     #Definition of a HandDrum
 
     def __init__(self, staff, energy=50, complexity=50):
@@ -22,30 +25,30 @@ class HandDrum(Musician):
         #self.key =  self.current_measure.key
         #self.time =  self.current_measure.time_signature
         self.time = [4,4]
-        self.__plans = []
+        self._plans = []
         self.changed = 1 #if a change is made, set changed to 1
                             #set to 0 by decide method when composing
 
-    def __decide(self):
+    def _decide(self):
         #chooses if it needs to play new music
         #returns true when needs to compose new music
         if self.changed:
             changed = 0
-            return true
+            return True
         else:
-            return false
+            return False
 
     #assumes decide returned true
     #new music is generated
-    def __compose(self):
+    def _write(self):
         #building a measure
         #possibly common to all musicians:
-        self.__plans = []
-        notes = __getNotes()
+        self._plans = []
+        notes = self.__getNotes()
 
         #specific to HandDrum
-        __quarters(notes)
-        #__eigths(notes)
+        self.__quarters(notes)
+        #self.__eigths(notes)
 
     #find number of notes to play in the measure
     def __getNotes(self):
@@ -65,8 +68,8 @@ class HandDrum(Musician):
 
         #more, or equal, notes then beats, fill the beats
         if notes>=self.time[0]:
-            self.__plans.append(range(self.time[0]))
-            notes-=range(self.time[0])
+            self._plans.append(range(self.time[0]))
+            notes-=self.time[0]
 
         #less notes then beats, need to fill some
         elif notes > 0: 
@@ -75,14 +78,14 @@ class HandDrum(Musician):
                 #have enough notes to fill in remaining beats
                 #so put a note on this beat
                 if notes>=(self.time[0]-x):
-                    self.plans.append(x)
+                    self._plans.append(x)
                     notes-=1
                 #not enough noted to fill in remaining beats
                 #randomly choose if this beat will have a note
                 else:
                     chance = random.randrange(self.time[0])
                     if chance < notes:
-                        self.__plans.append(x)
+                        self._plans.append(x)
                         notes-=1
 
 
@@ -90,7 +93,7 @@ class HandDrum(Musician):
      #   fill = false
       #  if notes > self.time[0]:
        #     fill = true
-        #for x in range(len(self.__plans)):
+        #for x in range(len(self._plans)):
             
 
 
