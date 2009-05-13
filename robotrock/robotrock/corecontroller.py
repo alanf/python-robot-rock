@@ -26,41 +26,51 @@ class CoreController():
     
     #Start the audio driver
     def play(self):
+	print 'playing'
         self.audio_driver.play()
     
     #Pause the audio driver
     def pause(self):
+	print 'paused'
         self.audio_driver.pause()
     
     # Halt the audio driver
     def halt(self):
         self.audio_driver.halt()
     
-    # Sets the tempo of the metronome
+    # Sets the tempo of the metronome (clamped to the min/max values)
+    # Param: tempo, an integer
     def setTempo(self, tempo):
-        if tempo >= MINIMUM_TEMPO and tempo <= MAXIMUM_TEMPO:
-            self.metronome.tempo = tempo
+        tempo = min(MAXIMUM_TEMPO, tempo)
+	tempo = max(MINIMUM_TEMPO, tempo)
+        self.metronome.tempo = tempo
     
     # Update the time signature
+    # Param: time_signature, a 2-tuple of a numerator and denominator
     def updateTimeSignature(self, time_signature):
         if len(time_signature) == 2 and \
-                time_signature[0] in songinfo.VALID_TIME_NUMERATOR and \
+	        time_signature[0] in songinfo.VALID_TIME_NUMERATOR and \
                 time_signature[1] in songinfo.VALID_TIME_DENOMINATOR:
                     self.song_info.info['time_signature'] = time_signature
     
     # Update the key signature of the music
+    # Param: key_signature, a 3-tuple of key, modifier, and tonality
+    #        See songinfo.py for legal values of the tuple's elements
     def updateKeySignature(self, key_signature):
         if len(key_signature) == 3 and \
-                key_signature[0] in songinfo.VALID_KEY and \
+	        key_signature[0] in songinfo.VALID_KEY and \
                 key_signature[1] in songinfo.VALID_KEY_MODIFIERS and \
                 key_signature[2] in songinfo.VALID_KEY_TONALITIES:
                     self.song_info.info['key_signature'] = key_signature
-        
+    
     # Adds the provided musician to the ensemble
+    # Param: musician, the musician to be added
     def addMusician(self, musician):
         self.conductor.addMusician(musician)
         
-    # Removes the provided musician from the ensemble
+    # Removes the provided musician from the ensemble, if musician is
+    # present in ensemble
+    # Param: musician, the musician to be removed
     def removeMusician(self, musician):
         if musician in self.conductor.ensemble:
             self.conductor.removeMusician(musician)
@@ -76,6 +86,9 @@ class CoreController():
     # Returns a list of tags whose intersection with the provided tags
     # is not the empty set.
     def validTags(self, tags):
+	tag_set = set()
+	for tag in tags:
+	    tag_set.add(tag)
         list = self.music_dir.validTags(tags)
         return list
     
