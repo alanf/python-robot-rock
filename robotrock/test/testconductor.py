@@ -8,6 +8,7 @@ import unittest
 
 class TestConductor(unittest.TestCase):
     def setUp(self):
+        ''' Create stub classes and create a conductor and musicians. '''
         self.test_log = []
         
         class Musician(object):
@@ -17,15 +18,20 @@ class TestConductor(unittest.TestCase):
                 self.log = log
                 self.instrument = 'Jazz Flute'
             
-            def compose(self, duration):
+            def compose(self, measure, start, duration):
                 self.log.append(self.id)
+                measure.id = self.id
         
         class SongInfo(object):
             def measureInfo(self):
                 return dict(time_signature=(4, 4))
         
-        class Staff(dict):
+        class Measure(object):
             pass
+            
+        class Staff(dict):
+            def __init__(self, instrument):
+                self.measures = expandinglist.ExpandingList(Measure, parent=self)
 
         class Score(object):
             def __init__(self):
@@ -35,7 +41,7 @@ class TestConductor(unittest.TestCase):
         self.flautist = Musician(id='flautist', log='')
         self.score = Score()
         self.song_info = SongInfo()
-        self.conductor = conductor.Conductor(self.score, self.song_info)
+        self.conductor = conductor.Conductor(self.score, self.song_info, staff_obj=Staff)
     
     def testCompose(self):
         ''' Each musician should write to their log items when compose is called. '''
@@ -43,6 +49,55 @@ class TestConductor(unittest.TestCase):
         [self.assertEqual(i, log_item) for (i, log_item) in \
                 enumerate(self.test_log)]
     
+    def testStartComposingAtFirstMeasure(self):
+        # First add our list of musicians with ids.
+        for musician in self.musicians:
+            self.conductor.addMusician(musician)
+        
+        # Trigger a single pulse, the duration shouldn't matter.
+        self.conductor.onPulse(123)
+        first_measure_ids = [staff.measures[0].id for staff in self.score.staffs]
+        
+        for musician in self.musicians:
+            self.assertTrue(musician.id in first_measure_ids)
+    
+    def testMeasureAdvance(self):
+        ''' 
+        This test ensures that the conductor correctly advances to the next
+        measure based on the number of pulses and their relative values.
+        '''
+        # First add our list of musicians with ids.
+        for musician in self.musicians:
+            self.conductor.addMusician(musician)
+        
+        self.conductor.chunks_per_beat = 1
+        
+        # After these ticks, we should not have written the second measure.
+        self.conductor.onPulse(1)
+        self.conductor.onPulse(1)
+        self.conductor.onPulse(1)
+        self.conductor.onPulse(1)                
+        # Get the list of measures from each staff.
+        for measures in [staff.measures for staff in self.score.staffs]:
+            self.assertNotEqual(measures[0].id, None)
+            # I have to give the assert a callable, which is why I use lambda.
+            self.assertRaises(AttributeError, lambda : measures[1].id) 
+            
+        # After the next pulse, we should be on the next measure.
+        self.conductor.onPulse(1)
+        for measures in [staff.measures for staff in self.score.staffs]:
+            self.assertNotEqual(measures[1].id, None)
+            self.assertRaises(AttributeError, lambda : measures[2].id) 
+            
+        # Just for fun, let's make sure we reach the third measure successfully.
+        self.conductor.onPulse(1)
+        self.conductor.onPulse(1)
+        self.conductor.onPulse(1)
+        self.conductor.onPulse(1)                        
+        for measures in [staff.measures for staff in self.score.staffs]:
+            self.assertNotEqual(measures[2].id, None)
+            self.assertRaises(AttributeError, lambda : measures[3].id)
+            
     def testAddMusician(self):
         ''' Adding a musician appends the ensemble and the staff list. '''
         self.conductor.addMusician(self.flautist)
