@@ -10,7 +10,7 @@ import warnings
 import logging
 
 from corecontroller import CoreController, MINIMUM_TEMPO, MAXIMUM_TEMPO
-from musicianStructured import MusicianStructured
+from musicianstructured import MusicianStructured
 
 try:
     import guiResources

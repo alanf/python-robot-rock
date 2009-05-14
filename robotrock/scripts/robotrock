@@ -67,9 +67,7 @@ class Panel(QWidget):
             child.close()
 
 if __name__ == '__main__':
-
-	app = QApplication(sys.argv)
-	panel = Panel()
-	panel.show()
-
-	sys.exit(app.exec_())
+	sys.path.append('../robotrock')
+	import main
+	main.init_gui()
+	#sys.exit(app.exec_())
