@@ -19,31 +19,27 @@ class TestMusician(unittest.TestCase):
         self.musician = HandDrum([])
         self.assertEqual(50, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
-        self.assertEqual([], self.musician.staff)
         self.assertEqual([4,4], self.musician.time)
-        self.assertEqual(1, self.musician.changed)
+        self.assertEqual(True, self.musician._changed)
         
         self.musician = HandDrum([], 40, 80)
         self.assertEqual(40, self.musician.energy)
         self.assertEqual(80, self.musician.complexity)
-        self.assertEqual([], self.musician.staff)
         self.assertEqual([4,4], self.musician.time)
-        self.assertEqual(1, self.musician.changed)
+        self.assertEqual(True, self.musician._changed)
 
         self.musician = HandDrum([], 42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
-        self.assertEqual([], self.musician.staff)
         self.assertEqual([4,4], self.musician.time)
-        self.assertEqual(1, self.musician.changed)
+        self.assertEqual(True, self.musician._changed)
 
     #tests that musician outputs to a measure
-    def testCompose(self):
-        self.drum.compose()
+    def testWrite(self):
+        self.drum._write()
         #self.asserNotEqual([], getCurrentMeasure(instrument))
-        self.assertNotEqual([], self.drum.current_measure)
+        self.assertNotEqual({}, self.drum._plans)
         
-
     #tests that the musician outputs something different
     #when the energy and complexity change, and that it
     #reacts appropriately (ex. less notes for less energy)
@@ -127,7 +123,6 @@ class TestMusician(unittest.TestCase):
         #self.assertTrue(self.compareComplexity(self.base3, self.current))
         self.assertTrue(self.compareEnergy(self.last, self.musician.current_measure))
         self.assertTrue(self.compareComplexity(self.base3, self.musician.current_measure))
-
 
 #helper methods:
     #counts the number of notes in the given measure
