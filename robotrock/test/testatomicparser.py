@@ -13,6 +13,7 @@ import unittest
 
 from score import Score
 from measure import Measure
+from dynamics import *
 import note
 
 class DebugReceiver(object):
@@ -20,7 +21,7 @@ class DebugReceiver(object):
 	def __init__(self):
 		self.events = []
 	def handle(self, event):
-		self.append( event )
+		self.events.append( event )
 
 class TestAtomicParser(unittest.TestCase):
 
@@ -34,22 +35,37 @@ class TestAtomicParser(unittest.TestCase):
 		# Create a Score with a single quarter note on first beat.
 		score = Score()
 		measure = score.staffs[0].measures[0]
-		n = note.Note(start=0, duration=note.NoteValues().QUARTER_NOTE)
+		measure.time_signature = (4,4)
+		n = note.Note(start=0, tone=('C',4), duration=note.NoteValues().QUARTER_NOTE, dynamic=MEZZOFORTE)
 		measure.addNote( n )
 
 		# Create testing parser
 		parser = AtomicParser( score=score, receiver=receiver )
 
 		# Parse a QUARTER_NOTE's worth of the score and compare output.
-		parser.onPulse( note.NoteValues().QUARTER_NOTE )
-		self.assertEqual( n, receiver.events[-1] )
+		for i in xrange( note.NoteValues().QUARTER_NOTE / ATOMIC_NOTE ):
+			parser.onPulse( ATOMIC_NOTE )
+
+		# TODO Expected tuple will change after BETA
+		actual_time = receiver.events[-1][0]
+		actual_staff, actual_type, actual_tone, actual_dynamic = receiver.events[-1][1]
+
+		self.assertEqual( 0, receiver.events[-1][0] )
+		self.assertEqual( score.staffs[0], actual_staff )
+		self.assertEqual( "Note on", actual_type )
+		self.assertEqual( n.tone, actual_tone )
+		self.assertEqual( n.dynamic, actual_dynamic )
 
 	def testEmptyScore(self):
 		"Tests processing of an empty score."
 
-		parser = AtomicParser( score = Score(), receiver = DebugReceiver() )
+		score = Score()
 
-		parser.onPulse( note.NoteValues().WHOLE_NOTE )
+		parser = AtomicParser( score = score, receiver = DebugReceiver() )
+
+		# Test a whole note's worth of score.
+		for i in xrange( note.NoteValues().WHOLE_NOTE / ATOMIC_NOTE ):
+			parser.onPulse( ATOMIC_NOTE )
 		self.assertEqual( 0, len( receiver.events[-1] ) )
 
 	def testEmptyStaff(self):
@@ -57,13 +73,15 @@ class TestAtomicParser(unittest.TestCase):
 
 		score = Score()
 		dummy = score.staffs[0]
-		dummy = score.staffs[1]
 
 		receiver = DebugReceiver()
 
 		parser = AtomicParser( score = Score(), receiver = receiver )
 
-		parser.onPulse( note.NoteValues().WHOLE_NOTE )
+		# Test a whole note's worth of score.
+		for i in xrange( note.NoteValues().WHOLE_NOTE / ATOMIC_NOTE ):
+			parser.onPulse( ATOMIC_NOTE )
+
 		self.assertEqual( 0, len( receiver.events[-1] ) )
 
 if __name__ == '__main__':
