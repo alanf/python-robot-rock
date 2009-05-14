@@ -51,7 +51,6 @@ class Conductor(object):
         our current measure, and tell each musician to perform a measure
         with its metadata up to date.
         '''
-        print 'Conducting'
         newMeasure = self.__chunks == 0
 
         # Update the measure info to reflect what's currently in song info.
