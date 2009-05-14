@@ -118,7 +118,7 @@ class RRMainWindow(QWidget):
     def mouseDoubleClickEvent(self, event):
         if event.button() == Qt.LeftButton:
             event.accept()
-            if self.focusedMusician is None and self.childAt(event.pos()) is None:
+            if self.focusedMusician is None and self.childAt(event.pos()) is None and event.x() < self.width() - 200 and event.y() < self.height() - 100:
                 m = MusicianWidget(MusicianStructured(), core=self.rrMain.core, parent=self)
                 m.userMove(event.x(), event.y())
                 m.show()
