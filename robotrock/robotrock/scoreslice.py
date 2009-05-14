@@ -15,6 +15,9 @@ class ScoreSlice(object):
     def __getitem__(self, i):
         return [staff.measures[i] for staff in self.staffs]
     
+    def current(self):
+        return self.__getitem__(self.current_index)
+        
     def next(self):
         self.current_index += 1
         try:

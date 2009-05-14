@@ -3,59 +3,72 @@
     ScoreMarker is used to obtain relative note data from a mutable
     location within a Score.
 '''
+import copy
+import note
+
 
 class ScoreMarker(object):
-	"""Keeps a position within a score and may be moved in arbitrary
-	directions.
+    """Keeps a position within a score and may be moved in arbitrary
+    directions.
+    
+    The ScoreMarker makes it possible to extract relative note data
+    from a location without having to explicitly handle measure boundaries
+    and other underlying Score structure."""
+    
+    def __init__(self, score):
+        "Constructor. Creates marker into the given Score."
+        self.score_slices = score.score_slices
+        # Start by moving to the first measure (score_slices starts on index -1).
+        self.score_slices.current_index += 1 
+        self.measure_position = 0
+    
+    def rewind(self, n_beats):
+        "Moves backward by the specified number of quarter notes."
+        # TODO (alanf): Implement
+        pass
+    
+    def forward(self, n_beats):
+        "Moves forward by the specified number of quarter notes."
+        # Moving across measure bars is NOT supported. Forward must
+        # be called in smaller increments so this doesn't happen.
+        while n_beats > self.beatsInCurrentMeasure():
+            n_beats -= self.beatsInCurrentMeasure()
+            self.score_slices.current_index += 1
 
-	The ScoreMarker makes it possible to extract relative note data
-	from a location without having to explicitly handle measure boundaries
-	and other underlying Score structure."""
+        if n_beats < 0:
+            self.score_slices.current_index -= 1
+            self.measure_position = self.beatsInCurrentMeasure() + n_beats
+        elif n_beats < self.beatsInCurrentMeasure():
+            self.measure_position += n_beats
 
-	def __init__(self, score):
-		"Constructor. Creates marker into the given Score."
-		self.score = score
-		# create a measure marker and a beat marker
-
-	def rewind(self, n_beats):
-		"Moves backward by the specified number of quarter notes."
-		
-		# Subtract beat marker from n_beats
-			# while n_beats is > 0
-		    # move the measure marker to previous
-		    # get the beats / measure in current measure
-		    # subtract beats / measure from n_beats
-		# if n_beats < 0
-		    # measure marker = previous
-		    # beat marker = beats / measure + n_beats 
-		pass
-
-	def forward(self, n_beats):
-		"Moves forward by the specified number of quarter notes."
-		# See rewind for basic algorithm
-		pass
-
-	def getNotes(self, range):
-		"""Returns the notes in the range for all staffs.
-
-		The dictionary returned uses the staff as a key and an ordered
-		list of time and note events as the values.  The time events
-		are relative to the marker.
-
-		The marker is not advanced."""
-		note_events = {}
-		# Should this bridge the gap across measure bars? Currently it doesn't.
-		for staff in staff.score_slices[self.measure_marker]:
-		    note_events[staff] = []
-		    for measure in staff:
-		         for note in measure.orderedNotes():
-		             # if note.start is after beat offset abd note.start is before
-		             # beat offset + range
-		             # Maybe break early too if we want, since the list is sorted.
-		             note_events[staff].append(note)
-		             
-
-		pass
-
-		return note_events
+    def beatsInCurrentMeasure(self):
+        ''' Uses a quarter note to define a full beat, to indicate how
+        much total "space" there is in a measure. This way we keep our
+        place when we advance through a measure before reaching the next
+        measure in the staff.'''
+        return self.score_slices.current()[0].time_signature[0] * \
+                note.Note.note_values.QUARTER_NOTE
+    
+    def getNotes(self, window_size):
+        """Returns the notes in the range for all staffs.
+        
+        The dictionary returned uses the staff as a key and an ordered
+        list of time and note events as the values.  The time events
+        are relative to the marker.
+        
+        The marker is not advanced."""
+        note_events = {}
+        
+        measures_slice = self.score_slices.current()
+        
+        for measure in measures_slice:
+            note_events[measure.parent] = []
+            for note in measure.orderedNotes():
+                if self.measure_position <= note.start \
+                        < self.measure_position + window_size:
+                    note_copy = copy.copy(note)
+                    note_copy.start -= self.measure_position
+                    note_events[measure.parent].append(note_copy)
+        
+        return note_events
 
