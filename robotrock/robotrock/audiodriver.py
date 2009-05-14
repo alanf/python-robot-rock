@@ -7,6 +7,7 @@
 from threading import Thread
 from time import sleep
 from os import times
+from time import time
 
 class AudioDriver(Thread):
 	"""A real-time audio driver.
@@ -27,9 +28,9 @@ class AudioDriver(Thread):
 	def run(self):
 		"DO NOT CALL DIRECTLY. This will be called by start()."
 		self.running = True
-		last_time = times()[-1]
+		last_time = time()
 		while self.running:
-			current_time = times()[-1]
+			current_time = time()
 			if self.playing:
 				self.m.advance( current_time - last_time )
 			else:
