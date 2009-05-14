@@ -10,7 +10,7 @@ import warnings
 import logging
 
 from corecontroller import CoreController, MINIMUM_TEMPO, MAXIMUM_TEMPO
-import metronomemusician
+from musicianStructured import MusicianStructured
 
 try:
     import guiResources
@@ -82,7 +82,7 @@ class RRMainWindow(QWidget):
         
         self.setLayout(self.grid)
         
-        m = metronomemusician.MetronomeMusician()
+        m = MusicianStructured()
         musician1 = MusicianWidget(musician=m, core=self.rrMain.core, parent=self)
         musician1.userMove(200,200)
         musician1.show()
@@ -132,9 +132,19 @@ class MusicianWidget(QLabel):
         
             
     def userMove(self, x, y):
+        if x < 0 or y < 0:
+            return # do not allow the move
+        if y > self.parentWidget().height() - self.height():
+            return
+        if x > self.parentWidget().width() - self.width():
+            return
+        
         self.x = x
         self.y = y
         #TODO add movement here!!!
+        self.musician.energy = 100 * x / self.parentWidget().width()
+        self.musician.complexity = (100 * (self.parentWidget().height() - y) / self.parentWidget().height())
+        
         self.move(x,y)
     
     def focusInEvent(self, event):
@@ -154,6 +164,9 @@ class MusicianWidget(QLabel):
             self.userMove(self.x+10, self.y)
         elif event.key() == Qt.Key_Escape:
             self.clearFocus()
+        elif event.key() == Qt.Key_Delete or event.key() == Qt.Key_Backspace:
+            self.core.removeMusician(self.musician)
+            self.close()
 
 class PlayButton(QPushButton):
     def __init__(self, text="Play", parent=None):

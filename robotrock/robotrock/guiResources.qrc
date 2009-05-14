@@ -1,4 +1,8 @@
 <!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file alias="delete_icon.png">../images/delete-128x128.png</file>
+<file alias="guitar_icon.png">../images/black-guitar-128x128.png</file>
+</qresource>
 <!-- 
      
      This is a resource file used to incorporate images and other static
@@ -9,8 +13,4 @@
      
      Author: Tim Crossley <tjac0@cs.washington.edu>
 -->
-<qresource>
-<file alias="delete_icon.png">../images/delete-128x128.png</file>
-<file alias="guitar_icon.png">../images/black-guitar-128x128.png</file>
-</qresource>
 </RCC>
