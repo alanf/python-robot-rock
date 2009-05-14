@@ -41,8 +41,8 @@ class MusicianStructured(Musician):
         if not(self._time == measure.time_signature):
             self._time = measure.time_signature
             self._changed = True
-        if not(self._key == measure.key):
-            self._key = measure.key
+        if not(self._key == measure.key_signature):
+            self._key = measure.key_signature
             self._changed = True
         if measure.notes == [] or window_start == 0:
             self._changed = True

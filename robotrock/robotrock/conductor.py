@@ -29,6 +29,7 @@ class Conductor(object):
         # Chunks allows us to keep our place within a measure.
         self.__chunks = 0
         self.chunks_per_beat = self.note_obj.note_values.QUARTER_NOTE
+        self.__measures_played = 0
     
     def addMusician(self, musician):
         ''' Adds a musician and associates them with a staff, mapped one-to-one. '''
@@ -50,13 +51,17 @@ class Conductor(object):
         our current measure, and tell each musician to perform a measure
         with its metadata up to date.
         '''
+        print 'Conducting'
         newMeasure = self.__chunks == 0
 
         # Update the measure info to reflect what's currently in song info.
         if newMeasure:
+            self.__measures_played += 1
             self.measure_info = self.song_info.measureInfo()
             for musician in self.ensemble:
                 self.__advanceMeasure(musician)
+                self.__updateMeasureInfo(self.current_musician_measures[musician], \
+                        self.measure_info)
 
         for (musician, measure) in self.current_musician_measures.iteritems():
             musician.compose(measure, self.__chunks, self.__chunks + duration)
