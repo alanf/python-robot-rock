@@ -7,6 +7,7 @@ from PyQt4.QtGui import *
 from corecontroller import CoreController
 
 import guiResources
+import metronomemusician
 
 import warnings
 
@@ -70,8 +71,8 @@ class RRMainWindow(QWidget):
         
         self.setLayout(self.grid)
         
-        
-        musician1 = MusicianWidget(musician=None, parent=self)
+        m = metronomemusician.MetronomeMusician()
+        musician1 = MusicianWidget(musician=m, core=self.rrMain.core, parent=self)
         musician1.userMove(200,200)
         musician1.show()
         
@@ -96,7 +97,7 @@ class RRMainWindow(QWidget):
 class MusicianWidget(QLabel):
     
     
-    def __init__(self, musician, parent=None):
+    def __init__(self, musician, core, parent=None):
         super(MusicianWidget, self).__init__(parent)
         self.setMinimumHeight(100)
         self.setMinimumWidth(100)
@@ -110,10 +111,16 @@ class MusicianWidget(QLabel):
         self.setPixmap(QPixmap(":/guitar_icon.png").scaled(100,100,Qt.IgnoreAspectRatio, Qt.SmoothTransformation))
         
         self.setFocusPolicy(Qt.ClickFocus)
+        self.musician = musician
+        
+        self.core = core
+        self.core.addMusician(musician)
+        
             
     def userMove(self, x, y):
         self.x = x
         self.y = y
+        #TODO add movement here!!!
         self.move(x,y)
     
     def focusInEvent(self, event):
