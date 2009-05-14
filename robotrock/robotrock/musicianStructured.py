@@ -20,6 +20,7 @@ class MusicianStructured(Musician):
         #self.key =  self.current_measure.key
         #self.time =  self.current_measure.time_signature
         '''
+        self.instrument = 'skin flute'
         self._key = key
         self._time = time
         self._plans = {}
