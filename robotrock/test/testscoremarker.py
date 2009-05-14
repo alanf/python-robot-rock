@@ -20,6 +20,7 @@ class TestScoreMarker(unittest.TestCase):
 
 		first_beat = note.Note( start=0.0, duration=note.NoteValues().QUARTER_NOTE )
 		score = Score()
+		staff = score.staffs[0]
 		score.staffs[0].measures[0].addNote( first_beat )
 
 		second_beat = note.Note( start=1.0, duration=note.NoteValues().QUARTER_NOTE )
@@ -31,12 +32,12 @@ class TestScoreMarker(unittest.TestCase):
 
 		# Get one note...
 		self.assertEquals( 1, len( notes ) )
-		self.assertEquals( first_beat, notes[0] )
+		self.assertEquals( first_beat, notes[staff][0] )
 
 		# Move forward one quarter; second note should look like the first
 		marker.forward( note.NoteValues().QUARTER_NOTE )
 		notes = marker.getNotes( note.NoteValues().EIGHTH_NOTE )
-		self.assertEquals( first_beat, notes[0] )
+		self.assertEquals( first_beat, notes[staff][0] )
 
 if __name__ == '__main__':
 	unittest.main()
