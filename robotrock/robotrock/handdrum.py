@@ -14,20 +14,14 @@ import note
 class HandDrum(MusicianStructured):
     #Definition of a HandDrum
 
-    def __init__(self, staff, energy=50, complexity=50):
+    def __init__(self, staff, energy=50, complexity=50, time = [4,4], key = 'B'):
         #Musician.__init__(staff, energy, complexity)
         self._id = 'handdrum'
         
         self._energy = energy
         self._complexity = complexity
-        '''
-        self.staff = staff
-        #self.current_measure = self.staff.measures.next()
-        self.current_measure = []
-        #self.key =  self.current_measure.key
-        #self.time =  self.current_measure.time_signature
-        '''
-        self._time = [4,4]
+        self._time = time
+        self._key = key
         self._plans = {}
         self._changed = True #if a change is made, set changed to 1
                             #set to 0 by decide method when composing

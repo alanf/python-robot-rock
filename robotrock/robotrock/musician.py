@@ -7,5 +7,5 @@
 #abstract data type of a musician
 class Musician(object):
         
-    def compose(self, measure, elapsed): #called by conductor
+    def compose(self, measure, window_start, window_duration): #called by conductor
         pass

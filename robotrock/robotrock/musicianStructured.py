@@ -10,7 +10,7 @@ import note
 class MusicianStructured(Musician):
     #Definition of what a Musician is
 
-    def __init__(self, staff, energy=50, complexity=50):
+    def __init__(self, staff, energy=50, complexity=50, time = [4,4], key = 'B'):
         self._energy = energy
         self._complexity = complexity
         '''
@@ -20,7 +20,8 @@ class MusicianStructured(Musician):
         #self.key =  self.current_measure.key
         #self.time =  self.current_measure.time_signature
         '''
-        self._time = [4,4]
+        self._key = key
+        self._time = time
         self._plans = {}
         self._changed = True #if a change is made, set changed to 1
                             #set to 0 by decide method when composing
