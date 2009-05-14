@@ -4,14 +4,21 @@
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from corecontroller import CoreController
 
-import guiResources
-import metronomemusician
 
 import warnings
-
 import logging
+
+from corecontroller import CoreController, MINIMUM_TEMPO, MAXIMUM_TEMPO
+import metronomemusician
+
+try:
+    import guiResources
+except ImportError:
+    print "GUI resources file not found. Please run the following command:\n\tpyrcc4 -o guiResources.py guiResources.qrc"
+    import sys
+    sys.exit(1)
+
 
 class RRGuiMain:
     def __init__(self, args, core=None):
@@ -58,6 +65,10 @@ class RRMainWindow(QWidget):
         self.tempoSlider = QSlider(Qt.Vertical)
         self.tempoSlider.setMaximumHeight(200)
         self.tempoSlider.setMinimumHeight(200)
+        self.tempoSlider.setMinimum(MINIMUM_TEMPO)
+        self.tempoSlider.setMaximum(MAXIMUM_TEMPO)
+        self.tempoSlider.setTickInterval(10)
+        self.connect(self.tempoSlider, SIGNAL('sliderReleased()'), self.tempoHandler)
         
         self.grid.addWidget(self.tempoSlider, 1,2,Qt.AlignHCenter|Qt.AlignVCenter)
         
@@ -92,6 +103,9 @@ class RRMainWindow(QWidget):
         
         self.isPlay = not self.isPlay
     
+    
+    def tempoHandler(self):
+        self.rrMain.core.setTempo(self.tempoSlider.value())
 
 
 class MusicianWidget(QLabel):
