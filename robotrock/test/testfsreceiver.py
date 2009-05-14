@@ -21,7 +21,7 @@ class DummyMusician(object):
 class TestFSReceiver(unittest.TestCase):
 
 	def testRegistration(self):
-		"Test successful registration of musicians into the synthesizer."""
+		"Test successful registration of musicians into the synthesizer."
 		r = Receiver()
 
 		# FIXME What if there is no limit to # of musicians?
@@ -39,6 +39,10 @@ class TestFSReceiver(unittest.TestCase):
 
 		# Verify capacity limit
 		self.assertFalse( r.registerMusician( musicians[n] ) )
+
+	def testUnregister(self):
+		# TODO Post BETA goal
+		pass
 
 	def testHandle(self):
 		"""Test event handling by playing a C-major chord.
