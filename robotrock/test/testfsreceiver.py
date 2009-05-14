@@ -14,31 +14,31 @@ from tone import *
 from dynamics import *
 from time import sleep
 
-class DummyMusician(object):
+class DummyStaff(object):
 	def __init__(self):
 		self.instrument = None
 
 class TestFSReceiver(unittest.TestCase):
 
 	def testRegistration(self):
-		"Test successful registration of musicians into the synthesizer."
+		"Test successful registration of staffs into the synthesizer."
 		r = Receiver()
 
-		# FIXME What if there is no limit to # of musicians?
+		# FIXME What if there is no limit to # of staffs?
 		n = len( r.available_channels )
 
-		musicians = [DummyMusician() for x in xrange(n+1)]
+		staffs = [DummyStaff() for x in xrange(n+1)]
 
 		# Register
-		for m in xrange(n):
-			self.assertTrue( r.registerMusician( musicians[m] ) )
+		for s in xrange(n):
+			self.assertTrue( r.registerStaff( staffs[s] ) )
 
 		# Verify admittance
-		for m in xrange(n):
-			self.assertTrue( r.registered_musicians.has_key( musicians[m] ) )
+		for s in xrange(n):
+			self.assertTrue( r.registered_staffs.has_key( staffs[s] ) )
 
 		# Verify capacity limit
-		self.assertFalse( r.registerMusician( musicians[n] ) )
+		self.assertFalse( r.registerStaff( staffs[n] ) )
 
 	def testUnregister(self):
 		# TODO Post BETA goal
@@ -50,31 +50,31 @@ class TestFSReceiver(unittest.TestCase):
 		Note that this test is subjective as its success depends upon audio output."""
 		r = Receiver()
 
-		class Musician(object):
+		class Staff(object):
 			def __init__(self):
 				self.instrument = "FF4"
 
 		# Manually setup directory
 		r.soundfont_directory["FF4"] = "ff4sf2.sf2"
 
-		m = Musician()
-		r.registerMusician( m ) # auto-registered for BETA
+		s = DummyStaff()
+		r.registerStaff( s ) # auto-registered for BETA
 
 		# Play C-major chord for two seconds
-		event = (m, "Note on", MIDDLE_C, MEZZOFORTE )
+		event = (s, "Note on", MIDDLE_C, MEZZOFORTE )
 		r.handle( event )
-		event = (m, "Note on", getTone(MIDDLE_C, MEDIANT), MEZZOFORTE )
+		event = (s, "Note on", getTone(MIDDLE_C, MEDIANT), MEZZOFORTE )
 		r.handle( event )
-		event = (m, "Note on", getTone(MIDDLE_C, DOMINANT), MEZZOFORTE )
+		event = (s, "Note on", getTone(MIDDLE_C, DOMINANT), MEZZOFORTE )
 		r.handle( event )
 		sleep(2)
 
 		# Release and wait two seconds
-		event = (m, "Note off", MIDDLE_C, MEZZOFORTE )
+		event = (s, "Note off", MIDDLE_C, MEZZOFORTE )
 		r.handle( event )
-		event = (m, "Note off", getTone(MIDDLE_C, MEDIANT), MEZZOFORTE )
+		event = (s, "Note off", getTone(MIDDLE_C, MEDIANT), MEZZOFORTE )
 		r.handle( event )
-		event = (m, "Note off", getTone(MIDDLE_C, DOMINANT), MEZZOFORTE )
+		event = (s, "Note off", getTone(MIDDLE_C, DOMINANT), MEZZOFORTE )
 		r.handle( event )
 
 		sleep(2)
