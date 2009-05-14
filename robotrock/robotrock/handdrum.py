@@ -96,7 +96,7 @@ class HandDrum(MusicianStructured):
         if diff >= 1.0:                     #quarter note
             myNote.duration=self._durations.QUARTER_NOTE
         elif diff == .5:                    #eigth note
-            myNote.duration=self._durations.EIGHT_NOTE
+            myNote.duration=self._durations.EIGTH_NOTE
         elif diff == .25:                   #sixteenth note
             myNote.duration=self._durations.SIXTEENTH_NOTE
         elif diff == .125:                  #32'nd note
@@ -104,7 +104,7 @@ class HandDrum(MusicianStructured):
         elif diff == .0625:                 #64'th note
             myNote.duration=self._durations.SIXTYFOURTH_NOTE
         elif diff == .33:                   #tripolet   
-            myNote.duration=self._durations.QUARTER_NOTE_TRIPLET
+            myNote.duration=self._durations.EIGTH_NOTE_TRIPLET
         elif not(diff % .5):                #divisible by eigth note
             self._setLengths(myNote, diff - .5)
         elif not(diff % .25):               #divisible by sixteenth note
@@ -149,7 +149,7 @@ class HandDrum(MusicianStructured):
         #more, or equal, notes then beats, fill the beats
         if notes>=self._time[0]:
             for x in range(self._time[0]):
-                myNote = note.Note(tone=38, start=x, rest=False)
+                myNote = note.Note(tone=38, start=self._getStart(x), rest=False)
                 self._plans[x] = myNote
             notes-=self.time[0]
 
@@ -160,7 +160,7 @@ class HandDrum(MusicianStructured):
                 #have enough notes to fill in remaining beats
                 #so put a note on this beat
                 if notes>=(self._time[0]-x):
-                    myNote = note.Note(tone=38, start=x, rest=False)
+                    myNote = note.Note(tone=38, start=self._getStart(x), rest=False)
                     self._plans[x] = myNote
                     notes-=1
                 #not enough noted to fill in remaining beats
@@ -168,7 +168,7 @@ class HandDrum(MusicianStructured):
                 else:
                     chance = random.randrange(self._time[0])
                     if chance < notes:
-                        myNote = note.Note(tone=38, start=x, rest=False)
+                        myNote = note.Note(tone=38, start=self._getStart(x), rest=False)
                         self._plans[x] = myNote
                         notes-=1
 

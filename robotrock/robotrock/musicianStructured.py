@@ -57,7 +57,36 @@ class MusicianStructured(Musician):
 
     #turns the numerical value val into a start value understandable by the score
     def _getStart(self, val):
-        pass
+        remainder = val % 1
+        val -=remainder
+        result = val * self._durations.QUARTER_NOTE
+        val = remainder
+        
+        remainder = val % .5
+        val -= remainder
+        result += val * self._durations.EIGTH_NOTE
+        val = remainder
+
+        remainder = val % .25
+        val -= remainder
+        result += val * self._durations.SIXTEENTH_NOTE
+        val = remainder
+
+        remainder = val % .125
+        val -= remainder
+        result += val * self._durations.THIRTYSECOND_NOTE
+        val = remainder
+
+        remainder = val % .0625
+        val -= remainder
+        result += val * self._durations.SIXTYFOURTH_NOTE
+        val = remainder
+
+        remainder = val % .33
+        val -= remainder
+        result += val * self._durations.EIGTH_NOTE_TRIPLET
+        return result
+        
 
 
     @property

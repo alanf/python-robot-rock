@@ -9,8 +9,8 @@ class NoteValues(object):
             self.SIXTYFOURTH_NOTE = 6
             self.THIRTYSECOND_NOTE = 2 * self.SIXTYFOURTH_NOTE
             self.SIXTEENTH_NOTE = 2 * self.THIRTYSECOND_NOTE
-            self.EIGHT_NOTE = 2 * self.SIXTEENTH_NOTE
-            self.QUARTER_NOTE = 2 * self.SIXTEENTH_NOTE
+            self.EIGTH_NOTE = 2 * self.SIXTEENTH_NOTE
+            self.QUARTER_NOTE = 2 * self.EIGTH_NOTE
             self.HALF_NOTE = 2 * self.QUARTER_NOTE
             self.WHOLE_NOTE = 2 * self.HALF_NOTE
             
