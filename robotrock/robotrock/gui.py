@@ -137,12 +137,7 @@ class DeleteIcon(QLabel):
             event.accept()
             if not self.musicianPanel.focusedMusician is None:
                 self.musicianPanel.rrMain.core.removeMusician(self.musicianPanel.focusedMusician.musician)
-                try:
-                    MusicianWidget.allMWidgets.remove(self.musicianPanel.focusedMusician)
-                except ValueError:
-                    print "Error when removing musician"
-                    print self.musicianPanel.focusedMusician
-                    print MusicianWidget.allMWidgets
+                MusicianWidget.allMWidgets.remove(self.musicianPanel.focusedMusician)
                 
                 self.musicianPanel.focusedMusician.close()
                 self.musicianPanel.focusedMusician = None
