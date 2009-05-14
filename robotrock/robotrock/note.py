@@ -9,15 +9,15 @@ class NoteValues(object):
             self.SIXTYFOURTH_NOTE = 6
             self.THIRTYSECOND_NOTE = 2 * self.SIXTYFOURTH_NOTE
             self.SIXTEENTH_NOTE = 2 * self.THIRTYSECOND_NOTE
-            self.EIGTH_NOTE = 2 * self.SIXTEENTH_NOTE
-            self.QUARTER_NOTE = 2 * self.EIGTH_NOTE
+            self.EIGHTH_NOTE = 2 * self.SIXTEENTH_NOTE
+            self.QUARTER_NOTE = 2 * self.EIGHTH_NOTE
             self.HALF_NOTE = 2 * self.QUARTER_NOTE
             self.WHOLE_NOTE = 2 * self.HALF_NOTE
             
             self.QUARTER_NOTE_TRIPLET = self.WHOLE_NOTE / 3
-            self.EIGTH_NOTE_TRIPLET =  self.QUARTER_NOTE / 3
-            self.SIXTEENTH_NOTE_TRIPLET = self.SIXTEENTH_NOTE / 3
-            self.THIRTYSECOND_NOTE_TRIPLET = self.THIRTYSECOND_NOTE / 3
+            self.EIGHTH_NOTE_TRIPLET =  self.QUARTER_NOTE / 3
+            self.SIXTEENTH_NOTE_TRIPLET = self.EIGHTH_NOTE / 3
+            self.THIRTYSECOND_NOTE_TRIPLET = self.SIXTEENTH_NOTE / 3
         
         def dotted(value):
             return 3 * value // 2
