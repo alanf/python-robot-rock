@@ -17,6 +17,7 @@ class Measure(object):
         self.notes.append(Note)
     
     def orderedNotes(self):
+        ''' Returns the notes in this measure ordered by start time.'''
         def compareNotes(a, b):
             ''' Returns the list of notes from earliest to latest.'''
             return a.start - b.start

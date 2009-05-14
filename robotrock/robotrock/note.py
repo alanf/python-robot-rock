@@ -30,4 +30,6 @@ class Note(object):
         self.__dict__.update(note_info)
                               
 if __name__ == '__main__':
-    note = Note(tone=('A',5), duration=('quarter'), dynamic='mezzoforte')
+    import dynamics
+    
+    note = Note(tone=('A',5), duration=Note.note_values.HALF_NOTE, dynamic=dynamics.MEZZOFORTE)

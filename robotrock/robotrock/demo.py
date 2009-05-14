@@ -69,7 +69,7 @@ def main():
         print i % 4 + 1
         conductor.onPulse(noteValues.QUARTER_NOTE)
         parser.onPulse(noteValues.QUARTER_NOTE)
-        sleep(1.9)
+        sleep(.333)
 
 if __name__ == '__main__':
     main()

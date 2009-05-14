@@ -24,10 +24,11 @@ class ExpandingList(list):
         self.default_object_dict = default_object_dict
         self.current_index = -1
         
-    ''' Expands the list by creating new objects using the given initial 
-        object info.
-    '''
+
     def __getitem__(self, i):
+        ''' May expand the list by creating new objects using the given initial 
+            object info.
+        '''
         try:
             list.__getitem__(self, i)
         except:
@@ -36,8 +37,8 @@ class ExpandingList(list):
            
         return list.__getitem__(self, i)
 
-    # Create the object using optional arguments, and set the object's parent. 
     def __default_object(self):
+        ''' Create an element using optional arguments, and set the element's parent. '''
         obj = apply(self.object, self.default_object_args)
         try:
             obj.__dict__.update(self.default_object_dict)
@@ -48,10 +49,14 @@ class ExpandingList(list):
         return obj
     
     def next(self):
+        ''' Move the current_index forward and return the items at that marker. 
+        Always returns an object reference. '''
         self.current_index += 1
         return self.__getitem__(self.current_index)
         
     def previous(self):
+        ''' Move the current_index backward and return the items at that marker.
+        Returns None if we have moved the current_index before the start. '''
         self.current_index -= 1
         if self.current_index > -1:
             return self.__getitem__(self.current_index)

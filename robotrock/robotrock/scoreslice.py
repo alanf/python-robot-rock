@@ -11,14 +11,16 @@ class ScoreSlice(object):
         self.staffs = staffs
         self.current_index = -1
     
-    ''' Implements bracket operators (e.g. score[4]). '''
     def __getitem__(self, i):
+        ''' Implements bracket operators (e.g. score[4]). '''
         return [staff.measures[i] for staff in self.staffs]
     
     def current(self):
+        ''' Return the measures at current_index. '''
         return self.__getitem__(self.current_index)
         
     def next(self):
+        ''' Move current_index forward and return the measures there. '''
         self.current_index += 1
         try:
             result = self.__getitem__(self.current_index)
@@ -28,6 +30,7 @@ class ScoreSlice(object):
         return result
 
     def previous(self):
+        ''' Move current_index backward and return the measures there. '''
         self.current_index -= 1
         if self.current_index > -1:
             return self.__getitem__(self.current_index)

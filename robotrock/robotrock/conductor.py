@@ -2,7 +2,8 @@
 ''' conductor.py
     Author: Alan Fineberg (af@cs.washington.edu)
     The conductor is responsible for telling the AI to perform,
-    and specifying their performance order.
+    specifying their performance order, and keeping measure meta
+    data up to date using its reference to song_info.
     The onPulse() method is triggered for each metronome pulse.
 '''
 import staff
@@ -35,17 +36,18 @@ class Conductor(object):
         self.__appendStaff(self.score, musician)
     
     def __appendStaff(self, score, musician):
+        ''' When a musician is added to the score, it has its own staff to write to. '''
         score.staffs.append(self.staff_obj(instrument=musician.instrument))
-        # Assume no other entity adding or removing staffs (or single threaded).
         self.current_musician_measures[musician] = score.staffs[-1].measures
         
     def removeMusician(self, musician):
+        ''' Prevents a musician from writing to the score. '''
         self.ensemble.remove(musician)
     
     def onPulse(self, duration):
         ''' 
         On every metronome tick, we check to see if we have reached the end of
-        our current measure, and tell each musician to performa a measure
+        our current measure, and tell each musician to perform a measure
         with its metadata up to date.
         '''
         newMeasure = self.__chunks == 0
@@ -61,6 +63,11 @@ class Conductor(object):
     
         self.__updateLocation(duration)
 
+    def __advanceMeasure(self, musician):
+        ''' Internally changes the mapping of each musician to its current measure. '''
+        measure = self.current_musician_measures[musician]
+        self.current_musician_measures[musician] = measure.parent.measures.next()
+        
     def __updateLocation(self, duration):
         ''' 
         Keep track of how far along we are in each measure. If we've reached
@@ -72,13 +79,9 @@ class Conductor(object):
         
         if self.__chunks == self.chunks_per_beat * beats_per_measure:
             self.__chunks = 0
-    
-        
-    def __advanceMeasure(self, musician):
-        measure = self.current_musician_measures[musician]
-        self.current_musician_measures[musician] = measure.parent.measures.next()
 
     def __updateMeasureInfo(self, measure, measure_info):
+        ''' Uses measure_info to update measure meta data. '''
         measure.__dict__.update(measure_info)
 
 if __name__ == '__main__':

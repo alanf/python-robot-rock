@@ -32,8 +32,6 @@ class ScoreMarker(object):
     
     def forward(self, n_beats):
         "Moves forward by the specified number of quarter notes."
-        # Moving across measure bars is NOT supported. Forward must
-        # be called in smaller increments so this doesn't happen.
         self.measure_position += n_beats
         
         while self.measure_position >= self.beatsInCurrentMeasure():
