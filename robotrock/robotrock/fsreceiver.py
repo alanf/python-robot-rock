@@ -45,7 +45,7 @@ class FluidsynthReceiver(object):
 	def __init__(self, samplerate=44100):
 		self.synth = Synth( samplerate=samplerate )
 		self.available_channels = range(16)
-		self.registered_musicians = {}
+		self.registered_staffs = {}
 
 		self.soundfonts = {}
 		self.soundfont_directory = {}
@@ -65,27 +65,27 @@ class FluidsynthReceiver(object):
 			key, value = line.split(":")
 			self.soundfont_directory[key.strip()] = value.strip()
 
-	def registerMusician(self, musician):
-		"Registers a musician for inclusion into the synthesizer."
+	def registerStaff(self, staff):
+		"Registers a staff for inclusion into the synthesizer."
 
 		# Reject if no vacancy
 		if len( self.available_channels ) == 0:
 			return False
 
 		# Reject if already included
-		if musician in self.registered_musicians:
+		if staff in self.registered_staffs:
 			return False
 
 		# Register!
 		channel = self.available_channels.pop()
-		self.registered_musicians[musician] = channel
+		self.registered_staffs[staffs] = channel
 
 		# Load instruments
-		if musician.instrument not in self.soundfonts:
+		if staff.instrument not in self.soundfonts:
 			try:
-				sf_filename = self.soundfont_directory[musician.instrument]
+				sf_filename = self.soundfont_directory[staff.instrument]
 				sf = self.synth.sfload(sf_filename)
-				self.soundfont_directory[musician.instrument] = sf
+				self.soundfont_directory[staff.instrument] = sf
 				# TODO Post BETA:
 				#      The following values will be read from the directory.
 				bank = 0
@@ -101,18 +101,18 @@ class FluidsynthReceiver(object):
 		# Return the good news
 		return True
 
-	def unregisterMusician(self, musician):
-		"Unregisters a musician from the synthesizer."
+	def unregisterStaff(self, staff):
+		"Unregisters a staff from the synthesizer."
 
 		# Reject if not registered
-		if musician not in self.registered_musicians:
+		if staff not in self.registered_staffs:
 			return False
 
 		# Give back resource
-		self.available_channels.append( self.registered_musicians[musician] )
+		self.available_channels.append( self.registered_staffs[staff] )
 
 		# Remove!
-		self.registered_musicians.pop( musician )
+		self.registered_staffs.pop( staff )
 
 		# Return the good news
 		return True
@@ -121,15 +121,15 @@ class FluidsynthReceiver(object):
 		"Process a given event."
 		# TODO After BETA, this tuple will change to have type first and
 		#      event tuples will be of variable length.
-		musician, type, tone, dynamic = event
+		staff, type, tone, dynamic = event
 
-		channel = self.registered_musicians.get( musician, -1 )
+		channel = self.registered_staffs.get( staff, -1 )
 
 		# HACK HACK HACK HACK HACK
 		# Auto register unknown musicians
 		if channel == -1:
-			self.registerMusician( musician )
-			channel = self.registered_musicians.get( musician, -1 )
+			self.registerStaff( staff )
+			channel = self.registered_staffs.get( staffs, -1 )
 		# HACK HACK HACK HACK HACK
 
 		# TODO early exit if channel == -1?
