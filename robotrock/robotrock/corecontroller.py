@@ -54,13 +54,12 @@ class CoreController():
                     self.song_info.info['time_signature'] = time_signature
     
     # Update the key signature of the music
-    # Param: key_signature, a 3-tuple of key, modifier, and tonality
+    # Param: key_signature, a 2-tuple of key, and tonality
     #        See songinfo.py for legal values of the tuple's elements
     def updateKeySignature(self, key_signature):
-        if len(key_signature) == 3 and \
+        if len(key_signature) == 2 and \
 	        key_signature[0] in songinfo.VALID_KEY and \
-                key_signature[1] in songinfo.VALID_KEY_MODIFIERS and \
-                key_signature[2] in songinfo.VALID_KEY_TONALITIES:
+                key_signature[1] in songinfo.VALID_KEY_TONALITIES:
                     self.song_info.info['key_signature'] = key_signature
     
     # Adds the provided musician to the ensemble

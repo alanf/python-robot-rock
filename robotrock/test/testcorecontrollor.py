@@ -112,16 +112,16 @@ class TestCoreController(unittest.TestCase):
     
     def testupdateKeySignature(self):
 	# Test valid inptus
-        self.corecontroller.updateKeySignature(('C', 'Sharp', 'Major'))
+        self.corecontroller.updateKeySignature(('C#', 'Major'))
         info = self.corecontroller.song_info.measureInfo()
-        self.assertEqual(info['key_signature'], ('C', 'Sharp', 'Major'))
-        self.corecontroller.updateKeySignature(('D', 'Natural', 'Minor'))
+        self.assertEqual(info['key_signature'], ('C#', 'Major'))
+        self.corecontroller.updateKeySignature(('D', 'Minor'))
         info = self.corecontroller.song_info.measureInfo()
-        self.assertEqual(info['key_signature'], ('D', 'Natural', 'Minor'))
+        self.assertEqual(info['key_signature'], ('D', 'Minor'))
 	# Test assertion, ensure no side effects
-        self.corecontroller.updateKeySignature(('D', 'Natural', 'Minor', 'Too long'))
+        self.corecontroller.updateKeySignature(('C', 'Minor', 'Too long'))
         info = self.corecontroller.song_info.measureInfo()
-        self.assertEqual(info['key_signature'], ('D', 'Natural', 'Minor'))
+        self.assertEqual(info['key_signature'], ('D', 'Minor'))
     
     def testaddMusician(self):
         self.corecontroller.addMusician('Guitar')
