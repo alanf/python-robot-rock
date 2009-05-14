@@ -136,11 +136,18 @@ class DeleteIcon(QLabel):
         if event.button() == Qt.LeftButton:
             event.accept()
             if not self.musicianPanel.focusedMusician is None:
+                self.musicianPanel.rrMain.core.removeMusician(self.musicianPanel.focusedMusician.musician)
+                try:
+                    MusicianWidget.allMWidgets.remove(self.musicianPanel.focusedMusician)
+                except ValueError:
+                    print "Error when removing musician"
+                    print self.musicianPanel.focusedMusician
+                    print MusicianWidget.allMWidgets
+                
                 self.musicianPanel.focusedMusician.close()
-                self.musicianPanel.rrMain.core.removeMusician(self.musicianPanel.focusedMusician)
                 self.musicianPanel.focusedMusician = None
-                MusicianWidget.allMWidgets.remove(self.musicianPanel.focusedMusician)
-            
+                
+                
 
 class MusicianWidget(QLabel):
     
@@ -173,7 +180,7 @@ class MusicianWidget(QLabel):
             return # do not allow the move
         if y > self.parent.height() - self.height():
             return
-        if x > self.parent.width() - self.width():
+        if x > self.parent.width() - self.width() - 100:
             return
         
         self.x = x
@@ -181,9 +188,20 @@ class MusicianWidget(QLabel):
         self.musician.energy = 100 * x / self.parent.width()
         self.musician.complexity = (100 * (self.parent.height() - y) / self.parent.height())
         
+        
+        # absolute minimums
+        minW = 600
+        minH = 400
         self.move(x,y)
         for w in MusicianWidget.allMWidgets:
             w.update()
+            if minW < w.x + w.width() + 100: # 100 pixels extra space
+                minW = w.x + w.width() + 100
+            if minH < w.y + w.height():
+                minH = w.y + w.height()
+            
+        self.parent.setMinimumWidth(minW)
+        self.parent.setMinimumHeight(minH)
         self.parent.update()
         
     
