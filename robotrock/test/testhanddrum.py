@@ -36,7 +36,7 @@ class TestHanddrum(unittest.TestCase):
         self.drum = HandDrum()
         self.assertEqual(50, self.drum.energy)
         self.assertEqual(50, self.drum.complexity)
-        self.assertEqual([4,4], self.drum.time)
+        self.assertEqual((4,4), self.drum.time)
         self.assertEqual(('B', 'major'), self.drum.key)
         self.assertEqual(True, self.drum._changed)
 
@@ -44,7 +44,7 @@ class TestHanddrum(unittest.TestCase):
         self.drum = HandDrum(40, 80)
         self.assertEqual(40, self.drum.energy)
         self.assertEqual(80, self.drum.complexity)
-        self.assertEqual([4,4], self.drum.time)
+        self.assertEqual((4,4), self.drum.time)
         self.assertEqual(('B', 'major'), self.drum.key)
         self.assertEqual(True, self.drum._changed)
 
@@ -52,7 +52,7 @@ class TestHanddrum(unittest.TestCase):
         self.drum = HandDrum(42)
         self.assertEqual(42, self.drum.energy)
         self.assertEqual(50, self.drum.complexity)
-        self.assertEqual([4,4], self.drum.time)
+        self.assertEqual((4,4), self.drum.time)
         self.assertEqual(('B', 'major'), self.drum.key)
         self.assertEqual(True, self.drum._changed)
 
@@ -160,7 +160,6 @@ class TestHanddrum(unittest.TestCase):
 
 if __name__ == '__main__':
     sys.path.append('../robotrock/')
-    from musician import Musician
     from handdrum import HandDrum
     import note
     unittest.main()

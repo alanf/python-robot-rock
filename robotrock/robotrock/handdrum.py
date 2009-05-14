@@ -14,7 +14,7 @@ import note
 class HandDrum(MusicianStructured):
 
     #initialize the handdrum musician
-    def __init__(self, energy=50, complexity=50, time = [4,4], key = ('B', 'major')):
+    def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         #Musician.__init__(staff, energy, complexity)
         self._id = 'handdrum'
         

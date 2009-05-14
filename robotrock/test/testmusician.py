@@ -29,7 +29,7 @@ class TestMusician(unittest.TestCase):
         self.musician = MusicianStructured()
         self.assertEqual(50, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
-        self.assertEqual([4,4], self.musician.time)
+        self.assertEqual((4,4), self.musician.time)
         self.assertEqual(('B', 'major'), self.musician.key)
         self.assertEqual(True, self.musician._changed)
 
@@ -37,7 +37,7 @@ class TestMusician(unittest.TestCase):
         self.musician = MusicianStructured(40, 80)
         self.assertEqual(40, self.musician.energy)
         self.assertEqual(80, self.musician.complexity)
-        self.assertEqual([4,4], self.musician.time)
+        self.assertEqual((4,4), self.musician.time)
         self.assertEqual(('B', 'major'), self.musician.key)
         self.assertEqual(True, self.musician._changed)
 
@@ -45,7 +45,7 @@ class TestMusician(unittest.TestCase):
         self.musician = MusicianStructured(42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
-        self.assertEqual([4,4], self.musician.time)
+        self.assertEqual((4,4), self.musician.time)
         self.assertEqual(('B', 'major'), self.musician.key)
         self.assertEqual(True, self.musician._changed)
 
@@ -55,7 +55,7 @@ class TestMusician(unittest.TestCase):
         self.musician = MusicianStructured(42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
-        self.assertEqual([4,4], self.musician.time)
+        self.assertEqual((4,4), self.musician.time)
         self.assertEqual(True, self.musician._changed)
 
         #test to see if the musician is writing music
@@ -73,8 +73,8 @@ class TestMusician(unittest.TestCase):
         self.musician.complexity = 78
         self.assertEqual(78, self.musician.complexity)
         #test time signature
-        self.musician.time = [2,6]
-        self.assertEqual([2,6], self.musician.time)
+        self.musician.time = (2,6)
+        self.assertEqual((2,6), self.musician.time)
         #test key signature
         self.musician.key = ('A', 'major')
         self.assertEqual(('A', 'major'), self.musician.key)
