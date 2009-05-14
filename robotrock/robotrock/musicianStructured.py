@@ -7,9 +7,12 @@
 from musician import Musician
 import note
 
+#definition of the recommended musician structure.
+#note: one does NOT have to follow this structure to make a working musician
+#note: the default musician is a metronome as defined below
 class MusicianStructured(Musician):
-    #Definition of what a Musician is
 
+    #initialize the general musician
     def __init__(self, energy=50, complexity=50, time = [4,4], key = ('B', 'major')):
         self._energy = energy
         self._complexity = complexity
@@ -20,7 +23,7 @@ class MusicianStructured(Musician):
         #self.key =  self.current_measure.key
         #self.time =  self.current_measure.time_signature
         '''
-        self.instrument = 'skin flute'
+        self.instrument = 'metronome'
         self._key = key
         self._time = time
         self._plans = {}
@@ -29,6 +32,11 @@ class MusicianStructured(Musician):
         self._durations = note.Note.note_values
 
     #composes to the given measure if it needs to
+    #measure is the measure being composed to
+    #window_start is the start of the part of the measure that needs to be composed
+    #window_duration is the length of the measure that needs to be composed
+    #note: this structure ignores window_start and window_duration for the most
+    #   part, they are mainly for allowing musicians to run dynamically
     def compose(self, measure, window_start, window_duration): #called by conductor
         if not(self._time == measure.time_signature):
             self._time = measure.time_signature
@@ -43,29 +51,14 @@ class MusicianStructured(Musician):
             self._write()
             self._print(measure)
 
-    #printing _plans to the given measure
+    #printing _plans (internal data structure) to the given measure
     def _print(self, measure):
         listing = self._plans.keys()
-        listing.sort()
-        for x in temp:
+        for x in listing:
             measure.notes.append(self._plans[x])
 
-
-
-    #functions below should be rewritten by individual musicians
-
-    #determines if new music needs to be generated
-    def _decide(self):
-        return True
-
-    #determines what is going to be played in this measure
-    #defualted to be a metronome
-    def _write(self):
-        for x in range(self._time[0]):
-            myNote = note.Note(tone=38, start=self._getStart(x), duration=self._durations.QUARTER_NOTE, rest=False)
-            self._plans[x] = myNote
-
-    #turns the numerical value val into a start value understandable by the score
+    #turns the numerical value val into a start value understandable by the
+    #   score
     def _getStart(self, val):
         remainder = val % 1
         val -=remainder
@@ -96,9 +89,8 @@ class MusicianStructured(Musician):
         val -= remainder
         result += val * self._durations.EIGHTH_NOTE_TRIPLET
         return result
-        
 
-
+    #property for energy
     @property
     def energy(self):
         return self._energy
@@ -108,6 +100,7 @@ class MusicianStructured(Musician):
         self._energy = value
         self._changed = True
 
+    #property for complexity
     @property
     def complexity(self):
         return self._complexity
@@ -117,6 +110,7 @@ class MusicianStructured(Musician):
         self._complexity = value
         self._changed = True
 
+    #property for time
     @property
     def time(self):
         return self._time
@@ -126,6 +120,7 @@ class MusicianStructured(Musician):
         self._time = value
         self._changed = True
 
+    #property for key 
     @property
     def key(self):
         return self._key
@@ -135,6 +130,21 @@ class MusicianStructured(Musician):
         self._key = value
         self._changed = True
         
+
+
+    #functions below should be rewritten by individual musicians
+
+    #determines if new music needs to be generated
+    def _decide(self):
+        return True
+
+    #determines what is going to be played in this measure
+    #defualted to be a metronome
+    def _write(self):
+        for x in range(self._time[0]):
+            myNote = note.Note(tone=38, start=self._getStart(x+1), duration=self._durations.QUARTER_NOTE, rest=False)
+            self._plans[x+1] = myNote
+
 
 '''
     #print _plans to measure

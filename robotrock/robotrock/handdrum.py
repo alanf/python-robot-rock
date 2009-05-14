@@ -10,10 +10,10 @@ import note
 
 
 #incomplete HandDrum. Only plays quarter notes, should vary with time signature
-#note: shoould fail testReactToChanges
+#note: should fail testReactToChanges
 class HandDrum(MusicianStructured):
-    #Definition of a HandDrum
 
+    #initialize the handdrum musician
     def __init__(self, energy=50, complexity=50, time = [4,4], key = ('B', 'major')):
         #Musician.__init__(staff, energy, complexity)
         self._id = 'handdrum'
@@ -32,7 +32,7 @@ class HandDrum(MusicianStructured):
     #returns false otherwise
     def _decide(self):
         #needs to generate new music if something changed
-        return not(self._changed)
+        return self._changed
 
     #fills in a measure by writing to _plans
     #_plans is the temporary storage for all notes, they are printed
@@ -72,9 +72,9 @@ class HandDrum(MusicianStructured):
 
         for x in range(len(listing)):
             if (x+1) < len(listing):
-                self._setLength(self._plans[x], listing[x+1] - listing[x])
+                self._setLength(self._plans[x+1], listing[x+1] - listing[x])
             else:
-                self._setLength(self._plans[x], (self._time[0] + 1) - listing[x])
+                self._setLength(self._plans[x+1], (self._time[0] + 1) - listing[x])
 
 
     #determines the dynamics of each note
@@ -112,28 +112,6 @@ class HandDrum(MusicianStructured):
         else:#somehow we fell through, default it to be as short as possible
             myNote.duration = self._durations.SIXTYFOURTH_NOTE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     #determines where all of the on beat notes are
     #notes is the number of notes still availible
     #this version fills in all of the on beat notes before filling in
@@ -143,6 +121,7 @@ class HandDrum(MusicianStructured):
         #more, or equal, notes then beats, fill the beats
         if notes>=self._time[0]:
             for x in range(self._time[0]):
+                x+=1
                 myNote = note.Note(tone=38, start=self._getStart(x), rest=False)
                 self._plans[x] = myNote
             notes-=self.time[0]
@@ -151,6 +130,7 @@ class HandDrum(MusicianStructured):
         elif notes > 0: 
             #iterate over all of the beats in the measure
             for x in range(self._time[0]):
+                x+=1
                 #have enough notes to fill in remaining beats
                 #so put a note on this beat
                 if notes>=(self._time[0]-x):
