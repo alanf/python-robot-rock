@@ -4,7 +4,7 @@
     Author: Rich Snider <mrsoviet@cs.washington.edu
 '''
 
-from musicianStructured import MusicianStructured
+from musicianstructured import MusicianStructured
 import random
 import note
 

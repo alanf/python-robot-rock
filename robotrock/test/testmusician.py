@@ -99,5 +99,5 @@ class TestMusician(unittest.TestCase):
 
 if __name__ == '__main__':
     sys.path.append('../robotrock/')
-    from musicianStructured import MusicianStructured
+    from musicianstructured import MusicianStructured
     unittest.main()
