@@ -24,22 +24,21 @@ class ScoreMarker(object):
     
     def rewind(self, n_beats):
         "Moves backward by the specified number of quarter notes."
-        # TODO (alanf): Implement
-        pass
+        self.measure_position -= n_beats
+        
+        while self.measure_position < 0:
+            self.measure_position += self.beatsInCurrentMeasure()
+            self.score_slices.current_index -= 1
     
     def forward(self, n_beats):
         "Moves forward by the specified number of quarter notes."
         # Moving across measure bars is NOT supported. Forward must
         # be called in smaller increments so this doesn't happen.
-        while n_beats > self.beatsInCurrentMeasure():
-            n_beats -= self.beatsInCurrentMeasure()
+        self.measure_position += n_beats
+        
+        while self.measure_position >= self.beatsInCurrentMeasure():
+            self.measure_position -= self.beatsInCurrentMeasure()
             self.score_slices.current_index += 1
-
-        if n_beats < 0:
-            self.score_slices.current_index -= 1
-            self.measure_position = self.beatsInCurrentMeasure() + n_beats
-        elif n_beats < self.beatsInCurrentMeasure():
-            self.measure_position += n_beats
 
     def beatsInCurrentMeasure(self):
         ''' Uses a quarter note to define a full beat, to indicate how

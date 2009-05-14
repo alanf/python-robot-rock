@@ -12,12 +12,17 @@ from score import *
 from scoremarker import ScoreMarker
 
 class TestScoreMarker(unittest.TestCase):
-
+    def testBeatsInCurrentMeasure(self):
+        score = Score()
+        score.staffs[0].measures[0].time_signature = (4, 4)
+        marker = ScoreMarker( score )
+        
+        self.assertEquals(marker.beatsInCurrentMeasure(), \
+                note.Note.note_values.QUARTER_NOTE * 4)
+                
     def testGetNotes(self):
         """Tests expected results from ScoreMarker.getNotes() method."""
-
         # Add quarter notes at beats 1 and 2.
-
         first_beat = note.Note( start=0, duration=note.Note.note_values.QUARTER_NOTE )
         score = Score()
         first_staff = score.staffs[0]
