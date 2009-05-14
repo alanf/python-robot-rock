@@ -87,10 +87,11 @@ class RRMainWindow(QWidget):
         musician1.userMove(200,200)
         musician1.show()
         
-        self.trashIcon = QLabel("Delete")
+        self.trashIcon = DeleteIcon(mp=self)
         self.grid.addWidget(self.trashIcon,2,2)
-        self.trashIcon.setPixmap(QPixmap(":/delete_icon.png").scaled(75,75,Qt.IgnoreAspectRatio,Qt.SmoothTransformation))
-        self.trashIcon.setMinimumSize(75,75)
+
+        
+        self.focusedMusician = None
         
     
     def playPauseHandler(self, checked):
@@ -106,10 +107,44 @@ class RRMainWindow(QWidget):
     
     def tempoHandler(self):
         self.rrMain.core.setTempo(self.tempoSlider.value())
+    
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            event.accept()
+            if not self.focusedMusician is None and self.childAt(event.pos()) is None:
+                self.focusedMusician.userMove(event.x(), event.y())
+            
+    
+    def mouseDoubleClickEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            event.accept()
+            if self.focusedMusician is None and self.childAt(event.pos()) is None:
+                m = MusicianWidget(MusicianStructured(), core=self.rrMain.core, parent=self)
+                m.userMove(event.x(), event.y())
+                m.show()
 
+class DeleteIcon(QLabel):
+    def __init__(self, parent=None, mp=None):
+        super(DeleteIcon, self).__init__(parent)
+        self.setText("Delete")
+        self.setPixmap(QPixmap(":/delete_icon.png").scaled(75,75,Qt.IgnoreAspectRatio,Qt.SmoothTransformation))
+        self.setMinimumSize(75,75)
+        
+        self.musicianPanel = mp
+    
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            event.accept()
+            if not self.musicianPanel.focusedMusician is None:
+                self.musicianPanel.focusedMusician.close()
+                self.musicianPanel.rrMain.core.removeMusician(self.musicianPanel.focusedMusician)
+                self.musicianPanel.focusedMusician = None
+                MusicianWidget.allMWidgets.remove(self.musicianPanel.focusedMusician)
+            
 
 class MusicianWidget(QLabel):
     
+    allMWidgets = []
     
     def __init__(self, musician, core, parent=None):
         super(MusicianWidget, self).__init__(parent)
@@ -130,25 +165,31 @@ class MusicianWidget(QLabel):
         self.core = core
         self.core.addMusician(musician)
         
-            
+        self.parent = parent
+        MusicianWidget.allMWidgets.append(self)
+        
     def userMove(self, x, y):
         if x < 0 or y < 0:
             return # do not allow the move
-        if y > self.parentWidget().height() - self.height():
+        if y > self.parent.height() - self.height():
             return
-        if x > self.parentWidget().width() - self.width():
+        if x > self.parent.width() - self.width():
             return
         
         self.x = x
         self.y = y
-        #TODO add movement here!!!
-        self.musician.energy = 100 * x / self.parentWidget().width()
-        self.musician.complexity = (100 * (self.parentWidget().height() - y) / self.parentWidget().height())
+        self.musician.energy = 100 * x / self.parent.width()
+        self.musician.complexity = (100 * (self.parent.height() - y) / self.parent.height())
         
         self.move(x,y)
+        for w in MusicianWidget.allMWidgets:
+            w.update()
+        self.parent.update()
+        
     
     def focusInEvent(self, event):
         self.setFrameStyle(self.frameStyle | QFrame.Sunken)
+        self.parent.focusedMusician = self
     
     def focusOutEvent(self, event):
         self.setFrameStyle(self.frameStyle | QFrame.Raised)
@@ -163,9 +204,12 @@ class MusicianWidget(QLabel):
         elif event.key() == Qt.Key_Right:
             self.userMove(self.x+10, self.y)
         elif event.key() == Qt.Key_Escape:
+            self.parent.focusedMusician = None
             self.clearFocus()
         elif event.key() == Qt.Key_Delete or event.key() == Qt.Key_Backspace:
+            self.parent.focusedMusician = None
             self.core.removeMusician(self.musician)
+            MusicianWidget.allMWidgets.remove(self)
             self.close()
 
 class PlayButton(QPushButton):
