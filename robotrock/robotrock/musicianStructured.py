@@ -10,7 +10,7 @@ import note
 class MusicianStructured(Musician):
     #Definition of what a Musician is
 
-    def __init__(self, staff, energy=50, complexity=50, time = [4,4], key = 'B'):
+    def __init__(self, energy=50, complexity=50, time = [4,4], key = ('B', 'major')):
         self._energy = energy
         self._complexity = complexity
         '''
@@ -27,9 +27,17 @@ class MusicianStructured(Musician):
                             #set to 0 by decide method when composing
         self._durations = note.Note.note_values
 
+    #composes to the given measure if it needs to
     def compose(self, measure, window_start, window_duration): #called by conductor
-        #deciding if it needs to update plans        
-        #writing to the score
+        if not(self._time == measure.time_signature):
+            self._time = measure.time_signature
+            self._changed = True
+        if not(self._key == measure.key):
+            self._key = measure.key
+            self._changed = True
+        if measure.notes == [] or window_start == 0:
+            self._changed = True
+            
         if self._decide():
             self._write()
             self._print(measure)
@@ -65,7 +73,7 @@ class MusicianStructured(Musician):
         
         remainder = val % .5
         val -= remainder
-        result += val * self._durations.EIGTH_NOTE
+        result += val * self._durations.EIGHTH_NOTE
         val = remainder
 
         remainder = val % .25
@@ -85,7 +93,7 @@ class MusicianStructured(Musician):
 
         remainder = val % .33
         val -= remainder
-        result += val * self._durations.EIGTH_NOTE_TRIPLET
+        result += val * self._durations.EIGHTH_NOTE_TRIPLET
         return result
         
 

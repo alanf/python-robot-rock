@@ -14,7 +14,7 @@ import note
 class HandDrum(MusicianStructured):
     #Definition of a HandDrum
 
-    def __init__(self, staff, energy=50, complexity=50, time = [4,4], key = 'B'):
+    def __init__(self, energy=50, complexity=50, time = [4,4], key = ('B', 'major')):
         #Musician.__init__(staff, energy, complexity)
         self._id = 'handdrum'
         
@@ -90,7 +90,7 @@ class HandDrum(MusicianStructured):
         if diff >= 1.0:                     #quarter note
             myNote.duration=self._durations.QUARTER_NOTE
         elif diff == .5:                    #eigth note
-            myNote.duration=self._durations.EIGTH_NOTE
+            myNote.duration=self._durations.EIGHTH_NOTE
         elif diff == .25:                   #sixteenth note
             myNote.duration=self._durations.SIXTEENTH_NOTE
         elif diff == .125:                  #32'nd note
@@ -98,7 +98,7 @@ class HandDrum(MusicianStructured):
         elif diff == .0625:                 #64'th note
             myNote.duration=self._durations.SIXTYFOURTH_NOTE
         elif diff == .33:                   #tripolet   
-            myNote.duration=self._durations.EIGTH_NOTE_TRIPLET
+            myNote.duration=self._durations.EIGHTH_NOTE_TRIPLET
         elif not(diff % .5):                #divisible by eigth note
             self._setLengths(myNote, diff - .5)
         elif not(diff % .25):               #divisible by sixteenth note

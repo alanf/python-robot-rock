@@ -9,29 +9,37 @@ import sys
 import unittest
 
 class TestMusician(unittest.TestCase):
+    def setUp(self):
+        class MeasureStub(object):
+            def __init__(self):
+                self.time_signature = (4, 4)
+                self.key = ('F#', 'major')
+                self.notes = []
 
+        self.test_measure = MeasureStub()
+        
     #tests init settings
     def testInit(self):
-        self.musician = MusicianStructured([])
+        self.musician = MusicianStructured()
         self.assertEqual(50, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)
         self.assertEqual(True, self.musician._changed)
         
-        self.musician = MusicianStructured([], 40, 80)
+        self.musician = MusicianStructured(40, 80)
         self.assertEqual(40, self.musician.energy)
         self.assertEqual(80, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)
         self.assertEqual(True, self.musician._changed)
 
-        self.musician = MusicianStructured([], 42)
+        self.musician = MusicianStructured(42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)
         self.assertEqual(True, self.musician._changed)
 
     def testWrite(self):
-        self.musician = MusicianStructured([], 42)
+        self.musician = MusicianStructured(42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)
@@ -41,7 +49,7 @@ class TestMusician(unittest.TestCase):
         self.assertNotEqual({}, self.musician._plans)
 
     def testGetAndSet(self):
-        self.musician = MusicianStructured([])
+        self.musician = MusicianStructured()
         self.musician.energy = 23
         self.assertEqual(23, self.musician.energy)
         self.musician.complexity = 78
@@ -53,7 +61,7 @@ class TestMusician(unittest.TestCase):
         
 '''
     def testCompose(self):
-        self.musician = MusicianStructured([], 42)
+        self.musician = MusicianStructured(42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)

@@ -12,23 +12,23 @@ import unittest
 class TestMusician(unittest.TestCase):
 
     def setUp(self):
-        self.drum = HandDrum([])
+        self.drum = HandDrum()
 
     #tests init settings
     def testInit(self):
-        self.musician = HandDrum([])
+        self.musician = HandDrum()
         self.assertEqual(50, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)
         self.assertEqual(True, self.musician._changed)
         
-        self.musician = HandDrum([], 40, 80)
+        self.musician = HandDrum(40, 80)
         self.assertEqual(40, self.musician.energy)
         self.assertEqual(80, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)
         self.assertEqual(True, self.musician._changed)
 
-        self.musician = HandDrum([], 42)
+        self.musician = HandDrum(42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
         self.assertEqual([4,4], self.musician.time)
@@ -45,7 +45,7 @@ class TestMusician(unittest.TestCase):
     #reacts appropriately (ex. less notes for less energy)
     def testReactToChanges(self):
         #base case: energy = 50, complexity = 50
-        self.musician = HandDrum([])
+        self.musician = HandDrum()
         self.musician.compose()
         #self.base = getCurrentMeasure(instrument)
         self.base = self.musician.current_measure
