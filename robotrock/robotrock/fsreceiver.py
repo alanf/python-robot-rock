@@ -4,7 +4,6 @@
 
 # Unresolved issues: Removing a musician before scheduled notes are played
 
-from scoreparser import Receiver
 from fluidsynth import Synth
 from dynamics import *
 
@@ -40,7 +39,7 @@ def dynamicToMIDICode(dynamic):
 	value /= MAXIMUM_DYNAMIC_VALUE - MINIMUM_DYNAMIC_VALUE
 	return int(127 * value)
 
-class FluidsynthReceiver(Receiver):
+class FluidsynthReceiver(object):
 	"A Receiver using Fluidsynth on the backend."
 
 	def __init__(self, samplerate=44100):
