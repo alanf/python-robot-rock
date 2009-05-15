@@ -127,7 +127,7 @@ class DeleteIcon(QLabel):
     def __init__(self, parent=None, mp=None):
         super(DeleteIcon, self).__init__(parent)
         self.setText("Delete")
-        self.setPixmap(QPixmap(":/delete_icon.png").scaled(75,75,Qt.IgnoreAspectRatio,Qt.SmoothTransformation))
+        self.setPixmap(QPixmap(":/delete_icon.png").scaled(75,75,Qt.KeepAspectRatio,Qt.SmoothTransformation))
         self.setMinimumSize(75,75)
         
         self.musicianPanel = mp
@@ -159,7 +159,7 @@ class MusicianWidget(QLabel):
         self.setLineWidth(2)
         self.setAutoFillBackground(True)
         
-        self.setPixmap(QPixmap(":/guitar_icon.png").scaled(100,100,Qt.IgnoreAspectRatio, Qt.SmoothTransformation))
+        self.setPixmap(QPixmap(":/metronome_icon.png").scaled(100,100,Qt.KeepAspectRatio, Qt.SmoothTransformation))
         
         self.setFocusPolicy(Qt.ClickFocus)
         self.musician = musician
