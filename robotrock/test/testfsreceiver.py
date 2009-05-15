@@ -57,7 +57,7 @@ class TestFSReceiver(unittest.TestCase):
 		# Manually setup directory
 		r.soundfont_directory["FF4"] = "ff4sf2.sf2"
 
-		s = DummyStaff()
+		s = Staff()
 		r.registerStaff( s ) # auto-registered for BETA
 
 		# Play C-major chord for two seconds
