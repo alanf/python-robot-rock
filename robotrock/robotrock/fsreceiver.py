@@ -86,17 +86,21 @@ class FluidsynthReceiver(object):
 				sf_filename = self.soundfont_directory[staff.instrument]
 				sf = self.synth.sfload(sf_filename)
 				self.soundfont_directory[staff.instrument] = sf
-				# TODO Post BETA:
-				#      The following values will be read from the directory.
-				bank = 0
-				preset = 0
-				# BETA FREEZE
-				self.synth.program_select( channel, sf, bank, preset)
-				self.synth.sfont_select(channel, sf)
 			except:
-				# TODO Error loading soundfont; best way to handle
+				# TODO Error loading soundfont; best way to handle???
+				self.soundfont_directory[staff.instrument] = None
 				pass
 		# else already available
+
+		# Associate chennel with instrument
+		# TODO Post BETA:
+		#      The following values will be read from the directory.
+		bank = 0
+		preset = 0
+		# BETA FREEZE
+		sf = self.soundfont_directory[staff.instrument]
+		self.synth.program_select( channel, sf, bank, preset)
+		self.synth.sfont_select(channel, sf)
 
 		# Return the good news
 		return True
@@ -129,7 +133,7 @@ class FluidsynthReceiver(object):
 		# Auto register unknown musicians
 		if channel == -1:
 			self.registerStaff( staff )
-			channel = self.registered_staffs.get( staffs, -1 )
+			channel = self.registered_staffs.get( staff, -1 )
 		# HACK HACK HACK HACK HACK
 
 		# TODO early exit if channel == -1?
