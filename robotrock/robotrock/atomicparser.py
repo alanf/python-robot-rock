@@ -4,7 +4,6 @@
 
 from heapq import heappush, heappop
 from scoremarker import ScoreMarker
-from locals import *
 from parser import *
 
 from atomicmetronome import ATOMIC_NOTE
