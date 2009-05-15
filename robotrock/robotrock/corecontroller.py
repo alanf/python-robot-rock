@@ -6,7 +6,6 @@
 
 import audiodriver
 import conductor
-import metronome
 import musiciandirectory
 import songinfo
 

@@ -5,5 +5,5 @@ import sys
 if __name__ == '__main__':
 	sys.path.append('../robotrock')
 	import main
-	main.init_gui()
+	main.init()
 	#sys.exit(app.exec_())
