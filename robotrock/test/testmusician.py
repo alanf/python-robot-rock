@@ -18,7 +18,7 @@ class TestMusician(unittest.TestCase):
         class MeasureStub(object):
             def __init__(self):
                 self.time_signature = (4, 4)
-                self.key = ('F#', 'major')
+                self.key_signature = ('F#', 'major')
                 self.notes = []
 
         self.test_measure = MeasureStub()

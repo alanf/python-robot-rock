@@ -20,11 +20,15 @@ class TestHanddrum(unittest.TestCase):
         class MeasureStub(object):
             def __init__(self):
                 self.time_signature = (4, 4)
-                self.key = ('F#', 'major')
+                self.key_signature = ('F#', 'major')
                 self.notes = []
 
         self.test_measure = MeasureStub()
+        self.test_measure2 = MeasureStub()
+        self.test_measure3 = MeasureStub()
+        self.test_measure4 = MeasureStub()
         self.last = MeasureStub()
+        self.last2 = MeasureStub()
         self.base = MeasureStub()
         self.base2 = MeasureStub()
         self.base3 = MeasureStub()
@@ -108,27 +112,27 @@ class TestHanddrum(unittest.TestCase):
 
         #case 5: energy = 20, complexity = 80
         self.drum.energy = 20
-        self.drum.compose(self.test_measure, 0, 0)
-        self.assertTrue(self.compareEnergy(self.last, self.test_measure))
-        self.assertTrue(self.compareComplexity(self.test_measure, self.base3))
+        self.drum.compose(self.test_measure2, 0, 0)
+        self.assertTrue(self.compareEnergy(self.last, self.test_measure2))
+        self.assertTrue(self.compareComplexity(self.test_measure2, self.base3))
 
         #case 6: energy = 50, complexity = 20
         self.drum.complexity = 20
         self.drum.energy = 50
-        self.drum.compose(self.last, 0, 0)
-        self.assertTrue(self.compareComplexity(self.base, self.last))
+        self.drum.compose(self.last2, 0, 0)
+        self.assertTrue(self.compareComplexity(self.base, self.last2))
         
         #case 7: energy = 80, complexity = 20
         self.drum.energy = 80
-        self.drum.compose(self.test_measure, 0, 0)
-        self.assertTrue(self.compareEnergy(self.test_measure, self.last))
-        self.assertTrue(self.compareComplexity(self.base2, self.test_measure))
+        self.drum.compose(self.test_measure3, 0, 0)
+        self.assertTrue(self.compareEnergy(self.test_measure3, self.last2))
+        self.assertTrue(self.compareComplexity(self.base2, self.test_measure3))
         
         #case 8: energy = 20, complexity = 20
         self.drum.energy = 20
-        self.drum.compose(self.test_measure, 0, 0)
-        self.assertTrue(self.compareEnergy(self.last, self.test_measure))
-        self.assertTrue(self.compareComplexity(self.base3, self.test_measure))
+        self.drum.compose(self.test_measure4, 0, 0)
+        self.assertTrue(self.compareEnergy(self.last2, self.test_measure4))
+        self.assertTrue(self.compareComplexity(self.base3, self.test_measure4))
 
 #helper methods:
     #counts the number of notes in the given measure
@@ -144,17 +148,17 @@ class TestHanddrum(unittest.TestCase):
         onbeats = 0
         for x in range(len(measure.notes)):
             note = measure.notes[x]
+            #print 'here is a note', note.__dict__
             #notes duration is either an eigth not or quarter note
-            if (note.duration % self._durations.EIGHTH_NOTE) == 0:
+            if (note.start % self._durations.QUARTER_NOTE) == 0:
                 onbeats += 1
-
         return len(measure.notes) - onbeats
 
     #returns whether first is more complex than second
     def compareComplexity(self, first, second):
-        valueFirst = self.countNotes(first)/self.countOffnotes(first)
-        valueSecond = self.countNotes(second)/self.countOffnotes(second)
-        return valueFirst < valueSecond
+        valueFirst = float(self.countOffnotes(first))/float(self.countNotes(first))
+        valueSecond = float(self.countOffnotes(second))/float(self.countNotes(second))
+        return valueFirst >= valueSecond
 
         
 

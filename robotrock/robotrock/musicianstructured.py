@@ -13,7 +13,7 @@ import note
 class MusicianStructured(Musician):
 
     #initialize the general musician
-    def __init__(self, energy=50, complexity=50, time = [4,4], key = ('B', 'major')):
+    def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         self._energy = energy
         self._complexity = complexity
         '''
@@ -60,35 +60,42 @@ class MusicianStructured(Musician):
     #turns the numerical value val into a start value understandable by the
     #   score
     def _getStart(self, val):
-        remainder = val % 1
-        val -=remainder
+        (val, remainder) = self.__shave(val, 1)
         result = val * self._durations.QUARTER_NOTE
         val = remainder
+
+        if not(val % .0625):
+            (val, remainder) = self.__shave(val, .5)
+            result += val  * self._durations.EIGHTH_NOTE
+            val = remainder
+
+            (val, remainder) = self.__shave(val, .25)
+            result += val  * self._durations.SIXTEENTH_NOTE
+            val = remainder
+
+            (val, remainder) = self.__shave(val, .125)
+            result += val  * self._durations.THIRTYSECOND_NOTE
+            val = remainder
+
+            (val, remainder) = self.__shave(val, .0625)
+            result += val * self._durations.SIXTYFOURTH_NOTE
+
+        else:   #triplets probably dont work, untested
+            (val, remainder) = self.__shave(val, .33)
+            result += val * self._durations.EIGHTH_NOTE_TRIPLET
         
-        remainder = val % .5
-        val -= remainder
-        result += val * self._durations.EIGHTH_NOTE
-        val = remainder
-
-        remainder = val % .25
-        val -= remainder
-        result += val * self._durations.SIXTEENTH_NOTE
-        val = remainder
-
-        remainder = val % .125
-        val -= remainder
-        result += val * self._durations.THIRTYSECOND_NOTE
-        val = remainder
-
-        remainder = val % .0625
-        val -= remainder
-        result += val * self._durations.SIXTYFOURTH_NOTE
-        val = remainder
-
-        remainder = val % .33
-        val -= remainder
-        result += val * self._durations.EIGHTH_NOTE_TRIPLET
         return result
+
+    #helper for _getStart, does the work of figuring out how many
+    #   of this type of note need to be skipped.
+    #returns (val, remainder) where val is the number of this note
+    #   to be skipped and remainder is how much of the measure is
+    #   left to be skipped
+    def __shave(self, val, amount):
+        remainder = val % amount
+        val -=remainder
+        val = int(val/amount)
+        return (val, remainder)
 
     #property for energy
     @property
