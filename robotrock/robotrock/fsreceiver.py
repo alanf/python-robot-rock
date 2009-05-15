@@ -78,7 +78,7 @@ class FluidsynthReceiver(object):
 
 		# Register!
 		channel = self.available_channels.pop()
-		self.registered_staffs[staffs] = channel
+		self.registered_staffs[staff] = channel
 
 		# Load instruments
 		if staff.instrument not in self.soundfonts:
