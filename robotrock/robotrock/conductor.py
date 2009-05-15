@@ -39,7 +39,9 @@ class Conductor(object):
     def __appendStaff(self, score, musician):
         ''' When a musician is added to the score, it has its own staff to write to. '''
         score.staffs.append(self.staff_obj(instrument=musician.instrument))
-        self.current_musician_measures[musician] = score.staffs[-1].measures
+        # Ensure that the musician starts playing at the correct measure.
+        self.current_musician_measures[musician] = \
+                score.staffs[-1].measures[self.__measures_played]
         
     def removeMusician(self, musician):
         ''' Prevents a musician from writing to the score. '''
@@ -55,7 +57,6 @@ class Conductor(object):
 
         # Update the measure info to reflect what's currently in song info.
         if newMeasure:
-            self.__measures_played += 1
             self.measure_info = self.song_info.measureInfo()
             for musician in self.ensemble:
                 self.__advanceMeasure(musician)
@@ -83,6 +84,7 @@ class Conductor(object):
         
         if self.__chunks == self.chunks_per_beat * beats_per_measure:
             self.__chunks = 0
+            self.__measures_played += 1
 
     def __updateMeasureInfo(self, measure, measure_info):
         ''' Uses measure_info to update measure meta data. '''

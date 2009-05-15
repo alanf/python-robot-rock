@@ -53,6 +53,23 @@ class TestScoreMarker(unittest.TestCase):
         self.assertEquals( note.Note.note_values.QUARTER_NOTE, \
                 notes[first_staff][0].duration)
         self.assertEquals( 0, notes[first_staff][0].start)
+        
+    def testGetNotesEmptyMeasure(self):
+        """Tests expected results from ScoreMarker.getNotes() method."""
+        score = Score()
+        first_staff = score.staffs[0]
+        first_staff.measures[0].time_signature = (4, 4)
+
+        marker = ScoreMarker( score )
+
+        notes = marker.getNotes( note.Note.note_values.EIGHTH_NOTE )
+        # Get one note...
+        self.assertEquals( 0, len( notes[first_staff] ) )
+
+        # Move forward one quarter; second note should look like the first
+        marker.forward( note.Note.note_values.QUARTER_NOTE )
+        notes = marker.getNotes( note.Note.note_values.EIGHTH_NOTE )
+        self.assertEqual( 0, len( notes[first_staff] ) )
 
 if __name__ == '__main__':
     unittest.main()

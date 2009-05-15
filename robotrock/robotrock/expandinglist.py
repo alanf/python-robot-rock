@@ -31,10 +31,9 @@ class ExpandingList(list):
         '''
         try:
             list.__getitem__(self, i)
-        except:
+        except IndexError:
             list.extend(self, [self.__default_object() for \
                             x in xrange((i + 1) - len(self))])
-           
         return list.__getitem__(self, i)
 
     def __default_object(self):
