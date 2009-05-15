@@ -16,7 +16,7 @@ class HandDrum(MusicianStructured):
     #initialize the handdrum musician
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         #Musician.__init__(staff, energy, complexity)
-        self._instrument = 'handdrum'
+        self.instrument = 'handdrum'
         
         self._energy = energy
         self._complexity = complexity
@@ -142,7 +142,7 @@ class HandDrum(MusicianStructured):
                             self._addNote(x)
 
     def _addNote(self, location):
-        myNote = note.Note(tone=38, start=self._getStart(location), rest=False)
+        myNote = note.Note(tone=38, start=self._getStart(location), rest=False, dynamic = 50)
         self._plans[location] = myNote
         self._notes-=1
 

@@ -11,7 +11,8 @@ import logging
 
 from corecontroller import CoreController, MINIMUM_TEMPO, MAXIMUM_TEMPO
 #from musicianstructured import MusicianStructured
-from activemusician import ActiveMusician as MusicianStructured
+#from activemusician import ActiveMusician as MusicianStructured
+from handdrum import HandDrum as MusicianStructured
 
 try:
     import guiResources
