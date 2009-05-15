@@ -1,5 +1,25 @@
 from distutils.core import setup
 
+### This section builds the guiResources file needed for images and such. ###
+### Warning: Building with sdist currently does not ###
+###    include the original images or the qrc file  ###
+
+### This lack of inclusion of source images, etc. is currently listed as a bug under
+#    ticket number 77
+
+import os.path as path
+import os
+GUI_GENERATED = path.abspath("robotrock/guiResources.py")
+GUI_SOURCE = path.abspath("robotrock/guiResources.qrc")
+
+if not path.exists(GUI_GENERATED) or path.getmtime(GUI_GENERATED) < path.getmtime(GUI_SOURCE):
+    print "generating GUI resource file"
+    os.system('pyrcc4 -o "%s" "%s"' % (GUI_GENERATED, GUI_SOURCE))
+
+
+### End of GUI resource generating code ###
+###########################################
+
 NAME = "Robot Rock" # print-friendly name
 
 MY_NAME = 'robotrock' # directory name

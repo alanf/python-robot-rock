@@ -8,8 +8,14 @@
      
      This is a resource file used to incorporate images and other static
      resources into a python module. To convert this file into a module,
-     run
+     run:
          pyrcc4 -o guiResources.py guiResources.qrc
+     
+     Note that currently this command is run when a user runs setup.py, if
+     needed. Needed is determined as either:
+       i)  guiResources.py does not exist
+          --or--
+       ii) guiResources.py is older than guiResources.qrc
      
      
      Author: Tim Crossley <tjac0@cs.washington.edu>

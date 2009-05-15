@@ -233,7 +233,7 @@ class PlayButton(QPushButton):
     
 
 
-'''A dummy version of the core controller class. This class has all the the methods from
+'''A dummy version of the core controller class. This class has most of the methods from
    the core controller, but they only print an info message'''
 class CoreControllerDummy():
     def __init__(self, rrMain):
