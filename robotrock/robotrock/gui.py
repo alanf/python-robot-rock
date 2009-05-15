@@ -22,6 +22,8 @@ except ImportError:
     sys.exit(1)
 
 
+"""Main entry point for the RobotRock GUI. To use: first create via standard constructor,
+then call run to enter main event handling loop"""
 class RRGuiMain:
     def __init__(self, args, core=None):
         # Maybe do some argument processing here
@@ -35,11 +37,16 @@ class RRGuiMain:
         else:
             self.core = core
         self.mainWindow = RRMainWindow(rrMain=self)
-        
+    
+    """Enters the main event handling loop of QT. Returns the value returned from the event
+       handling loop"""
     def run(self):
         self.mainWindow.show()
         return self.app.exec_()
 
+"""Main Window Class for the Robot Rock GUI. This window is the top
+level QWidget under which all instances of the GUI are created (save for
+pop up dialogs and other similar windows[currently, none of these exist])"""
 class RRMainWindow(QWidget):
     def __init__(self, parent = None, flags = Qt.WindowFlags(), rrMain=None):
         super(RRMainWindow, self).__init__(parent, flags)
@@ -64,6 +71,7 @@ class RRMainWindow(QWidget):
         self.connect(self.playButton, SIGNAL("clicked(bool)"), self.playPauseHandler)
         self.grid.addWidget(self.playButton, 1, 2, Qt.AlignHCenter | Qt.AlignBottom)
         
+        ## Add the Tempo Slider
         self.tempoSlider = QSlider(Qt.Vertical)
         self.tempoSlider.setMaximumHeight(200)
         self.tempoSlider.setMinimumHeight(200)
@@ -75,27 +83,28 @@ class RRMainWindow(QWidget):
         self.grid.addWidget(self.tempoSlider, 1,2,Qt.AlignHCenter|Qt.AlignVCenter)
         
         
-        textbox = QTextEdit()
-        textbox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) #expand both directions
-        
-        #self.grid.addWidget(textbox,1,1)
+        # These two lines make the center area like to stretch before any other area
+        #  This ensures that the items placed in column 2 remain on the right hand edge
         self.grid.setColumnStretch(1,1)
         self.grid.setRowStretch(1,1)
         
         self.setLayout(self.grid)
         
+        # Create a single musician initially
         m = MusicianStructured()
         musician1 = MusicianWidget(musician=m, core=self.rrMain.core, parent=self)
         musician1.userMove(200,200)
         musician1.show()
         
+        # Add the delete icon in bottom right
         self.trashIcon = DeleteIcon(mp=self)
         self.grid.addWidget(self.trashIcon,2,2)
 
-        
+        # No musician currently has focus
         self.focusedMusician = None
         
     
+    ### TODO Move this functionality into the PlayButton class
     def playPauseHandler(self, checked):
         if self.isPlay:
             self.rrMain.core.play()
@@ -110,13 +119,14 @@ class RRMainWindow(QWidget):
     def tempoHandler(self):
         self.rrMain.core.setTempo(self.tempoSlider.value())
     
+    """Move the selected musician, if any"""
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
             event.accept()
             if not self.focusedMusician is None and self.childAt(event.pos()) is None:
                 self.focusedMusician.userMove(event.x(), event.y())
             
-    
+    """On double click, create a new Musician"""
     def mouseDoubleClickEvent(self, event):
         if event.button() == Qt.LeftButton:
             event.accept()
@@ -125,6 +135,9 @@ class RRMainWindow(QWidget):
                 m.userMove(event.x(), event.y())
                 m.show()
 
+"""The delete icon for the robot rock gui, instances of this class
+display themselves using a suitable 'x' icon, and implement a mouse
+handler in order to delete musicians when clicked on"""
 class DeleteIcon(QLabel):
     def __init__(self, parent=None, mp=None):
         super(DeleteIcon, self).__init__(parent)
@@ -145,7 +158,11 @@ class DeleteIcon(QLabel):
                 self.musicianPanel.focusedMusician = None
                 
                 
-
+"""Base display of all Musicians. Instances of this class contain a
+reference to the actual musician object which they represent, and
+talk directly to that musician object to change energy, complexity,
+and other factors. Can be moved around the stage via mouseclicks
+or by arrow keys."""
 class MusicianWidget(QLabel):
     
     allMWidgets = []
@@ -210,6 +227,7 @@ class MusicianWidget(QLabel):
         self.setFrameStyle(self.frameStyle | QFrame.Raised)
     
     def keyPressEvent(self, event):
+        # Key press hander: move if arrow keys, delete if delete/backspace key, lose focus if escape key
         if event.key() == Qt.Key_Up:
             self.userMove(self.x, self.y-10)
         elif event.key() == Qt.Key_Down:
@@ -227,9 +245,13 @@ class MusicianWidget(QLabel):
             MusicianWidget.allMWidgets.remove(self)
             self.close()
 
+"""Simple Play/Pause button. This is its own class because the state changing
+aspect (switching between play/pause) should be done within itself."""
 class PlayButton(QPushButton):
     def __init__(self, text="Play", parent=None):
         super(PlayButton, self).__init__(text, parent)
+        
+    ### TODO Put state changing code within this class, remove it from RRMainWindow
     
 
 
