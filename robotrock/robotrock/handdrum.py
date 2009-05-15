@@ -121,7 +121,6 @@ class HandDrum(MusicianStructured):
         #there are more notes left to play than there are beats
         if self._notes>=self._time[0]:
             for x in range(self._time[0]):
-                x+=1
                 self._addNote(x)
 
         #less notes then beats, need to fill some
@@ -129,7 +128,6 @@ class HandDrum(MusicianStructured):
             #iterate over all of the beats in the measure
             for x in range(self._time[0]):
                 if self._notes > 0: 
-                    x+=1
                     #have enough notes to fill in remaining beats
                     #so put a note on this beat
                     if self._notes>=(self._time[0]-x):
@@ -162,7 +160,6 @@ class HandDrum(MusicianStructured):
         if self._notes >= (3*self._time[0]):
             #fill in 16th notes
             for x in range(self._time[0]):
-                x+=1
                 self._addNote(x+.25)
                 self._addNote(x+.5)
                 self._addNote(x+.75)
@@ -173,12 +170,10 @@ class HandDrum(MusicianStructured):
         elif self._notes>=(2*self._time[0]):
             #eighth notes
             for x in range(self._time[0]):
-                x+=1
                 if self._notes > 0: 
                     self._addNote(x+.5)
             #sixteenth notes
             for x in range(self._time[0]):
-                x+=1
                 #have enough notes to fill in remaining sixteenth notes
                 if 0 < self._notes>=(self._time[0]-x):
                     self._addNote(x+.25)
@@ -196,7 +191,6 @@ class HandDrum(MusicianStructured):
         elif self._notes > 0:
             #eighth notes
             for x in range(self._time[0]):
-                x+=1
                 #have enough notes to fill in remaining sixteenth notes
                 if 0 < self._notes >=(self._time[0]-x):
                     self._addNote(x+.5)

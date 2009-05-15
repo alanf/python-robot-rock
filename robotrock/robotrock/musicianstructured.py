@@ -149,8 +149,8 @@ class MusicianStructured(Musician):
     #defualted to be a metronome
     def _write(self):
         for x in range(self._time[0]):
-            myNote = note.Note(tone=38, start=self._getStart(x+1), duration=self._durations.QUARTER_NOTE, rest=False)
-            self._plans[x+1] = myNote
+            myNote = note.Note(tone=38, start=self._getStart(x), duration=self._durations.QUARTER_NOTE, rest=False)
+            self._plans[x] = myNote
 
 
 '''

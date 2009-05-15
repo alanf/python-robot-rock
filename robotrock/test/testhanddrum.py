@@ -73,7 +73,7 @@ class TestHanddrum(unittest.TestCase):
 
         listing = self.drum._plans.keys()
         for x in listing:
-            self.assertNotEqual(0, x)
+            self.assertTrue(x >= 0)
             test = False
             for y in range(len(self.test_measure.notes)):
                 if self.test_measure.notes[y] == self.drum._plans[x]:
