@@ -58,7 +58,7 @@ class AtomicParser(object):
 
 		# Fire off current events to receiver.
 		for event in self.current_events():
-			self.receiver.handle( event )
+			self.receiver.handle( event[1] )
 
 		# advance marker
 		self.score_marker.forward( elapsed_beats )
