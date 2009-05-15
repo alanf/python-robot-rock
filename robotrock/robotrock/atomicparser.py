@@ -76,10 +76,12 @@ class AtomicParser(object):
 			#       currently fixed size: (musician, type, tone, dynamic)
 		for note in notes:
 			beat = self.delay + note.start
-			event = ( beat, (staff, "Note on", note.tone, note.dynamic) )
+			# Maintainers: It is vital that "Note off" events are placed in queue
+			#   before "Note on" events. This ensures that Notes with equal tones
+			#   and times are scheduled in the right playing order.
+			event = ( beat+note.duration, (staff, "Note off", note.tone, note.dynamic) )
 			heappush( self.eventq , event )
-			beat += note.duration
-			event = ( beat, (staff, "Note off", note.tone, note.dynamic) )
+			event = ( beat, (staff, "Note on", note.tone, note.dynamic) )
 			heappush( self.eventq , event )
 
 	def current_events(self):
