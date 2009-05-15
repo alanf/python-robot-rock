@@ -47,10 +47,8 @@ class TestAtomicParser(unittest.TestCase):
 			parser.onPulse( ATOMIC_NOTE )
 
 		# TODO Expected tuple will change after BETA
-		actual_time = receiver.events[-1][0]
-		actual_staff, actual_type, actual_tone, actual_dynamic = receiver.events[-1][1]
+		actual_staff, actual_type, actual_tone, actual_dynamic = receiver.events[-1]
 
-		self.assertEqual( 0, receiver.events[-1][0] )
 		self.assertEqual( score.staffs[0], actual_staff )
 		self.assertEqual( "Note on", actual_type )
 		self.assertEqual( n.tone, actual_tone )
