@@ -106,6 +106,11 @@ class RRMainWindow(QWidget):
         self.focusedMusician = None
         
     
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Space:
+            event.accept()
+            self.playPauseHandler(False)
+    
     ### TODO Move this functionality into the PlayButton class
     def playPauseHandler(self, checked):
         if self.isPlay:
@@ -202,9 +207,9 @@ class MusicianWidget(QLabel):
         self.x = x
         self.y = y
         self.musician.energy = 100 * x / (self.parent.width() - self.width())
-        print "changing musician energy to:", 100 * x / (self.parent.width() - self.width() - 100)
+        self.parent.rrMain.logger.debug("changing musician energy to: %d" % (100 * x / (self.parent.width() - self.width() - 100)))
         self.musician.complexity = (100 * (self.parent.height() - y - self.height()) / (self.parent.height() - self.height()))
-        print "chenging musician complexity to:", (100 * (self.parent.height() - y - self.height()) / (self.parent.height() - self.height()))
+        self.parent.rrMain.logger.debug("chenging musician complexity to: %d" % (100 * (self.parent.height() - y - self.height()) / (self.parent.height() - self.height())))
         
         # absolute minimums
         minW = 600
@@ -247,6 +252,8 @@ class MusicianWidget(QLabel):
             self.core.removeMusician(self.musician)
             MusicianWidget.allMWidgets.remove(self)
             self.close()
+        else:
+            self.parent.keyPressEvent(event)
 
 """Simple Play/Pause button. This is its own class because the state changing
 aspect (switching between play/pause) should be done within itself."""
