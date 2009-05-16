@@ -1,0 +1,5 @@
+include AUTHORS
+include COPYING
+include INSTALL
+prune robotrock/demo*
+include scripts/*.sf2
