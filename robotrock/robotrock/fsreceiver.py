@@ -144,5 +144,5 @@ class FluidsynthReceiver(object):
 		if type == "Note on":
 			self.synth.noteon( channel, midi_note, midi_vel )
 		elif type == "Note off":
-			self.synth.noteoff( channel, midi_note )
+			pass#self.synth.noteoff( channel, midi_note )
 
