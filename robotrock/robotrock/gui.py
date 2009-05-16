@@ -185,7 +185,7 @@ class MusicianWidget(QLabel):
         self.setLineWidth(2)
         self.setAutoFillBackground(True)
         
-        self.setPixmap(QPixmap(":/metronome_icon.png").scaled(100,100,Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.setPixmap(QPixmap(":/bongo_icon.png").scaled(100,100,Qt.KeepAspectRatio, Qt.SmoothTransformation))
         
         self.setFocusPolicy(Qt.ClickFocus)
         self.musician = musician

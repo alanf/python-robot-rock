@@ -3,6 +3,7 @@
 <file alias="delete_icon.png">../images/delete-128x128.png</file>
 <file alias="guitar_icon.png">../images/black-guitar-128x128.png</file>
 <file alias="metronome_icon.png">../images/old_metronome.png</file>
+<file alias="bongo_icon.png">../images/bongo256em9.png</file>
 </qresource>
 <!-- 
      
@@ -14,7 +15,7 @@
      Note that currently this command is run when a user runs setup.py, if
      needed. Needed is determined as either:
        i)  guiResources.py does not exist
-          --or--
+            or
        ii) guiResources.py is older than guiResources.qrc
      
      
