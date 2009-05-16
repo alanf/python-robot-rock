@@ -25,12 +25,12 @@ class CoreController():
     
     #Start the audio driver
     def play(self):
-	print 'playing'
+	#print 'playing'
         self.audio_driver.play()
     
     #Pause the audio driver
     def pause(self):
-	print 'paused'
+	#print 'paused'
         self.audio_driver.pause()
     
     # Halt the audio driver

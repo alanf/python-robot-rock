@@ -36,7 +36,7 @@ class ScoreMarker(object):
         while self.measure_position >= self.beatsInCurrentMeasure():
             self.measure_position -= self.beatsInCurrentMeasure()
             #self.score_slices.current_index += 1
-	    print 'advanced measure counter in marker'
+	    #print 'advanced measure counter in marker'
 
     def beatsInCurrentMeasure(self):
         ''' Uses a quarter note to define a full beat, to indicate how
@@ -54,7 +54,7 @@ class ScoreMarker(object):
         are relative to the marker.
         
         The marker is not advanced."""
-	print 'marker measure position', self.measure_position
+	#print 'marker measure position', self.measure_position
 	
         note_events = {}
         if self.measure_position == 0:

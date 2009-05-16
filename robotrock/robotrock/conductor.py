@@ -60,7 +60,7 @@ class Conductor(object):
             self.measure_info = self.song_info.measureInfo()
             for musician in self.ensemble:
                 self.__advanceMeasure(musician)
-                print 'updating measure info'
+                #print 'updating measure info'
                 self.__updateMeasureInfo(self.current_musician_measures[musician], \
                         self.measure_info)
 

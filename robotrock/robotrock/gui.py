@@ -29,7 +29,7 @@ class RRGuiMain:
     def __init__(self, args, core=None):
         # Maybe do some argument processing here
         self.app = QApplication(args)
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger('robotrock.gui')
         
         if core is None:
