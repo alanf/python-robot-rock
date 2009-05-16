@@ -34,7 +34,7 @@ class AudioDriver(Thread):
 			if self.playing:
 				self.m.advance( current_time - last_time )
 			# Be nice to CPU and not burn cycles...
-			sleep( 0.001 )
+			# sleep( 0.001 ) # BETA: Don't worry about yet.
 			last_time = current_time
 
 	def halt(self):
