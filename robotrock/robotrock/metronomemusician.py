@@ -15,7 +15,7 @@ class MetronomeMusician(object):
         self.instrument = 'metronome'
     
     def compose(self, measure, window_start, window_duration):
-        myNote = note.Note(tone=DrumKit("closed hi-hat"), start=window_start, \
+        myNote = note.Note(tone=DrumKit["closed hi-hat"], start=window_start, \
                 duration=note.Note.note_values.QUARTER_NOTE, \
                 rest=False, dynamic=dynamics.FORTE)
         measure.addNote(myNote)
