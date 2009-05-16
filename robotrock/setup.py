@@ -39,7 +39,7 @@ CONTACT = "Alan Fineberg"
 
 CONTACT_EMAIL = "af@cs.washington.edu"
 
-DATA = [ ] # other resources are listed in here, like so.
+DATA = [ 'scripts/HS_R8_Drums.sf2' ] # other resources are listed in here, like so.
 
 DESCRIPTION = "A fun, easy interactive music tool." # TODO should be better!
 
