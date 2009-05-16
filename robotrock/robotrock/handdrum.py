@@ -4,6 +4,8 @@
     Author: Rich Snider <mrsoviet@cs.washington.edu
 '''
 
+from drumkit import DrumKit
+import dynamics
 from musicianstructured import MusicianStructured
 import random
 import note
@@ -140,7 +142,8 @@ class HandDrum(MusicianStructured):
                             self._addNote(x)
 
     def _addNote(self, location):
-        myNote = note.Note(tone=38, start=self._getStart(location), rest=False, dynamic = 50)
+	my_tone=DrumKit["High Tom"]
+        myNote = note.Note(tone=my_tone, start=self._getStart(location), duration = note.Note.note_values.QUARTER_NOTE, rest=False, dynamic=dynamics.FORTE)
         self._plans[location] = myNote
         self._notes-=1
 
