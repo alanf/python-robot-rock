@@ -88,6 +88,7 @@ class TestConductor(unittest.TestCase):
         for measures in [staff.measures for staff in self.score.staffs]:
             self.assertNotEqual(measures[1].id, None)
             self.assertRaises(AttributeError, lambda : measures[2].id) 
+            print measures[1].time_signature
             
         # Just for fun, let's make sure we reach the third measure successfully.
         self.conductor.onPulse(1)
@@ -97,6 +98,7 @@ class TestConductor(unittest.TestCase):
         for measures in [staff.measures for staff in self.score.staffs]:
             self.assertNotEqual(measures[2].id, None)
             self.assertRaises(AttributeError, lambda : measures[3].id)
+            print measures[2].time_signature
             
     def testAddMusician(self):
         ''' Adding a musician appends the ensemble and the staff list. '''
