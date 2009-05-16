@@ -16,12 +16,12 @@ def calc_dynamic( value ):
 	return MINIMUM_DYNAMIC_VALUE + value
 
 # softer
-PIANISSIMO = calc_dynamic( 0.125 )
-PIANO      = calc_dynamic( 0.25  )
-MEZZOPIANO = calc_dynamic( 0.375 )
-MEZZOFORTE = calc_dynamic( 0.5   )
-FORTE      = calc_dynamic( 0.75  )
-FORISSIMO  = calc_dynamic( 0.875 )
+PIANISSIMO = calc_dynamic( 0.5625 )
+PIANO      = calc_dynamic( 0.625  )
+MEZZOPIANO = calc_dynamic( 0.6875 )
+MEZZOFORTE = calc_dynamic( 0.75   )
+FORTE      = calc_dynamic( 0.875  )
+FORISSIMO  = calc_dynamic( 0.9375 )
 # louder
 
 DEFAULT_DYNAMIC = MEZZOFORTE
