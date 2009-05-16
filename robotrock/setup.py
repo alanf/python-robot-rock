@@ -39,7 +39,7 @@ CONTACT = "Alan Fineberg"
 
 CONTACT_EMAIL = "af@cs.washington.edu"
 
-DATA = [ 'scripts/HS_R8_Drums.sf2' ] # other resources are listed in here, like so.
+DATA = [ ('robotrockresources/sounds', ['scripts/HS_R8_Drums.sf2']) ] # other resources are listed in here, like so.
 
 DESCRIPTION = "A fun, easy interactive music tool." # TODO should be better!
 
@@ -79,7 +79,7 @@ setup(
 #	py_modules = [ "fluidsynth" ]
 
 	# misc data files
-#	data_files = DATA,
+	data_files = DATA,
 
 	# requirements
 	requires = REQUIREMENTS,

@@ -22,7 +22,7 @@ if sys.path[0] is not '':
 else:
 	PATH = ""
 
-SOUNDFONT_FILE = PATH + 'HS_R8_Drums.sf2'
+SOUNDFONT_FILE = sys.prefix + '/robotrockresources/sounds/' + 'HS_R8_Drums.sf2'
 
 def init_core():
     pass
