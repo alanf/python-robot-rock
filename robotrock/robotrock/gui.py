@@ -12,6 +12,7 @@ import logging
 from corecontroller import CoreController, MINIMUM_TEMPO, MAXIMUM_TEMPO
 #from musicianstructured import MusicianStructured
 #from activemusician import ActiveMusician as MusicianStructured
+#from handdrum import HandDrum as MusicianStructured
 from metronomemusician import MetronomeMusician as MusicianStructured
 
 try:
@@ -200,9 +201,10 @@ class MusicianWidget(QLabel):
         
         self.x = x
         self.y = y
-        self.musician.energy = 100 * x / self.parent.width()
-        self.musician.complexity = (100 * (self.parent.height() - y) / self.parent.height())
-        
+        self.musician.energy = 100 * x / (self.parent.width() - self.width())
+        print "changing musician energy to:", 100 * x / (self.parent.width() - self.width() - 100)
+        self.musician.complexity = (100 * (self.parent.height() - y - self.height()) / (self.parent.height() - self.height()))
+        print "chenging musician complexity to:", (100 * (self.parent.height() - y - self.height()) / (self.parent.height() - self.height()))
         
         # absolute minimums
         minW = 600
