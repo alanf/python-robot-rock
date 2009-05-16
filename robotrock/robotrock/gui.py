@@ -77,7 +77,8 @@ class RRMainWindow(QWidget):
         self.tempoSlider.setMinimumHeight(200)
         self.tempoSlider.setMinimum(MINIMUM_TEMPO)
         self.tempoSlider.setMaximum(MAXIMUM_TEMPO)
-        self.tempoSlider.setTickInterval(10)
+        self.tempoSlider.setValue((MAXIMUM_TEMPO-MINIMUM_TEMPO)/3) # Set the initial value to 1/3 the max
+        self.tempoHandler() # update the core controller
         self.connect(self.tempoSlider, SIGNAL('sliderReleased()'), self.tempoHandler)
         
         self.grid.addWidget(self.tempoSlider, 1,2,Qt.AlignHCenter|Qt.AlignVCenter)
