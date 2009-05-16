@@ -15,6 +15,15 @@ import score
 import songinfo
 import sys
     
+# TEMP BETA: find soundfont source
+import os.path
+if sys.path[0] is not '':
+	PATH = sys.path[0] + os.path.sep
+else:
+	PATH = ""
+
+SOUNDFONT_FILE = PATH + 'HS_R8_Drums.sf2'
+
 def init_core():
     pass
     
@@ -23,8 +32,10 @@ def init():
     score_object = score.Score()
     conductor_object = conductor.Conductor(score_object, song_info_object)
     receiver_object = Receiver()
-    receiver_object.soundfont_directory['metronome'] = 'HS_R8_Drums.sf2' # TEMP hardcoded for BETA
-    receiver_object.soundfont_directory['handdrum'] = 'HS_R8_Drums.sf2'
+	# TEMP hardcoded for BETA
+    receiver_object.soundfont_directory['metronome'] = SOUNDFONT_FILE
+    receiver_object.soundfont_directory['handdrum'] = SOUNDFONT_FILE
+	# TEMP BETA TEMP BETA
     parser_object = Parser(score_object, receiver_object)
     metronome_object = Metronome()
     metronome_object.addListener(conductor_object)
