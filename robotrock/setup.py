@@ -12,7 +12,7 @@ import os
 GUI_GENERATED = path.abspath("robotrock/guiResources.py")
 GUI_SOURCE = path.abspath("robotrock/guiResources.qrc")
 
-if not path.exists(GUI_GENERATED) or path.getmtime(GUI_GENERATED) < path.getmtime(GUI_SOURCE):
+if not path.exists(GUI_GENERATED) or (path.exists(GUI_SOURCE) and path.getmtime(GUI_GENERATED) < path.getmtime(GUI_SOURCE)):
     print "generating GUI resource file"
     os.system('pyrcc4 -o "%s" "%s"' % (GUI_GENERATED, GUI_SOURCE))
 
