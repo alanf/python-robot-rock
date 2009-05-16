@@ -39,7 +39,7 @@ CONTACT = "Alan Fineberg"
 
 CONTACT_EMAIL = "af@cs.washington.edu"
 
-DATA = [ 'doc/*' ] # other resources are listed in here, like so.
+DATA = [ ] # other resources are listed in here, like so.
 
 DESCRIPTION = "A fun, easy interactive music tool." # TODO should be better!
 
@@ -49,9 +49,9 @@ PLATFORMS = "any"
 
 REQUIREMENTS = ['pyQt']
 
-URL = "TODO"
+URL = "http://www.assembla.com/wiki/show/cse403"
 
-VERSION = "0.0-ZFR"
+VERSION = "0.0-BETA"
 
 setup(
 	# project 
