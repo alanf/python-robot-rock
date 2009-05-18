@@ -35,6 +35,8 @@ class Conductor(object):
         ''' Adds a musician and associates them with a staff, mapped one-to-one. '''
         self.ensemble.append(musician)
         self.__appendStaff(self.score, musician)
+        self.__updateMeasureInfo(self.current_musician_measures[musician], \
+                self.measure_info)
     
     def __appendStaff(self, score, musician):
         ''' When a musician is added to the score, it has its own staff to write to. '''
@@ -42,7 +44,7 @@ class Conductor(object):
         # Ensure that the musician starts playing at the correct measure.
         self.current_musician_measures[musician] = \
                 score.staffs[-1].measures[self.__measures_played]
-        
+                        
     def removeMusician(self, musician):
         ''' Prevents a musician from writing to the score. '''
         self.ensemble.remove(musician)

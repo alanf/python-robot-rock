@@ -20,6 +20,8 @@ class ScoreMarker(object):
         self.score_slices = score.score_slices
         # Start by moving to the first measure (score_slices starts on index -1).
         self.measure_position = 0
+        # Assume 4 beats in measure by default. This should be updated as we advance.
+        self.beats_in_measure = 4
     
     def rewind(self, n_beats):
         "Moves backward by the specified number of quarter notes."
@@ -36,15 +38,24 @@ class ScoreMarker(object):
         while self.measure_position >= self.beatsInCurrentMeasure():
             self.measure_position -= self.beatsInCurrentMeasure()
             #self.score_slices.current_index += 1
-	    #print 'advanced measure counter in marker'
 
     def beatsInCurrentMeasure(self):
         ''' Uses a quarter note to define a full beat, to indicate how
         much total "space" there is in a measure. This way we keep our
         place when we advance through a measure before reaching the next
         measure in the staff.'''
-        return self.score_slices.current()[0].time_signature[0] * \
-                note.Note.note_values.QUARTER_NOTE
+        beats = self.beats_in_measure
+        for measure in self.score_slices.current():
+            # If a staff no longer has a musician, it may not have a time
+            # signature attribute. Search for one, or use our previous value.
+            try:
+                beats = measure.time_signature[0]
+                break
+            except AttributeError:
+                continue
+                
+        self.beats_in_measure = beats * note.Note.note_values.QUARTER_NOTE
+        return self.beats_in_measure
     
     def getNotes(self, window_size):
         """Returns the notes in the range for all staffs.
@@ -54,12 +65,10 @@ class ScoreMarker(object):
         are relative to the marker.
         
         The marker is not advanced."""
-	#print 'marker measure position', self.measure_position
-	
         note_events = {}
         if self.measure_position == 0:
-	    self.score_slices.current_index += 1
-	    
+            self.score_slices.current_index += 1
+        
         measures_slice = self.score_slices.current()
         
         for measure in measures_slice:
