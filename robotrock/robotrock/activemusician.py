@@ -8,6 +8,7 @@ Created by Alan Fineberg on 2009-05-03.
 import sys
 import note
 import dynamics
+import drumkit
 
 class ActiveMusician(object):
     def __init__(self):
@@ -17,7 +18,6 @@ class ActiveMusician(object):
         self.changed = False
     
     def compose(self, measure, window_start, window_duration):
-        print 'energy', self.__energy, 'complex', self.__complexity
         if window_start == 0 or self.changed:
             if self.changed:
                 measure.notes = []
@@ -44,7 +44,8 @@ class ActiveMusician(object):
             total_duration = my_start
             i = 0
             while total_duration < note.Note.note_values.QUARTER_NOTE * 4:
-                myNote = note.Note(tone=42, start=my_start +i*my_duration, \
+                myNote = note.Note(tone=drumkit.DrumKit['open hi-hat'], \
+                        start=my_start +i*my_duration, \
                         duration=my_duration, \
                         rest=False, dynamic=dynamics.FORTE)
                 measure.addNote(myNote)

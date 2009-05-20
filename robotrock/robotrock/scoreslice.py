@@ -21,7 +21,6 @@ class ScoreSlice(object):
         
     def next(self):
         ''' Move current_index forward and return the measures there. '''
-        self.current_index += 1
         try:
             result = self.__getitem__(self.current_index)
         except IndexError:
@@ -37,7 +36,3 @@ class ScoreSlice(object):
         else:
             self.current_index = -1
             return None
-        
-if __name__ == '__main__':
-    pass
-        
