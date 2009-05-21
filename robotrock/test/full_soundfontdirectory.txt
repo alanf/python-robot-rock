@@ -1,0 +1,3 @@
+banjo : sffile.sf2
+keyboard : sffile.sf2 1
+kazoo : another.sf2 2 2
