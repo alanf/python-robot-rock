@@ -1,0 +1,5 @@
+MUSICIAN_DICTIONARY
+{
+'handdrum' : ['percussion']
+'open hi-hat' : ['percussion', 'drumset']
+}
