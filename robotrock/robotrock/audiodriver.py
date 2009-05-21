@@ -6,7 +6,6 @@
 
 from threading import Thread
 from time import sleep
-from os import times
 from time import time
 
 class AudioDriver(Thread):
@@ -16,10 +15,15 @@ class AudioDriver(Thread):
 
 	The metronome is initially halted. Use play() to begin."""
 
-	def __init__(self, metronome):
+	def __init__(self, clock, metronome):
+		"""Constructor.
+
+		clock: mechanism to regulate time. Must conform to Clock interface.
+		metronome: generator of onPulse events. Must conform to Metronome interface. """
 
 		Thread.__init__(self)
 
+		self.clock = clock
 		self.m = metronome
 
 		self.running = False
@@ -28,9 +32,9 @@ class AudioDriver(Thread):
 	def run(self):
 		"DO NOT CALL DIRECTLY. This will be called by start()."
 		self.running = True
-		last_time = time()
+		last_time = self.clock.time()
 		while self.running:
-			current_time = time()
+			current_time = self.clock.time()
 			if self.playing:
 				self.m.advance( current_time - last_time )
 			# Be nice to CPU and not burn cycles...
