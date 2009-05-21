@@ -4,8 +4,11 @@
     Author: Rich Snider <mrsoviet@cs.washington.edu>
 '''
 
+from drumkit import DrumKit
 from musician import Musician
 import note
+import dynamics
+import chords
 
 #definition of the recommended musician structure.
 #note: one does NOT have to follow this structure to make a working musician
@@ -16,13 +19,8 @@ class MusicianStructured(Musician):
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         self._energy = energy
         self._complexity = complexity
-        '''
-        self.staff = staff
-        #self.current_measure = self.staff.measures.next()
-        self.current_measure = []
-        #self.key =  self.current_measure.key
-        #self.time =  self.current_measure.time_signature
-        '''
+        self._my_tone=DrumKit["claves"]
+        self._notes = 0
         self.instrument = 'metronome'
         self._key = key
         self._time = time
@@ -37,7 +35,7 @@ class MusicianStructured(Musician):
     #window_duration is the length of the measure that needs to be composed
     #note: this structure ignores window_start and window_duration for the most
     #   part, they are mainly for allowing musicians to run dynamically
-    def compose(self, measure, window_start, window_duration): #called by conductor
+    def compose(self, measure, window_start, window_duration): 
         if not(self._time == measure.time_signature):
             self._time = measure.time_signature
             self._changed = True
@@ -55,7 +53,8 @@ class MusicianStructured(Musician):
     def _print(self, measure):
         listing = self._plans.keys()
         for x in listing:
-            measure.notes.append(self._plans[x])
+            notelisting = self._plans[x]
+            measure.notes.extend(notelisting)
 
     #turns the numerical value val into a start value understandable by the
     #   score
@@ -65,18 +64,6 @@ class MusicianStructured(Musician):
         val = remainder
 
         if not(val % .0625):
-            (val, remainder) = self.__shave(val, .5)
-            result += val  * self._durations.EIGHTH_NOTE
-            val = remainder
-
-            (val, remainder) = self.__shave(val, .25)
-            result += val  * self._durations.SIXTEENTH_NOTE
-            val = remainder
-
-            (val, remainder) = self.__shave(val, .125)
-            result += val  * self._durations.THIRTYSECOND_NOTE
-            val = remainder
-
             (val, remainder) = self.__shave(val, .0625)
             result += val * self._durations.SIXTYFOURTH_NOTE
 
@@ -136,93 +123,47 @@ class MusicianStructured(Musician):
     def key(self, value):
         self._key = value
         self._changed = True
+
         
+    #adds a note at the specified location in the measure. each note is defaulted
+    #   to be a quarter note and have the dynamics of Forte, these can of course be
+    #   changed later. This version assumes that _plans (the data store being written to)
+    #   is a dictionary of type (num, list). 
+    def _addNote(self, location, my_tone):
+        myNote = note.Note(tone=my_tone, start=self._getStart(location), duration=self._durations.QUARTER_NOTE, rest=False, dynamic=dynamics.FORTE)
+        if self._plans.keys().count(location):
+            self._plans[location].append(myNote)
+        else:
+            self._plans[location] = [myNote]
+        self._notes-=1
+
+    #adds the specified chord from the specified chordlist to the specified
+    #   location in the measure. it uses _addNote to do so, and also keeps
+    #   _notes at the proper count (so adding a chord only takes up one note)
+    #chordlist is the type of chord: major, minor, diminished, etc.
+    #chord is an index into the chordlist specified
+    def _addChord(self, location, chord, chordlist):
+        self._notes += 2
+        listing = chords.Majors[chord]
+        if chordlist == 'minor':
+            listing = Minors[chord]
+        if chordlist == 'diminished':
+            listing = Diminished[chord]
+        if chordlist == 'augmented':
+            listing = Augmented[chord]
+        for x in range(len(listing)):
+            self._addNote(location, (listing[x], 4))        
 
 
     #functions below should be rewritten by individual musicians
 
     #determines if new music needs to be generated
     def _decide(self):
-        return True
+        return self._changed
 
     #determines what is going to be played in this measure
     #defualted to be a metronome
     def _write(self):
         for x in range(self._time[0]):
-            myNote = note.Note(tone=38, start=self._getStart(x), duration=self._durations.QUARTER_NOTE, rest=False)
-            self._plans[x] = myNote
+            self._addNote(x, self._my_tone)
 
-
-'''
-    #print _plans to measure
-    def __printToMeasure(self, measure):
-        #parse _plans
-        #create notes when needed
-        #append notes to measure as created
-        for x in range(len(_plans)):
-            if (x + 1) < len(_plans): #if there is another value left in the measure
-                measure.notes.append(__getNoteType(_plans[x+1] - _plans[x]))
-            else:
-                measure.notes.append(__getNoteType((self.time[0] + 1) - _plans[x]))
-'''
-
-'''
-    def __getNoteType(diff,location):
-        myNote = note.Note(tone=0, start=location, duration=self.durations.SIXTYFOURTH_NOTE, rest=True)
-        location+=self.durations.SIXTYFOURTH_NOTE
-        if diff == 4.0:                       #Whole note
-            myNote = note.Note(tone=38, start=location, duration=self.durations.WHOLE_NOTE, rest=False)
-            location+=self.durations.WHOLE_NOTE
-        elif diff == 2.0:                     #half note
-            myNote = note.Note(tone=38, start=location, duration=self.durations.HALF_NOTE, rest=False)
-            location+=self.durations.HALF_NOTE
-        elif diff == 1.0:                     #quarter note
-            myNote = note.Note(tone=38, start=location, duration=self.durations.QUARTER_NOTE, rest=False)
-            location+=self.durations.QUARTER_NOTE
-        elif diff == .5:                    #eigth note
-            myNote = note.Note(tone=38, start=location, duration=self.durations.EIGHT_NOTE, rest=False)
-            location+=self.durations.EIGHT_NOTE
-        elif diff == .25:                   #sixteenth note
-            myNote = note.Note(tone=38, start=location, duration=self.durations.SIXTEENTH_NOTE, rest=False)
-            location+=self.durations.SIXTEENTH_NOTE
-        elif diff == .125:                  #32'nd note
-            myNote = note.Note(tone=38, start=location, duration=self.durations.THIRTYSECOND_NOTE, rest=False)
-            location+=self.durations.THIRTYSECOND_NOTE
-        elif diff == .0625:                 #64'th note
-            myNote = note.Note(tone=38, start=location, duration=self.durations.SIXTYFOURTH_NOTE, rest=False)
-            location+=self.durations.SIXTYFOURTH_NOTE
-        elif diff == .33:                   #tripolet   
-            myNote = note.Note(tone=38, start=location, duration=self.durations.QUARTER_NOTE_TRIPLET, rest=False)
-            location+=self.durations.QUARTER_NOTE_TRIPLET
-        elif not(diff % 1.0):                 #divisible by quarter note
-            myNote = note.Note(tone=0, start=location, duration=self.durations.QUARTER_NOTE, rest=True)
-            location+=self.durations.QUARTER_NOTE
-            measure.notes.append(myNote)
-            myNote = __getNoteType(diff - 1)
-        elif not(diff % .5):                #divisible by eigth note
-            myNote = note.Note(tone=0, start=location, duration=self.durations.EIGHT_NOTE, rest=True)
-            location+=self.durations.EIGHT_NOTE
-            measure.notes.append(myNote)
-            myNote = __getNoteType(diff - .5)
-        elif not(diff % .25):               #divisible by sixteenth note
-            myNote = note.Note(tone=0, start=location, duration=self.durations.SIXTEENTH_NOTE, rest=True)
-            location+=self.durations.SIXTEENTH_NOTE
-            measure.notes.append(myNote)
-            myNote = __getNoteType(diff - .25)
-        elif not(diff % .125):              #divisible by 32'nd note
-            myNote = note.Note(tone=0, start=location, duration=self.durations.THIRTYSECOND_NOTE, rest=True)
-            location+=self.durations.THIRTYSECOND_NOTE
-            measure.notes.append(myNote)
-            myNote = __getNoteType(diff - .125)
-        elif not(diff % .0625):             #divisible by 64'th note
-            myNote = note.Note(tone=0, start=location, duration=self.durations.SIXTYFOURTH_NOTE, rest=True)
-            location+=self.durations.SIXTYFOURTH_NOTE
-            measure.notes.append(myNote)
-            myNote = __getNoteType(diff - .0625)
-        else not(diff % .33):               #divisible by tripolet
-            myNote = note.Note(tone=0, start=location, duration=self.durations.QUARTER_NOTE_TRIPLET, rest=True)
-            location+=self.durations.QUARTER_NOTE_TRIPLET
-            measure.notes.append(myNote)
-            myNote = __getNoteType(diff - .33)
-        return myNote
-'''

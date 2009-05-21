@@ -23,6 +23,7 @@ class TestHanddrum(unittest.TestCase):
                 self.key_signature = ('F#', 'major')
                 self.notes = []
 
+        # TODO: make this (and other similar instances a list)
         self.test_measure = MeasureStub()
         self.test_measure2 = MeasureStub()
         self.test_measure3 = MeasureStub()
@@ -60,25 +61,10 @@ class TestHanddrum(unittest.TestCase):
         self.assertEqual(('B', 'major'), self.drum.key)
         self.assertEqual(True, self.drum._changed)
 
-    #tests that the handdrum is composing and storing properly
+    #tests that the handdrum is composing and storing a non-empty dictionary.
     def testWrite(self):
         self.drum._write()
         self.assertNotEqual({}, self.drum._plans)
-
-    #tests that the handdrum is writing the music to the measure properly
-    def testCompose(self):    
-        self.drum.compose(self.test_measure, 0, 0)
-        self.assertNotEqual({}, self.drum._plans)
-        self.assertNotEqual([], self.test_measure.notes)
-
-        listing = self.drum._plans.keys()
-        for x in listing:
-            self.assertTrue(x >= 0)
-            test = False
-            for y in range(len(self.test_measure.notes)):
-                if self.test_measure.notes[y] == self.drum._plans[x]:
-                    test = True
-            self.assertNotEqual(test, False)
         
     #tests that the handdrum outputs something different
     #when the energy and complexity change, and that it
@@ -148,7 +134,7 @@ class TestHanddrum(unittest.TestCase):
         onbeats = 0
         for x in range(len(measure.notes)):
             note = measure.notes[x]
-            #print 'here is a note', note.__dict__
+
             #notes duration is either an eigth not or quarter note
             if (note.start % self._durations.QUARTER_NOTE) == 0:
                 onbeats += 1

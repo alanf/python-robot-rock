@@ -89,11 +89,34 @@ class TestMusician(unittest.TestCase):
         listing = self.musician._plans.keys()
         for x in listing:
             self.assertTrue(x >= 0)
-            test = False
-            for y in range(len(self.test_measure.notes)):
-                if self.test_measure.notes[y] == self.musician._plans[x]:
-                    test = True
-            self.assertNotEqual(test, False)
+            notelisting = self.musician._plans[x]
+            for y in range(len(notelisting)):
+                test = False
+                for z in range(len(self.test_measure.notes)):
+                    if self.test_measure.notes[z] == notelisting[y]:
+                        test = True
+                self.assertNotEqual(test, False)
+
+    #tests that the musician can write a chord properly
+    def testChords(self):
+        self.musician = MusicianStructured()
+        self.musician._plans = {}
+        self.musician._addChord(0, 'D', 'major')
+        self.assertNotEqual({}, self.musician._plans)
+
+        listing = self.musician._plans.keys()
+        for x in listing:
+            self.assertTrue(x >= 0)
+            notelisting = self.musician._plans[x]
+            testD = testF = testA = False
+            for y in range(len(notelisting)):
+                if notelisting[y].tone == ("D", 4):
+                    testD = True
+                elif notelisting[y].tone == ("F#", 4):
+                    testF = True
+                elif notelisting[y].tone == ("A", 4):
+                    testA = True
+            self.assertTrue(testD and testF and testA)
 
         
 
