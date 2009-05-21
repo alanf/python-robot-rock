@@ -3,3 +3,4 @@ include COPYING
 include INSTALL
 prune robotrock/demo*
 include scripts/*.sf2
+include images/*.png

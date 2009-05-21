@@ -1,24 +1,13 @@
 from distutils.core import setup
-
-### This section builds the guiResources file needed for images and such. ###
-### Warning: Building with sdist currently does not ###
-###    include the original images or the qrc file  ###
-
-### This lack of inclusion of source images, etc. is currently listed as a bug under
-#    ticket number 77
-
-import os.path as path
 import os
-GUI_GENERATED = path.abspath("robotrock/guiResources.py")
-GUI_SOURCE = path.abspath("robotrock/guiResources.qrc")
+import re
 
-if not path.exists(GUI_GENERATED) or (path.exists(GUI_SOURCE) and path.getmtime(GUI_GENERATED) < path.getmtime(GUI_SOURCE)):
-    print "generating GUI resource file"
-    os.system('pyrcc4 -o "%s" "%s"' % (GUI_GENERATED, GUI_SOURCE))
-
-
-### End of GUI resource generating code ###
-###########################################
+"""Finds filenames matching a given regular expression, in the given directory.
+   Returns a list of file paths (the concatenation of dir and each matching filename)."""
+def getmatchingfiles(dir, pattern):
+    addPrefix = lambda file: os.path.join(dir, file)
+    filteredList = filter( lambda file: re.match(pattern, file) is not None, os.listdir(dir))
+    return map(addPrefix, filteredList)
 
 NAME = "Robot Rock" # print-friendly name
 
@@ -39,7 +28,8 @@ CONTACT = "Alan Fineberg"
 
 CONTACT_EMAIL = "af@cs.washington.edu"
 
-DATA = [ ('robotrockresources/sounds', ['scripts/HS_R8_Drums.sf2']) ] # other resources are listed in here, like so.
+DATA = [ ('robotrockresources/sounds', ['scripts/HS_R8_Drums.sf2']),
+         ('robotrockresources/images', getmatchingfiles('images', '.*\.png$')) ] # other resources are listed in here, like so.
 
 DESCRIPTION = "A fun, easy interactive music tool." # TODO should be better!
 
