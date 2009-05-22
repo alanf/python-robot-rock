@@ -7,9 +7,6 @@ Author: Tim Crossley <tjac0@cs.washington.edu>
 from PyQt4.QtCore import *
 from PyQt4.QtGui  import *
 
-
-from guiactions import RRActions
-
 from guistage import RRStage
 from guiaddpanel import RRAddPanel
 from guicontrolspanel import RRControlsPanel

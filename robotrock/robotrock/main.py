@@ -46,7 +46,7 @@ def init():
     audio_driver_object.start()
     core_controller_object = corecontroller.CoreController(audio_driver_object, \
             metronome_object, conductor_object, song_info_object)
-    gui_object = gui.RRGuiMain([], core_controller_object)
+    gui_object = guimain.RRGuiMain([], core_controller_object)
     sys.exit(gui_object.run())
     print 'initializing gui modules'
     
