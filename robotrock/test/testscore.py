@@ -11,7 +11,6 @@ class TestScore(unittest.TestCase):
     def testCreateScore(self):
         score = Score()
         self.assertNotEquals(score.staffs[0], None)
-        self.assertNotEquals(score.score_slices, None)
         
 if __name__ == '__main__':
     sys.path.append('../robotrock/')

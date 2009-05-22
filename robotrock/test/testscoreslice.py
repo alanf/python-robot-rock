@@ -24,24 +24,6 @@ class TestScoreSlice(unittest.TestCase):
         for (i, word) in enumerate(self.measure_labels):
             [self.assertEqual(word, result) for result in self.score_slice[i]]
         
-    def testNext(self):
-        for (i, word) in enumerate(self.measure_labels):
-            [self.assertEqual(word, result) for result in self.score_slice.next()]
-    
-    def testPrevious(self):
-        for (i, word) in enumerate(self.measure_labels):
-            self.score_slice.next()
-        
-        # Move the cursor one more space, past the last item.
-        self.score_slice.next()
-        
-        # Copy and reverse the list.
-        reversed_labels = self.measure_labels[:]
-        reversed_labels.reverse()
-        
-        for (i, word) in enumerate(reversed_labels):
-            [self.assertEqual(word, result) for result in self.score_slice.previous()]
-        
 if __name__ == '__main__':
     sys.path.append('../robotrock/')
     from scoreslice import ScoreSlice
