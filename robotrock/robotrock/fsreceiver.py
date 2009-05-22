@@ -7,6 +7,11 @@
 from fluidsynth import Synth
 from dynamics import *
 
+# Maximum number of audio channels available
+MAX_CHANNELS  = 16
+# Value for an invalid soundfont reference
+INVALID_SOUNDFONT = -1
+
 _TONE_VALUE = { # for toneToMIDICode
     'C'  :  0, 'B#' : 0,
     'C#' :  1, 'Db' : 1,
@@ -42,31 +47,27 @@ def dynamicToMIDICode(dynamic):
 class FluidsynthReceiver(object):
     "A Receiver using Fluidsynth on the backend."
 
-    def __init__(self, samplerate=44100):
+    def __init__(self, soundfont_directory, samplerate=44100):
         self.synth = Synth( samplerate=samplerate )
-        self.available_channels = range(16)
+        self.available_channels = range( MAX_CHANNELS )
         self.registered_staffs = {}
 
-        self.soundfonts = []
-        self.soundfont_directory = {}
+        # Maps each instrument to an UNLOADED soundfont file, bank and patch
+        self.sfdir = soundfont_directory
+
+        # Maps a filename a loaded sound font
+        self.soundfonts = {}
+
+        # Maps each instrument to a LOADED soundfont, bank, patch
+        self.instrument = {}
 
         # Start 'er up!
         self.synth.start()
 
-    def loadSoundfontDirectory(self, filename):
-        # TODO *** Post BETA feature ***
-        # TODO Add support to read bank and preset
-        # TODO This file format needs documentation!
-        f = open(filename)
-        for line in f:
-            # Ignore comments
-            line = line.split('#')[0].strip()
-            if ':' not in line: continue
-            key, value = line.split(":")
-            self.soundfont_directory[key.strip()] = value.strip()
-
     def registerStaff(self, staff):
         "Registers a staff for inclusion into the synthesizer."
+
+        instrument = staff.instrument
 
         # Reject if no vacancy
         if len( self.available_channels ) == 0:
@@ -80,22 +81,25 @@ class FluidsynthReceiver(object):
         channel = self.available_channels.pop()
         self.registered_staffs[staff] = channel
 
-        # Load instruments
-        if staff.instrument not in self.soundfonts:
-            sf_filename = self.soundfont_directory[staff.instrument]
-            sf = self.synth.sfload(sf_filename)
-            self.soundfont_directory[staff.instrument] = sf
-            self.soundfonts.append(staff.instrument)
+        # Load sound
+        if instrument not in self.instrument:
+            # Instrument has no associated soundfont yet, so look it up.
+            sf_info = self.sfdir.get(instrument, (None,0,0) )
+            sf_filename, bank, patch = sf_info
+            # Ensure soundfont associated with instrument is loaded...
+            if sf_filename is None:
+                self.soundfonts[ instrument ] = INVALID_SOUNDFONT
+            elif sf_filename not in self.soundfonts:
+                sf = self.synth.sfload( sf_filename ) # INVALID_SOUNDFONT on failure
+                self.soundfonts[ instrument ] = sf
+            # Finally, place in loaded instrument directory
+            self.instrument[ instrument ] = ( self.soundfonts[ instrument ], bank, patch )
 
         # Associate channel with instrument
-        # TODO Post BETA:
-        #      The following values will be read from the directory.
-        bank = 0
-        preset = 0
-        # BETA FREEZE
-        sf = self.soundfont_directory[staff.instrument]
-        self.synth.program_select( channel, sf, bank, preset)
-        self.synth.sfont_select(channel, sf)
+        sf, bank, patch = self.instrument[ instrument ]
+        if sf is not -1:
+            self.synth.program_select( channel, sf, bank, patch)
+            self.synth.sfont_select(channel, sf)
 
         # Return the good news
         return True
@@ -131,7 +135,9 @@ class FluidsynthReceiver(object):
             channel = self.registered_staffs.get( staff, -1 )
         # HACK HACK HACK HACK HACK
 
-        # TODO early exit if channel == -1?
+        # Bail if staff doesn't have a channel
+        if channel == -1:
+            return
 
         midi_note = toneToMIDICode( tone )
         midi_vel = dynamicToMIDICode( dynamic )
@@ -139,5 +145,5 @@ class FluidsynthReceiver(object):
         if type == "Note on":
             self.synth.noteon( channel, midi_note, midi_vel )
         elif type == "Note off":
-            pass#self.synth.noteoff( channel, midi_note )
+            self.synth.noteoff( channel, midi_note )
 
