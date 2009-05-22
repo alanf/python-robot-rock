@@ -35,7 +35,7 @@ class MusicianDirectory(object):
 			tags = tags[tags.find(',') + 1: len(tags)]
 		    # add the last tag
 		    tags_set.add(tags)
-		elif('.py' in file_name and '.pyc' not in file_name):
+		elif('.py' in file_name and '.pyc' not in file_name and 'test' not in file_name):
 		    # import the module
 		    #HACK
 		    module_name = file_name[0:file_name.find('.')]

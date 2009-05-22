@@ -11,7 +11,7 @@ import note
 import dynamics
 import drumkit
     
-class HiHat(object):
+class Hihat(object):
     def __init__(self):
         self.instrument = 'metronome'
         self.__energy = 50
