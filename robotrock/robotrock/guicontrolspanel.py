@@ -135,16 +135,16 @@ class RRTempoSlider(QWidget):
 
 from songinfo import VALID_KEY, VALID_KEY_TONALITIES, VALID_TIME_NUMERATOR, VALID_TIME_DENOMINATOR
 
-class RRTimeSelector(QWidget):
-    def __init__(self, guimain):
-        super(RRTimeSelector, self).__init__()
-        self.__guimain = guimain
-        
-    
-    def settime(self, time):
-        
-        
-    time = property(fsets=settime)
+# class RRTimeSelector(QWidget):
+#     def __init__(self, guimain):
+#         super(RRTimeSelector, self).__init__()
+#         self.__guimain = guimain
+#         
+#     
+#     def settime(self, time):
+#         pass
+#         
+#     time = property(fsets=settime)
 
 class RRKeySelector(QWidget):
     def __init__(self, guimain):
