@@ -5,8 +5,8 @@
     Author: Rich Snider <mrsoviet@cs.washington.edu>
 '''
 
-import sys
 import unittest
+from musicianstructured import MusicianStructured
 
 #definition of the test suite for musicians in general
 class TestMusician(unittest.TestCase):
@@ -121,6 +121,4 @@ class TestMusician(unittest.TestCase):
         
 
 if __name__ == '__main__':
-    sys.path.append('../robotrock/')
-    from musicianstructured import MusicianStructured
     unittest.main()

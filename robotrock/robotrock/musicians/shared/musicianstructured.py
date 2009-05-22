@@ -4,8 +4,9 @@
     Author: Rich Snider <mrsoviet@cs.washington.edu>
 '''
 
-from drumkit import DrumKit
+import sys
 from musician import Musician
+sys.path.append('../..')
 import note
 import dynamics
 import chords
@@ -21,7 +22,7 @@ class MusicianStructured(Musician):
         self._complexity = complexity
         self._my_tone=38
         self._notes = 0
-        self.instrument = 'metronome'
+        self.instrument = 'none'
         self._key = key
         self._time = time
         self._plans = {}
