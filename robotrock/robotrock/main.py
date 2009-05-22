@@ -11,7 +11,7 @@ import audiodriver
 import realtimeclock
 import conductor
 import corecontroller
-import gui
+import guimain
 import score
 import songinfo
 import sys

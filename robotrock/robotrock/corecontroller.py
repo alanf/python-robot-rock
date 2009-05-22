@@ -84,9 +84,9 @@ class CoreController():
     # Returns a list of tags whose intersection with the provided tags
     # is not the empty set.
     def validTags(self, tags):
-	tag_set = set()
-	for tag in tags:
-	    tag_set.add(tag)
+        tag_set = set()
+        for tag in tags:
+            tag_set.add(tag)
         list = self.music_dir.validTags(tags)
         return list
     
