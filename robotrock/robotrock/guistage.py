@@ -27,6 +27,8 @@ lbspace = 30 # 30 pixels to the left and bottom
 rtspace = 15 # 15 pixels to the right and top
 txtspace = 5 # 5 pixels space for text above baseline
 
+mwidget_size = 20
+
 
 class RRStage(QWidget):
     def __init__(self, guimain):
@@ -37,6 +39,10 @@ class RRStage(QWidget):
         self.setMinimumSize(150,150)
         
         self.__mwidgets = []
+        self.__resizeTimer = QTimer(self)
+        self.__resizeTimer.setInterval(500)
+        self.__resizeTimer.setSingleShot(True)
+        self.connect(self.__resizeTimer, SIGNAL('timeout()'), self.updateImages)
         
         guimain.stage = self
     
@@ -100,10 +106,23 @@ class RRStage(QWidget):
         scaleX = float(event.size().width()) / event.oldSize().width()
         scaleY = float(event.size().height()) / event.oldSize().height()
         
+        size = mwidget_size * min([event.size().width(), event.size().height()]) / 100
+        
+        self.__resizeTimer.start()
+        
         for mwidget in self.__mwidgets:
-            mwidget.attemptMove((mwidget.x()+mwidget.width()/2) * scaleX, (mwidget.y()+mwidget.height()/2) * scaleY)
+            x = (mwidget.x()+mwidget.width()/2) * scaleX
+            y = (mwidget.y()+mwidget.height()/2) * scaleY
             
+            mwidget.setMinimumSize(size, size)
+            mwidget.setMaximumSize(size, size)
+            mwidget.attemptMove(x, y)
+        
     
+    def updateImages(self):
+        for mwidget in self.__mwidgets:
+            mwidget.updateImageSize()
+            
 
 class MusicianWidget(QWidget):
     def __init__(self, musician, guimain, parent):
@@ -123,7 +142,10 @@ class MusicianWidget(QWidget):
         
         self.setToolTip("A musician, playing %s %s" % (article, musician.instrument))
         
-        self.setMinimumSize(100,100)
+        size = mwidget_size * min([parent.width(), parent.height()]) / 100
+        
+        self.setMinimumSize(size,size)
+        self.setMaximumSize(size,size)
         
         self.setFocusPolicy(Qt.ClickFocus)
         
@@ -198,10 +220,18 @@ class MusicianWidget(QWidget):
         
         self.paintInstrument(event, painter)
     
+    def updateImageSize(self):
+        inscribed = self.rect().adjusted(10,10,-10,-10)
+        self.__guimain.updateImageSize(self.getImageName(), inscribed.size())
+        self.update()
+    
     def paintInstrument(self, event, painter):
         inscribed = self.rect().adjusted(10,10,-10,-10)
         
-        painter.drawPixmap(inscribed, self.__guimain.getImage("black-guitar-128x128.png", inscribed.size()))
+        painter.drawPixmap(inscribed, self.__guimain.getImage(self.getImageName(), inscribed.size()))
+    
+    def getImageName(self):
+        return "black-guitar-128x128.png"
     
     def mouseReleaseEvent(self, event):
         event.accept()

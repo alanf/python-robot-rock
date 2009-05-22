@@ -22,10 +22,13 @@ class RRControlsPanel(QWidget):
         vpanel.addStretch(1)
         
         vpanel.addWidget(RRKeySelector(guimain), 0, Qt.AlignHCenter)
+        vpanel.addWidget(RRTimeSelector(guimain), 0, Qt.AlignHCenter)
+        
         vpanel.addWidget(RRTempoSlider(guimain), 0, Qt.AlignHCenter)
         vpanel.addWidget(RRPlayButton(guimain), 0, Qt.AlignHCenter)
-        vpanel.addWidget(RRDeleteIcon(guimain), 0, Qt.AlignHCenter)
         
+        vpanel.addWidget(RRDeleteIcon(guimain), 0, Qt.AlignHCenter)
+        #vpanel.addWidget(TimeSpinBox([100,2,4,3,24,1],guimain), 0, Qt.AlignHCenter)
         self.setLayout(vpanel)
         
     
@@ -136,16 +139,79 @@ class RRTempoSlider(QWidget):
 
 from songinfo import VALID_KEY, VALID_KEY_TONALITIES, VALID_TIME_NUMERATOR, VALID_TIME_DENOMINATOR
 
-# class RRTimeSelector(QWidget):
-#     def __init__(self, guimain):
-#         super(RRTimeSelector, self).__init__()
-#         self.__guimain = guimain
-#         
-#     
-#     def settime(self, time):
-#         pass
-#         
-#     time = property(fsets=settime)
+class RRTimeSelector(QWidget):
+    def __init__(self, guimain):
+        super(RRTimeSelector, self).__init__()
+        self.__guimain = guimain
+        
+        grid = QGridLayout()
+        
+        self.__num = TimeSpinBox([x for x in VALID_TIME_NUMERATOR], guimain)
+        self.__den = TimeSpinBox([x for x in VALID_TIME_DENOMINATOR], guimain)
+        
+        self.__time = (4,4)
+        
+        grid.addWidget(QLabel("<b>Time: </b>"), 0,0,2,1,Qt.AlignVCenter | Qt.AlignRight)
+        grid.addWidget(self.__num, 0,1,Qt.AlignHCenter)
+        grid.addWidget(self.__den, 1,1,Qt.AlignHCenter)
+        
+        self.connect(self.__num, SIGNAL('valueChanged(int)'), self.updateTime)
+        self.connect(self.__den, SIGNAL('valueChanged(int)'), self.updateTime)
+        
+        self.setLayout(grid)
+    
+    
+    def updateTime(self, val):
+        self.time = (self.__num.value(), self.__den.value())
+    
+    def settime(self, time):
+        if self.__time != time:
+            self.__guimain.core.updateTimeSignature(time)
+            self.__time = time
+        
+    time = property(fset=settime)
+
+class TimeSpinBox(QSpinBox):
+    def __init__(self, values, guimain):
+        super(TimeSpinBox, self).__init__()
+        
+        values.sort()
+        self.__values = values
+        self.__guimain = guimain
+        
+        self.__min = min(values) - 1
+        self.__max = max(values) + 1
+        self.setMinimum(self.__min)
+        self.setMaximum(self.__max)
+        
+        self.__index = self.__values.index(4)
+        
+        self.updateValue()
+    
+    def updateValue(self):
+        self.setValue(self.__values[self.__index])
+    
+    def stepBy(self, val):
+        self.__index = self.__index + val
+        self.setMinimum(self.__min)
+        self.setMaximum(self.__max)
+        if self.__index == 0:
+            self.setMinimum(self.__values[self.__index])
+        elif self.__index == len(self.__values) - 1:
+            self.setMaximum(self.__values[self.__index])
+        self.updateValue()
+    
+    def validate(self, potential, pos):
+        good_vals = [str(x) for x in self.__values]
+        result = QValidator.Invalid
+        for v in good_vals:
+            if v == potential:
+                return (QValidator.Acceptable, pos)
+            if v.startswith(potential):
+                result = QValidator.Intermediate
+            
+        return (result, pos)
+    
 
 class RRKeySelector(QWidget):
     def __init__(self, guimain):

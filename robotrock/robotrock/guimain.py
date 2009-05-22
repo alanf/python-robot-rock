@@ -84,28 +84,42 @@ class RRGuiMain(object):
     def getImage(self, image_name, scale=None, format=None):
         # Try cache first, then local, then global
         if self.__images.has_key(image_name):
-            return self.__images[image_name]
+            return self.__images[image_name][0]
         
         localname = os.path.join(self.__parentdir, 'images', image_name)
         if os.path.isfile(localname):
             self.logger.debug("Located image: %s" % localname)
-            image = QPixmap(localname, format)
+            original = QPixmap(localname, format)
             if scale is not None:
-                image = image.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-            self.__images[image_name] = image
-            return image
+                scaled = original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.__images[image_name] = (scaled, original)
+            else:
+                self.__images[image_name] = (original, original)
+            return self.__images[image_name][0]
         
         globalname = os.path.join(sys.prefix, 'robotrockresources', 'images', image_name)
         if os.path.isfile(globalname):
             self.logger.debug("Located image: %s" % globalname)
-            image = QPixmap(globalname, format)
+            original = QPixmap(globalname, format)
             if scale is not None:
-                image = image.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-            self.__images[image_name] = image
-            return image
+                scaled = image.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.__images[image_name] = (scaled, original)
+            else:
+                self.__images[image_name] = (original, original)
+            return self.__images[image_name][0]
         
         self.logger.error("Failed to find image: %s" % image_name)
         return QPixmap(self.__notfoundimage)
+    
+    def updateImageSize(self, image_name, scale):
+        if not self.__images.has_key(image_name):
+            self.logger.warn("Calling update image size on an image not yet loaded..")
+            self.getImage(image_name, scale)
+            return
+        
+        scaled, original = self.__images[image_name]
+        if not scaled.size() == scale:
+            self.__images[image_name] = (original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation), original)
     
     def setup_logging(self):
         logging.basicConfig(level=logging.DEBUG)
