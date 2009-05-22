@@ -1,0 +1,6 @@
+jazz bass : JazzAcousticBass.sf2 0 1 # Use the less raspy bass
+drum kit : HS_R8_Drums.sf2
+fingered bass : trb62.sf2
+blowed bottle : HS_Synth_Collection_I.sf2 0 5
+wah synth : HS_Synth_Collection_I.sf2 0 45
+harmonica synth : HS_Synth_Collection_I.sf2 0 75
