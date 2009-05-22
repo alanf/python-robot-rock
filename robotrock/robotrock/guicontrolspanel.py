@@ -28,7 +28,6 @@ class RRControlsPanel(QWidget):
         vpanel.addWidget(RRPlayButton(guimain), 0, Qt.AlignHCenter)
         
         vpanel.addWidget(RRDeleteIcon(guimain), 0, Qt.AlignHCenter)
-        #vpanel.addWidget(TimeSpinBox([100,2,4,3,24,1],guimain), 0, Qt.AlignHCenter)
         self.setLayout(vpanel)
         
     
@@ -78,7 +77,7 @@ class RRDeleteIcon(QLabel):
         self.__guimain = guimain
         self.setToolTip("Delete the selected musician")
         
-        self.setPixmap(guimain.getImage("delete-128x128.png").scaled(75,75,Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.setPixmap(guimain.getImage("delete-128x128.png").scaled(50,50,Qt.KeepAspectRatio, Qt.SmoothTransformation))
     
     def mouseReleaseEvent(self, event):
         event.accept()
@@ -143,6 +142,8 @@ class RRTimeSelector(QWidget):
     def __init__(self, guimain):
         super(RRTimeSelector, self).__init__()
         self.__guimain = guimain
+        
+        self.setToolTip("Selects a time signature")
         
         grid = QGridLayout()
         
@@ -217,6 +218,8 @@ class RRKeySelector(QWidget):
     def __init__(self, guimain):
         super(RRKeySelector, self).__init__()
         self.__guimain = guimain
+        
+        self.setToolTip("Selects a key signature")
         
         self.__key = ('C', 'Major')
         guimain.core.updateKeySignature(self.__key)

@@ -11,6 +11,7 @@ import re
 
 ## The following are some contants and things
 # that I didn't really want to redeclare a lot
+# (especially as they are used in print routines)
 background_brush = QBrush(Qt.white)
 background_pen = QPen(QBrush(Qt.gray), 2.0)
 hdist = QPoint(5,0)
@@ -150,6 +151,8 @@ class MusicianWidget(QWidget):
         self.setFocusPolicy(Qt.ClickFocus)
         
         self.setAttribute(Qt.WA_DeleteOnClose)
+        
+        self.updateImageSize()
     
     def attemptMove(self, x, y):
         validArea = self.__stage.rect().adjusted(lbspace + 1, rtspace, -rtspace, -lbspace+1)
@@ -235,7 +238,8 @@ class MusicianWidget(QWidget):
     
     def mouseReleaseEvent(self, event):
         event.accept()
-        #self.__guimain.logger.debug("Musician widget clicked at: %d, %d" % (event.x(), event.y()))
+        if event.button() == Qt.RightButton:
+            self.close()
     
     def mouseDoubleClickEvent(self, event):
         event.accept()

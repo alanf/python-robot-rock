@@ -120,6 +120,7 @@ class RRGuiMain(object):
         scaled, original = self.__images[image_name]
         if not scaled.size() == scale:
             self.__images[image_name] = (original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation), original)
+        
     
     def setup_logging(self):
         logging.basicConfig(level=logging.DEBUG)

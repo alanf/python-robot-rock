@@ -11,9 +11,9 @@ import functools
 class RRMusicianInfoPanel(QWidget):
     def __init__(self, guimain):
         super(RRMusicianInfoPanel, self).__init__()
-        #guimain.logger.debug("Creating musician info panel")
-        
         self.__guimain = guimain
+        
+        self.setToolTip("Displays information and properties about musicians on the stage")
         
         stacked = QStackedLayout()
         self.__mwidget_detail = RRMWidgetDetail(guimain)
@@ -50,15 +50,11 @@ class RRMWidgetDetail(QWidget):
         grid.addWidget(QLabel("Energy: "),1,0,Qt.AlignRight)
         grid.addWidget(QLabel("Complexity: "),2,0,Qt.AlignRight)
         
-        self.__energyField = QLineEdit()
-        self.__energyField.setReadOnly(True)
-        self.__energyField.setFocusPolicy(Qt.NoFocus)
+        self.__energyField = QLabel()
         self.__energyField.setMaximumWidth(50)
         grid.addWidget(self.__energyField, 1,1,Qt.AlignLeft)
         
-        self.__complexityField = QLineEdit()
-        self.__complexityField.setReadOnly(True)
-        self.__complexityField.setFocusPolicy(Qt.NoFocus)
+        self.__complexityField = QLabel()
         self.__complexityField.setMaximumWidth(50)
         grid.addWidget(self.__complexityField, 2,1,Qt.AlignLeft)
         
