@@ -13,15 +13,12 @@ class AtomicParser(object):
 	ATOMIC_NOTE.
 	"""
 
-	def __init__(self, score, receiver, delay=0):
+	def __init__(self, score, receiver):
 		"""Constructor for an AtomicParser object.
 
 		score is a Score object for which the parser reads notes from.
 
 		receiver is a Receiver object to handle note events.
-
-		delay is the time multiple of ATOMIC_NOTE  which the parser lags behind the marker
-		within the score.
 		"""
 
 		# the coupled receiver...
@@ -30,9 +27,6 @@ class AtomicParser(object):
 		self.score_marker = ScoreMarker( score )
 		
 		self.reset()
-
-		# Impose a delay of note to receiver.
-		self.delay = delay
 
 	def reset(self):
 		"Resets this parser."
@@ -58,7 +52,7 @@ class AtomicParser(object):
 
 		# Fire off current events to receiver.
 		for event in self.current_events():
-			self.receiver.handle( event[1] )
+			self.receiver.handle( event[-1] )
 
 		# advance marker
 		self.score_marker.forward( elapsed_beats )
@@ -73,12 +67,9 @@ class AtomicParser(object):
 		"Turn notes into receiver events."
 			# FIXME After BETA release
 			#       Event tuple structure will change.
-			#       currently fixed size: (musician, type, tone, dynamic)
+			#       currently fixed size: (staff, type, tone, dynamic)
 		for note in notes:
-			beat = self.delay + note.start
-			# Maintainers: It is vital that "Note off" events are placed in queue
-			#   before "Note on" events. This ensures that Notes with equal tones
-			#   and times are scheduled in the right playing order.
+			beat = self.current_beat + note.start
 			event = ( beat+note.duration, (staff, "Note off", note.tone, note.dynamic) )
 			heappush( self.eventq , event )
 			event = ( beat, (staff, "Note on", note.tone, note.dynamic) )
@@ -87,6 +78,24 @@ class AtomicParser(object):
 	def current_events(self):
 		"Returns an event that is scheduled to occur NOW!"
 
+		# Sort so "Note off" goes first
+		# Does so via a bucket sort
+		type_bucket = {}
+		type_bucket["Note on"] = []
+		type_bucket["Note off"] = []
+
 		while len( self.eventq ) > 0 and self.eventq[0][0] <= self.current_beat:
-			yield heappop( self.eventq )
+			event = heappop(self.eventq)
+			type_bucket[event[-1][1]].append( event )
+
+		current_events = []
+
+		for event in type_bucket["Note off"]:
+			current_events.append(event)
+
+		for event in type_bucket["Note on"]:
+			current_events.append(event)
+
+		for event in current_events:
+			yield event
 
