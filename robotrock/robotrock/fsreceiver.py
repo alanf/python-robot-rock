@@ -11,6 +11,8 @@ from dynamics import *
 MAX_CHANNELS  = 16
 # Value for an invalid soundfont reference
 INVALID_SOUNDFONT = -1
+# Gain for fluidsynth
+FLUIDSYNTH_GAIN = 0.4
 
 _TONE_VALUE = { # for toneToMIDICode
     'C'  :  0, 'B#' : 0,
@@ -48,7 +50,7 @@ class FluidsynthReceiver(object):
     "A Receiver using Fluidsynth on the backend."
 
     def __init__(self, soundfont_directory, samplerate=44100):
-        self.synth = Synth( samplerate=samplerate )
+        self.synth = Synth( gain=FLUIDSYNTH_GAIN, samplerate=samplerate  )
         self.available_channels = range( MAX_CHANNELS )
         self.registered_staffs = {}
 
