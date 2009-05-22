@@ -8,26 +8,64 @@
 import unittest
 import sys
 
+class AcousticGuitar(object):
+    
+    def __init__(self):
+	pass
+
+class ElectricGuitar(object):
+    
+    def __init__(self):
+	pass
+	
+class HandDrum(object):
+    
+    def __init__(self):
+	pass
+
+class Metronome(object):
+    
+    def __init__(self):
+	pass
+	
+	
+def Musician(instrument):
+    if instrument == 'acousticguitar':
+        return AcousticGuitar
+    if instrument == 'electricguitar':
+        return ElectricGuitar
+    if instrument == 'handdrum':
+	return HandDrum
+    if instrument == 'metronome':
+	return Metronome
+
+
 class TestMusicianDirectory(unittest.TestCase):
 
     def setUp(self):
         self.musicDir = musiciandirectory.MusicianDirectory();
-        self.musicDir.musicians = dict(acoustic_guitar=frozenset(['acoustic', 'string']), \
-                electric_guitar=frozenset(['electric', 'string']), \
-                hand_drum=frozenset(['percussion']), \
-                metronome=frozenset(['percussion']))
+        self.musicDir.musicians = dict( \
+	    acousticguitar=(set(['acoustic','string']), \
+	    Musician('acousticguitar')), \
+            electricguitar=(set(['electric','string']), \
+	    Musician('electricguitar')), \
+            handdrum=(set(['percussion']), Musician('handdrum')), \
+            metronome=(set(['percussion']), Musician('metronome')))
 
 
     def testfilterMusicianList(self):
-        list = self.musicDir.filterMusicianList(frozenset(['acoustic']))
-        self.assertEqual(['acoustic_guitar'], list)
-        list = self.musicDir.filterMusicianList(frozenset(['percussion']))
-        self.assertEqual(['hand_drum', 'metronome'], list)
-        list = self.musicDir.filterMusicianList(frozenset(['acoustic', 'percussion']))
+        list = self.musicDir.filterMusicianList(set(['acoustic']))
+        self.assertEqual([('acousticguitar', Musician('acousticguitar'))], list)
+        list = self.musicDir.filterMusicianList(set(['percussion']))
+        self.assertEqual([('handdrum', Musician('handdrum')), \
+	    ('metronome', Musician('metronome'))], list)
+        list = self.musicDir.filterMusicianList(set(['acoustic', 'percussion']))
         self.assertEqual([], list)
         list = self.musicDir.filterMusicianList(frozenset())
-        self.assertEqual(['acoustic_guitar', 'electric_guitar', 'hand_drum', \
-                          'metronome'], list)
+        self.assertEqual([('acousticguitar', Musician('acousticguitar')), \
+	    ('electricguitar', Musician('electricguitar')), \
+	    ('handdrum', Musician('handdrum')),  \
+            ('metronome', Musician('metronome'))], list)
         
     def testvalidTags(self):
         list = self.musicDir.validTags(set(['acoustic']))

@@ -1,0 +1,18 @@
+Musicians Directory Layout:
+
+-Each musician has its own directory, which must contain the word 'musician' in the directory name.
+
+-Each musician directory may contain up to two python files, the musician module and the test module. No other python files should be placed insdie the individual musician files.
+
+-All base classes or other necessary python files musicians inherit from or use should be placed in the shared directory or the main source directory, and the musician modules should add '../shared' or '../..' to the system path as necessary before importing these resources
+
+Specific Musician Directory Layout:
+
+-Within each musician directory, there should be a python file for the musician module, and optionally a python file for the test module.
+
+-There should also be an info.txt file. This file contains information about the musician, such as the stylistic tags that it should fall under.
+
+
+info.txt format:
+
+tags: tag1,tag2,tag3...tagn
