@@ -98,7 +98,8 @@ class RRTempoSlider(QWidget):
         self.__slider.setMaximum(MAXIMUM_TEMPO)
         self.__slider.setTickInterval(30)
         self.__slider.setTickPosition(QSlider.TicksBelow)
-        self.__slider.setValue((MAXIMUM_TEMPO-MINIMUM_TEMPO)/3)
+        # Initialize the tempo to 120 beats per minute.
+        self.__slider.setValue(120)
         
         label = QLabel("Tempo:")
         self.__value_label = QLineEdit()

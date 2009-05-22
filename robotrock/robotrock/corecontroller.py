@@ -9,12 +9,13 @@ import conductor
 import musiciandirectory
 import songinfo
 
-MINIMUM_TEMPO = 0
-MAXIMUM_TEMPO = 360
+MINIMUM_TEMPO = 40
+MAXIMUM_TEMPO = 208
 
 
 class CoreController():
 
+    # TODO: Pass in musician directory, already to go (from main()).
     def __init__(self, audio_driver, metronome, conductor, songInfo):
         #Do initialization stuff
         self.metronome = metronome
