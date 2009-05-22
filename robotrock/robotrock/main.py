@@ -33,11 +33,11 @@ def init():
     song_info_object = songinfo.SongInfo()
     score_object = score.Score()
     conductor_object = conductor.Conductor(score_object, song_info_object)
-    receiver_object = Receiver()
-    # TEMP hardcoded for BETA
-    receiver_object.soundfont_directory['metronome'] = SOUNDFONT_FILE
-    receiver_object.soundfont_directory['handdrum'] = SOUNDFONT_FILE
-    # TEMP BETA TEMP BETA
+    soundfont_directory = { # New hardcoded format. ;) Will be fixed TONIGHT! - Travis
+        'metronome' : (SOUNDFONT_FILE, 0, 0),
+        'handdrum'  : (SOUNDFONT_FILE, 0, 0)
+    }
+    receiver_object = Receiver( soundfont_directory )
     parser_object = Parser(score_object, receiver_object)
     clock_object = realtimeclock.RealtimeClock()
     metronome_object = Metronome()
