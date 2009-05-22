@@ -15,14 +15,15 @@ MAXIMUM_TEMPO = 208
 
 class CoreController():
 
-    # TODO: Pass in musician directory, already to go (from main()).
-    def __init__(self, audio_driver, metronome, conductor, songInfo):
+
+    def __init__(self, audio_driver, metronome, conductor, songInfo, \
+        musician_directory):
         #Do initialization stuff
         self.metronome = metronome
         self.audio_driver = audio_driver
         self.conductor = conductor
         self.song_info = songInfo
-        self.music_dir = musiciandirectory.MusicianDirectory()
+        self.music_dir = musician_directory
     
     #Start the audio driver
     def play(self):

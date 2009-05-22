@@ -45,20 +45,37 @@ class TestCoreController(unittest.TestCase):
             
             def removeMusician(self, musician):
                 self.ensemble.remove(musician)
+		
+	class MusicianDirectory(object):
+	    
+	    def __init__(self):
+		pass
+		
+	    def filterMusicianList(self, tags):
+		if tags == set(['acoustic']):
+		    return ['acousticguitar']
+		if tags == set(['percussion']):
+		    return ['handdrum', 'metronome']
+		if tags == set(['acoustic', 'electric']):
+		    return []
+		    
+            def validTags(self, tags):
+		if tags == set(['acoustic']):
+		    return ['string']
+		if tags == set(['string']):
+		    return ['acoustic', 'electric']
+		if tags == set(['percussion']):
+		    return []
+	    
         
         self.metronome = Metronome()
         self.audio_driver = AudioDriver()
         self.song_info = songinfo.SongInfo()
         self.conductor = Conductor()
+	self.musiciandirectory = MusicianDirectory()
         self.corecontroller = corecontroller.CoreController(self.audio_driver, \
-                self.metronome, self.conductor, self.song_info)
-                
-        self.corecontroller.music_dir.musicians = dict(
-                acoustic_guitar=frozenset(['acoustic', 'string']), \
-                electric_guitar=frozenset(['electric', 'string']), \
-                hand_drum=frozenset(['percussion']), \
-                metronome=frozenset(['percussion']))
-    
+                self.metronome, self.conductor, self.song_info, \
+		self.musiciandirectory)
     def testplay(self):
         self.corecontroller.play()
         self.assertTrue(self.audio_driver.isPlaying())
@@ -145,9 +162,9 @@ class TestCoreController(unittest.TestCase):
     
     def testfilterMusicianList(self):
         list = self.corecontroller.filterMusicianList(['acoustic'])
-        self.assertEqual(list, ['acoustic_guitar'])
+        self.assertEqual(['acousticguitar'], list)
         list = self.corecontroller.filterMusicianList(['percussion'])
-        self.assertEqual(list, ['hand_drum', 'metronome'])
+        self.assertEqual(['handdrum', 'metronome'], list)
         list = self.corecontroller.filterMusicianList(['acoustic', 'electric'])
         self.assertEqual(list, [])
         

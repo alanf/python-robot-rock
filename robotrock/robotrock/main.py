@@ -8,10 +8,11 @@ from atomicmetronome import AtomicMetronome as Metronome
 from atomicparser import AtomicParser as Parser
 from fsreceiver import FluidsynthReceiver as Receiver
 import audiodriver
-import realtimeclock
 import conductor
 import corecontroller
 import guimain
+import musiciandirectory
+import realtimeclock
 import score
 import songinfo
 import sys
@@ -44,8 +45,10 @@ def init():
     metronome_object.addListener(parser_object)
     audio_driver_object = audiodriver.AudioDriver(clock_object, metronome_object)
     audio_driver_object.start()
+    musician_directory_object = musiciandirectory.MusicianDirectory()
     core_controller_object = corecontroller.CoreController(audio_driver_object, \
-            metronome_object, conductor_object, song_info_object)
+        metronome_object, conductor_object, song_info_object, \
+	musician_directory_object)
     gui_object = guimain.RRGuiMain([], core_controller_object)
     sys.exit(gui_object.run())
     print 'initializing gui modules'
