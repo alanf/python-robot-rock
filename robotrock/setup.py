@@ -30,7 +30,7 @@ CONTACT_EMAIL = "af@cs.washington.edu"
 
 DATA = [ ('robotrockresources/images', getmatchingfiles('images', '.*\.png$')),
          ('robotrockresources/soundfonts', getmatchingfiles('soundfonts', '.*\.sf2$')),
-         ('robotrockresources/soundfonts', 'soundfonts/basic_set.txt') ]
+         ('robotrockresources/soundfonts', ['soundfonts/basic_set.txt']) ]
 
 DESCRIPTION = "A fun, easy interactive music tool."
 
