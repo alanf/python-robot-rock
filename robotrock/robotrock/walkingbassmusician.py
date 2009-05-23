@@ -21,7 +21,7 @@ class WalkingBass(activemusician.ActiveMusician):
         if window_start == 0 or self.changed:
             if self.changed:
                 measure.notes = []
-w                self.changed = False
+                self.changed = False
         
             complexity = self._complexity / 100.0
             beat_value = note.Note.note_values.HALF_NOTE
