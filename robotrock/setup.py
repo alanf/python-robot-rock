@@ -11,7 +11,9 @@ def getmatchingfiles(dir, pattern):
 
 NAME = "Robot Rock" # print-friendly name
 
-MY_NAME = 'robotrock' # directory name
+MY_NAME = 'robotrock' # package name
+
+PKG_DATA = ['musicians/*/*.py', 'musicians/*/*.txt', 'musicians/*.txt']
 
 AUTHOR = \
 	"Alan Fineberg, " +\
@@ -27,6 +29,20 @@ AUTHOR_EMAIL = "cse403-robot-rock@cs.washington.edu"
 CONTACT = "Alan Fineberg"
 
 CONTACT_EMAIL = "af@cs.washington.edu"
+
+# contents = []
+# 
+# def visit(contents, dirname, files):
+#     remove = []
+#     for f in files:
+#         if f.startswith('.'):
+#             remove.append(f)
+#         elif 
+#             contents.append(os.path.join(dirname, f))
+#     for f in remove:
+#         files.remove(f)
+# 
+# os.path.walk('musicians', visit, contents)
 
 DATA = [ ('robotrockresources/images', getmatchingfiles('images', '.*\.png$')),
          ('robotrockresources/soundfonts', getmatchingfiles('soundfonts', '.*\.sf2$')),
@@ -65,6 +81,7 @@ setup(
 	# packages
 	packages = [ MY_NAME ],
 	package_dir = { MY_NAME : MY_NAME },
+	package_data = { MY_NAME : PKG_DATA },
 
 	# misc data files
 	data_files = DATA,

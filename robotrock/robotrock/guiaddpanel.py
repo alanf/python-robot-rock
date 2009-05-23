@@ -6,8 +6,10 @@ Author: Tim Crossley <tjac0@cs.washington.edu>
 from PyQt4.QtCore import *
 from PyQt4.QtGui  import *
 
+
 from walkingbassmusician import WalkingBass
 from handdrum import HandDrum
+#from musicians.handdrummusician import handdrum
 
 import random
 class RRAddPanel(QWidget):

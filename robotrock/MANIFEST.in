@@ -4,3 +4,5 @@ include INSTALL
 prune robotrock/demo*
 include soundfonts/*.sf2
 include images/*.png
+include robotrock/musicians/*
+
