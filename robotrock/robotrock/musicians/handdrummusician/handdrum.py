@@ -191,6 +191,6 @@ class HandDrum(MusicianStructured):
                     if chance < self._notes:
                         self._addNote(x+.75, self._my_tone)
                         
-    # Returns the construtor for the HandDrum		
+# Returns the construtor for the HandDrum		
 def Musician():
-        return HandDrum()
+    return HandDrum()

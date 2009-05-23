@@ -45,6 +45,23 @@ class AcousticGuitar(MusicianStructured):
     #   signature. energy and complexity range from 1 to 100 (or 0 to 99)
     # Just returns 4 for this version.
     def _getNotes(self):
+        # Calculates the base number of notes. At full energy, this should
+        #   be 16 and should have a minimum of 2. The 21 is provided by the
+        #   leading 1 and the range from 2-16 is provided by dividing energy
+        #   by 6. 
+        notes = 2 + self._energy/6
+        # Adds notes to the number of notes to be played due to complexity.
+        #   The number of notes that are added is also a function of energy.
+        #   More energy means more notes, and so does more complexity. But a
+        #   high complexity and low energy shouldnt add too many notes. To
+        #   do this, both energy and complexity need to be in the numerator;
+        #   also, something needs to be in the denominator. 100 is found to be
+        #   the correct denominator because complexity == 100, energy == 0, only
+        #   one note is added. However, at complexity == 100, energy == 100, 16
+        #   notes are added.
+        notes = notes+(self._complexity/(100/notes))
+        # Modulates the number of notes based on the time signature. 
+        notes = notes * self._time[0] / self._time[1]
         return 4
 
     # This method decides the start locations of all the notes in the to be
@@ -53,6 +70,7 @@ class AcousticGuitar(MusicianStructured):
     def _locations(self):
         self._onbeat()
         self._offbeat()
+        self._dropnotes()
 
     # This method decides the length of each note in the measure. For an
     #   AcousticGuitar, this is not limited. 
@@ -66,6 +84,9 @@ class AcousticGuitar(MusicianStructured):
 
     # This method adds notes to the measure which are on the beat.
     def _onbeat(self):
+        
+
+        
         listing = chords.Progressions[self._key[0]]
         for x in range(len(listing)):
             self._addChord(x, listing[x], 'major')
@@ -74,7 +95,14 @@ class AcousticGuitar(MusicianStructured):
     def _offbeat(self):
         pass
 
+    # This method drops random notes from the measure based on the values
+    #   of complexity.
+    def _dropnotes(self):
+        pass
 
+# Returns the construtor for the HandDrum		
+def Musician():
+    return HandDrum()
         
 
     
