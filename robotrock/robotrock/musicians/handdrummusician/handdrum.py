@@ -12,31 +12,25 @@ import note
 import dynamics
 from drumkit import DrumKit
 
-
-# I prefer comments that are complete sentences, and that start with a space.
-#incomplete HandDrum. Only plays quarter notes, should vary with time signature
-#note: should fail testReactToChanges
+# This is the definition of a HandDrum
 class HandDrum(MusicianStructured):
 
-    # TODO: I'm a fan of full sentence comments.
-    #initialize the handdrum musician
+    # Initialization of a HandDrum. Initializes HandDrum specific values and
+    #   leaves the rest to the super class __init__ method.
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         MusicianStructured.__init__(self, energy, complexity, time, key)
         self.instrument = 'handdrum'
         self._my_tone=DrumKit["High Tom"]
 
-    #decides if new music needs to be generated.
-    #returns true when new music is to be generated
-    #returns false otherwise
+    # This method decides if new music needs to be composed on this iteration.
     def _decide(self):
-        #needs to generate new music if something changed
+        # Needs to generate new music if something has changed
         return self._changed
 
-    #fills in a measure by writing to _plans
-    #_plans is the temporary storage for all notes, they are printed
-    #   to the measure after the notes have been fully determined
-    #assumes that the whole measure needs to be rebuilt. as a result,
-    #   the last version of the measure is essentially deleted
+    # This method decides what will be played this iteration. This method
+    #   assumes the whole measure needs to be rebuilt, so it does so.
+    # For a HandDrum, this is done by playing mainly on-beat notes (as able)
+    #   and filling in with random off-beat notes as allowed by complexity.
     def _write(self):
         self._plans = {}
         self._notes = self._getNotes()
@@ -45,27 +39,40 @@ class HandDrum(MusicianStructured):
         self._dynamics()
         self._changed = False
 
-    #find number of notes to play in the measure
+    # This method calculates the number of notes to be played in this
+    #   measure. This calcluation is based on the energy and complexity
+    #   presently set. The number of notes played varies with the time
+    #   signature. energy and complexity range from 1 to 100 (or 0 to 99)
     def _getNotes(self):
-        #assumes 4/4 and 16 notes in a measure (1,e,&,a...)
-        # TODO: Magic number 13 -> needs a variable name and comments
+        # Calculates the base number of notes. At full energy, this should
+        #   be 8 and should have a minimum of 1. The 1 is provided by the
+        #   leading 1 and the range from 1-8 is provided by dividing energy
+        #   by 13. 
         notes = 1 + self._energy/13
-        # Also here: document what 100 is.
+        # Adds notes to the number of notes to be played due to complexity.
+        #   The number of notes that are added is also a function of energy.
+        #   More energy means more notes, and so does more complexity. But a
+        #   high complexity and low energy shouldnt add too many notes. To
+        #   do this, both energy and complexity need to be in the numerator;
+        #   also, something needs to be in the denominator. 100 is found to be
+        #   the correct denominator because complexity == 100, energy == 0, only
+        #   one note is added. However, at complexity == 100, energy == 100, 8
+        #   notes are added.
         notes = notes+(self._complexity/(100/notes))
+        # Modulates the number of notes based on the time signature. 
         notes = notes * self._time[0] / self._time[1]
-        #self.time[0] is 2, self.time[1] is 4 for 2/4 time
         return notes
 
-    #determines where all of the notes will be for this measure
-    #notes is the number of notes there are to work with
+    # This method decides the start locations of all the notes in the to be
+    #   played. It does this by splitting the job up into on-beat notes and
+    #   off-beat notes. 
     def _locations(self):
         self._onbeat()
         self._offbeat()
 
-    #determines the lengths of each of the notes
-    #this version is for drums only, makes the notes as long as possible
-    #   up to a quarter note so that it fits without overlapping any other
-    #   note
+    # This method decides the length of each note in the measure. For a
+    #   HandDrum, a note should run into the next note and be no more than
+    #   a QUARTER_NOTE in length. 
     def _lengths(self):
         listing = self._plans.keys()
         listing.sort()
@@ -79,70 +86,66 @@ class HandDrum(MusicianStructured):
                     self._setLength(notelisting[y], (self._time[0] + 1) - listing[x])
 
 
-    #determines the dynamics of each note
-    #this version sets all values to be middle of the road (50)    
+    # This method decides the dynamics of each note in the measure. Right now,
+    #   everything is left to defualt (Forte).
     def _dynamics(self):
         pass
 
-    #works for _lengths by setting the lengths themselves
-    #myNote is the note being edited at the moment
-    #diff is the space in time from the start of this note to the start
-    #   of the next note
-    def _setLength(self, myNote, diff):
-        if diff >= 1.0:                     #quarter note
+    # This method calculates the length of the given note based on the the given
+    #   dist (distance) to the next note. The length of the note is made as
+    #   long as possible without being longer than dist.
+    def _setLength(self, myNote, dist):
+        if dist >= 1.0:                     #quarter note
             myNote.duration=self._durations.QUARTER_NOTE
-        elif diff == .5:                    #eigth note
+        elif dist == .5:                    #eighth note
             myNote.duration=self._durations.EIGHTH_NOTE
-        elif diff == .25:                   #sixteenth note
+        elif dist == .25:                   #sixteenth note
             myNote.duration=self._durations.SIXTEENTH_NOTE
-        elif diff == .125:                  #32'nd note
+        elif dist == .125:                  #32'nd note
             myNote.duration=self._durations.THIRTYSECOND_NOTE
-        elif diff == .0625:                 #64'th note
+        elif dist == .0625:                 #64'th note
             myNote.duration=self._durations.SIXTYFOURTH_NOTE
-        elif diff == .33:                   #tripolet   
+        elif dist == .33:                   #tripolet   
             myNote.duration=self._durations.EIGHTH_NOTE_TRIPLET
-        elif not(diff % .5):                #divisible by eigth note
-            self._setLength(myNote, diff - .5)
-        elif not(diff % .25):               #divisible by sixteenth note
-            self._setLength(myNote, diff - .25)
-        elif not(diff % .125):              #divisible by 32'nd note
-            self._setLength(myNote, diff - .125)
-        elif not(diff % .0625):             #divisible by 64'th note
-            self._setLength(myNote, diff - .0625)
-        elif not(diff % .33):               #divisible by tripolet
-            self._setLength(myNote, diff - .33)
-        else:#somehow we fell through, default it to be as short as possible
+        elif not(dist % .5):                #divisible by eigth note
+            self._setLength(myNote, dist - .5)
+        elif not(dist % .25):               #divisible by sixteenth note
+            self._setLength(myNote, dist - .25)
+        elif not(dist % .125):              #divisible by 32'nd note
+            self._setLength(myNote, dist - .125)
+        elif not(dist % .0625):             #divisible by 64'th note
+            self._setLength(myNote, dist - .0625)
+        elif not(dist % .33):               #divisible by tripolet
+            self._setLength(myNote, dist - .33)
+        else:#Somehow we fell through, default it to be as short as possible
             myNote.duration = self._durations.SIXTYFOURTH_NOTE
 
-    #determines where all of the on beat notes are
-    #notes is the number of notes still availible
-    #this version fills in all of the on beat notes before filling in
-    #   off beat notes
+    # This method adds notes to the measure which are on the beat.
     def _onbeat(self):
 
-        #there are more notes left to play than there are beats
+        # There are more notes left to play than there are beats, so fill
+        #   up all of the beats. 
         if self._notes>=self._time[0]:
             for x in range(self._time[0]):
                 self._addNote(x, self._my_tone)
 
-        #less notes then beats, need to fill some
+        # There are less notes then beats, so only some can have notes
         elif self._notes > 0: 
-            #iterate over all of the beats in the measure
+            # Iterate over all of the beats in the measure
             for x in range(self._time[0]):
                 if self._notes > 0: 
-                    #have enough notes to fill in remaining beats
-                    #so put a note on this beat
+                    # There are enough notes to fill in remaining beats, so
+                    #   do so.
                     if self._notes>=(self._time[0]-x):
                         self._addNote(x, self._my_tone)
-                    #not enough noted to fill in remaining beats
-                    #randomly choose if this beat will have a note
+                    # There are not enough notes to fill in remaining beats,
+                    #   so randomly choose if this beat will have a note.
                     else:
                         chance = random.randrange(self._time[0])
                         if chance < self._notes:
                             self._addNote(x, self._my_tone)            
 
-    #determines where all off beat notes are located
-    #notes is the number of notes still availible
+    # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
         # TODO: update these comments
         #case1: just a few left (less than the number spaces for eighth notes)
@@ -150,8 +153,7 @@ class HandDrum(MusicianStructured):
         #case3: lots of notes (enough to fill 16th)
         #case4: more notes (more notes than through 16th notes) (not implemented)
 
-        #case: lots of notes
-        #3 beacuse 1/4 have been written (quarters)
+        # There are enough notes to fill in all of the sixteenth notes, so do so
         if self._notes >= (3*self._time[0]):
             #fill in 16th notes
             for x in range(self._time[0]):
@@ -159,30 +161,36 @@ class HandDrum(MusicianStructured):
                 self._addNote(x+.5, self._my_tone)
                 self._addNote(x+.75, self._my_tone)
 
-        #case: some notes
-        #there are enough notes to play all eighth notes, so lets play some.
-        #   we also need to add some 16th notes
+        # There are not enough notes to fill in all sixteenth notes, so we can
+        #   only do some.
         elif self._notes > 0:
-            #sixteenth notes
+            # Iterate over the beats in the measure
             for x in range(self._time[0]):
-                #have enough notes to fill in remaining sixteenth notes
+                # There are enough notes to fill in remaining sixteenth notes,
+                #   so do so.
                 if 0 < self._notes>=(self._time[0]-x):
-                    # TODO: cleanup magic numbers 
+                    # e of the beat
                     self._addNote(x+.25, self._my_tone)
+                    # & of the beat
                     self._addNote(x+.5, self._my_tone)
+                    # a of the beat
                     self._addNote(x+.75, self._my_tone)
-                #not enough notes to fill in remaining sixteenth notes
-                #randomly choose if this beat will have some sixteenth notes
+                # There are not enough notes to fill in remaining sixteenth notes,
+                #   so randomly choose if this beat will have some sixteenth notes.
                 else:
+                    # e of the beat
                     chance = random.randrange(2*self._time[0])
                     if chance < self._notes:
                         self._addNote(x+.25, self._my_tone)
+                    # & of the beat
                     chance = random.randrange(2*self._time[0])
                     if chance < self._notes:
                         self._addNote(x+.5, self._my_tone)
+                    # a of the beat
                     chance = random.randrange(2*self._time[0])
                     if chance < self._notes:
                         self._addNote(x+.75, self._my_tone)
-			
+                        
+    # Returns the construtor for the HandDrum		
 def Musician():
-    return HandDrum()
+        return HandDrum()

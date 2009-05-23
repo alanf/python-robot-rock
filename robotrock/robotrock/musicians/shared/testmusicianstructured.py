@@ -8,13 +8,17 @@
 import unittest
 from musicianstructured import MusicianStructured
 
-#definition of the test suite for musicians in general
+# This is the definition of the test suite for the MusicianStructured class.
+#   All of the functionality of a musician is tested here (such as adding
+#   notes and writing to measures). Individual style correctness is left
+#   to independant musician testing. 
 class TestMusician(unittest.TestCase):
 
-    #setup to allow for testing the output of a musician
+    # Setup method to allow for musicians to be tested.
     def setUp(self):
+        self.musician = MusicianStructured(42)
 
-        #a stub measure to be written to for testing purposes
+        # A stub measure to be written to for testing purposes.
         class MeasureStub(object):
             def __init__(self):
                 self.time_signature = (4, 4)
@@ -23,9 +27,9 @@ class TestMusician(unittest.TestCase):
 
         self.test_measure = MeasureStub()
         
-    #tests initialization settings
+    # This test tests that musicians are being initialized correctly
     def testInit(self):
-        #ititialize with no inputs, test settings
+        # Initialize with no inputs, then test settings
         self.musician = MusicianStructured()
         self.assertEqual(50, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
@@ -33,7 +37,7 @@ class TestMusician(unittest.TestCase):
         self.assertEqual(('B', 'major'), self.musician.key)
         self.assertEqual(True, self.musician._changed)
 
-        #initialize with given energy and complexity
+        # Initialize with a given setting for energy and complexity
         self.musician = MusicianStructured(40, 80)
         self.assertEqual(40, self.musician.energy)
         self.assertEqual(80, self.musician.complexity)
@@ -41,7 +45,7 @@ class TestMusician(unittest.TestCase):
         self.assertEqual(('B', 'major'), self.musician.key)
         self.assertEqual(True, self.musician._changed)
 
-        #initialize with energy only
+        # Initialize with a given setting for energy only
         self.musician = MusicianStructured(42)
         self.assertEqual(42, self.musician.energy)
         self.assertEqual(50, self.musician.complexity)
@@ -49,37 +53,30 @@ class TestMusician(unittest.TestCase):
         self.assertEqual(('B', 'major'), self.musician.key)
         self.assertEqual(True, self.musician._changed)
 
-    #tests the musician is composing and storing properly
+    # Tests if the musician is writing to the internal data structure
+    #   correctly. Tests _addNote in the process.
     def testWrite(self):
-        #check initialization
-        self.musician = MusicianStructured(42)
-        self.assertEqual(42, self.musician.energy)
-        self.assertEqual(50, self.musician.complexity)
-        self.assertEqual((4,4), self.musician.time)
-        self.assertEqual(True, self.musician._changed)
-
-        #test to see if the musician is writing music
         self.musician._write()
         self.assertNotEqual({}, self.musician._plans)
 
-    #tests that all of the properties are working properly
+    # Tests that all of the getter and setter properties are working
+    #   correctly
     def testGetAndSet(self):
-        #init
-        self.musician = MusicianStructured()
-        #test engergy
+        # Testing engergy
         self.musician.energy = 23
         self.assertEqual(23, self.musician.energy)
-        #test complexity
+        # Testing complexity
         self.musician.complexity = 78
         self.assertEqual(78, self.musician.complexity)
-        #test time signature
+        # Testing time signature
         self.musician.time = (2,6)
         self.assertEqual((2,6), self.musician.time)
-        #test key signature
+        # Testing key signature
         self.musician.key = ('A', 'major')
         self.assertEqual(('A', 'major'), self.musician.key)
         
-    #tests that the musician is writing the music to the measure properly
+    # Tests that the given measure is being written to correctly and
+    #   completely.
     def testCompose(self):
         self.musician = MusicianStructured()
     
@@ -97,7 +94,7 @@ class TestMusician(unittest.TestCase):
                         test = True
                 self.assertNotEqual(test, False)
 
-    #tests that the musician can write a chord properly
+    # Tests that the musician can write a chord correctly
     def testChords(self):
         self.musician = MusicianStructured()
         self.musician._plans = {}
@@ -118,7 +115,6 @@ class TestMusician(unittest.TestCase):
                     testA = True
             self.assertTrue(testD and testF and testA)
 
-        
-
+# Start running the tests. 
 if __name__ == '__main__':
     unittest.main()
