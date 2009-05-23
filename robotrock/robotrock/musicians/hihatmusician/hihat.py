@@ -13,7 +13,7 @@ import drumkit
     
 class HiHat(object):
     def __init__(self):
-        self.instrument = 'metronome'
+        self.instrument = 'hi hat'
         self.__energy = 50
         self.__complexity = 50
         self.changed = False
