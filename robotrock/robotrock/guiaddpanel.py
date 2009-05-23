@@ -6,7 +6,7 @@ Author: Tim Crossley <tjac0@cs.washington.edu>
 from PyQt4.QtCore import *
 from PyQt4.QtGui  import *
 
-from bassmusician import WalkingBass as ActiveMusician
+from walkingbassmusician import WalkingBass as ActiveMusician
 #from activemusician import ActiveMusician
 
 class RRAddPanel(QWidget):
