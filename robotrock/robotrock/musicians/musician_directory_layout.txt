@@ -10,6 +10,8 @@ Specific Musician Directory Layout:
 
 -Within each musician directory, there should be a python file for the musician module, and optionally a python file for the test module.
 
+-The python file must contain a method called Musician() that returns the constructor for the musician.
+
 -There should also be an info.txt file. This file contains information about the musician, such as the stylistic tags that it should fall under.
 
 
