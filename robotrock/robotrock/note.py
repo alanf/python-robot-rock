@@ -19,7 +19,7 @@ class NoteValues(object):
             self.SIXTEENTH_NOTE_TRIPLET = self.EIGHTH_NOTE / 3
             self.THIRTYSECOND_NOTE_TRIPLET = self.SIXTEENTH_NOTE / 3
         
-        def dotted(value):
+        def dotted(self, value):
             return 3 * value // 2
 
 
