@@ -1,4 +1,3 @@
-
 ''' musicianStructured.py
     musician definition
     Author: Rich Snider <mrsoviet@cs.washington.edu>
@@ -11,7 +10,7 @@ import note
 import dynamics
 import chords
 
-#dThis is the definition of MusicianStructued, the superclass of how
+#This is the definition of MusicianStructued, the superclass of how
 #   musicians are recommendedly implemented. Please see pre-existing
 #   musicians and the online API for further information and techniques.
 #Note: One does NOT have to follow this structure to make a working musician.
@@ -202,7 +201,8 @@ class MusicianStructured(Musician):
     #purposes.
 
     #This method decides if new music needs to be composed on this iteration.
-    #It returns a boolean True or False
+    #It returns a boolean True when music needs to be composed, or False when
+    #   it does not.
     def _decide(self):
         return self._changed
 
