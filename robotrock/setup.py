@@ -28,10 +28,11 @@ CONTACT = "Alan Fineberg"
 
 CONTACT_EMAIL = "af@cs.washington.edu"
 
-DATA = [ ('robotrockresources/sounds', ['scripts/HS_R8_Drums.sf2']),
-         ('robotrockresources/images', getmatchingfiles('images', '.*\.png$')) ] # other resources are listed in here, like so.
+DATA = [ ('robotrockresources/images', getmatchingfiles('images', '.*\.png$')),
+         ('robotrockresources/soundfonts', getmatchingfiles('soundfonts', '.*\.sf2$')),
+         ('robotrockresources/soundfonts', 'soundfonts/basic_set.txt') ]
 
-DESCRIPTION = "A fun, easy interactive music tool." # TODO should be better!
+DESCRIPTION = "A fun, easy interactive music tool."
 
 LICENSE = "MIT"
 
@@ -41,7 +42,7 @@ REQUIREMENTS = ['pyQt']
 
 URL = "http://www.assembla.com/wiki/show/cse403"
 
-VERSION = "0.0-BETA"
+VERSION = "0.1-RC"
 
 setup(
 	# project 
@@ -64,9 +65,6 @@ setup(
 	# packages
 	packages = [ MY_NAME ],
 	package_dir = { MY_NAME : MY_NAME },
-#	package_data = { MY_NAME : DATA },
-	# OR
-#	py_modules = [ "fluidsynth" ]
 
 	# misc data files
 	data_files = DATA,
