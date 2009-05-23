@@ -113,8 +113,8 @@ class TestAcousticGuitar(unittest.TestCase):
         for x in range(len(measure.notes)):
             note = measure.notes[x]
 
-            # Note's start is on a beat
-            if (note.start % self._durations.QUARTER_NOTE) == 0:
+            # Note's start is a SIXTEENTH_NOTE or greater
+            if (note.start % self._durations.SIXTEENTH_NOTE) == 0:
                 onbeats += 1
         return len(measure.notes) - onbeats
 

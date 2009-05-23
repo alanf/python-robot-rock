@@ -22,6 +22,8 @@ class AcousticGuitar(MusicianStructured):
         MusicianStructured.__init__(self, energy, complexity, time, key)
         self.instrument = 'acousticguitar'
         self._my_tone= (key[0], 4)
+        self._present_chord = key
+        self._chord_progress = 0
 
     # This method decides if new music needs to be composed on this iteration.
     def _decide(self):
@@ -62,14 +64,15 @@ class AcousticGuitar(MusicianStructured):
         notes = notes+(self._complexity/(100/notes))
         # Modulates the number of notes based on the time signature. 
         notes = notes * self._time[0] / self._time[1]
-        return 4
+        return notes
 
     # This method decides the start locations of all the notes in the to be
     #   played. It does this by splitting the job up into on-beat notes and
     #   off-beat notes. 
     def _locations(self):
         self._onbeat()
-        self._offbeat()
+        if self._notes > 0:
+            self._offbeat()
         self._dropnotes()
 
     # This method decides the length of each note in the measure. For an
@@ -84,16 +87,75 @@ class AcousticGuitar(MusicianStructured):
 
     # This method adds notes to the measure which are on the beat.
     def _onbeat(self):
-        
+        # On beat for the acoustic guitar are beats, eighths, and sixteenths
+        # There are enough notes to play all of the on beat notes, so play them
+        if self._notes >= 4 * self._time[0]:
+            for x in range(self._time[0]):
+                self._addChord(x, self._key[0], 'major')
+                self._addChord(x+.25, self._key[0], 'major')
+                self._addChord(x+.5, self._key[0], 'major')
+                self._addChord(x+.75, self._key[0], 'major')
+                
+        # There are enough notes to play at least half of the on beat notes and
+        #   maybe some others. 
+        elif self._notes >= 2 * self._time[0]:
+            for x in range(self._time[0]):
+                self._addChord(x, self._key[0], 'major')
+                self._addChord(x+.5, self._key[0], 'major')
+            # If there are notes left to be played
+            if self._notes > 0:
+                for x in range(self._time[0]):
+                    chance = random.randrange(self._time[0])
+                    if chance < self._notes:
+                        self._addChord(x+.25, self._key[0], 'major')
+                    chance = random.randrange(self._time[0])
+                    if chance < self._notes:
+                        self._addChord(x+.75, self._key[0], 'major')
+            
+        # There are enough notes to only play the notes on the beats and maybe
+        #   some others. Limit this others to eighth notes.
+        elif self._notes >= self._time[0]:
+            for x in range(self._time[0]):
+                self._addNote(x, self._my_tone)
+            # If there are notes left to be played
+            if self._notes > 0:
+                for x in range(self._time[0]):
+                    chance = random.randrange(self._time[0])
+                    if chance < self._notes:
+                        self._addChord(x+.5, self._key[0], 'major')
+                
+        # Not even enough notes to play a note on every beat
+        else:
+            for x in range(self._time[0]):
+                self._addNote(x, self._my_tone)
+            # If there are notes left to be played
+            if self._notes > 0:
+                for x in range(self._time[0]):
+                    chance = random.randrange(self._time[0])
+                    if chance < self._notes:
+                        self._addChord(x, self._key[0], 'major')
 
         
-        listing = chords.Progressions[self._key[0]]
-        for x in range(len(listing)):
-            self._addChord(x, listing[x], 'major')
+        #listing = chords.Progressions[self._key[0]]
+        #for x in range(len(listing)):
+        #    self._addChord(x, listing[x], 'major')
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
-        pass
+        for x in range(self._time[0]):
+            chance = random.randrange(self._time[0])
+            if chance < self._notes:
+                self._addChord(x+.125, self._key[0], 'major')
+            chance = random.randrange(self._time[0])
+            if chance < self._notes:
+                self._addChord(x+.375, self._key[0], 'major')
+            chance = random.randrange(self._time[0])
+            if chance < self._notes:
+                self._addChord(x+.625, self._key[0], 'major')
+            chance = random.randrange(self._time[0])
+            if chance < self._notes:
+                self._addChord(x+.875, self._key[0], 'major')
+        
 
     # This method drops random notes from the measure based on the values
     #   of complexity.
