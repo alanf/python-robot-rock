@@ -1,4 +1,4 @@
-''' metronome.py
+''' basemetronome.py
     Author: Travis Veralrud <veralrud@cs.washington.edu>
 	Defines Metronome, a base class for concrete implementations.
 '''
@@ -6,7 +6,7 @@
 DEFAULT_TEMPO = 120 # in beats per minute
 MINIMUM_TEMPO =   1 
 
-class Metronome(object):
+class BaseMetronome(object):
 	"""An object to convert time into beats with respect to a given tempo.
 
         Listener objects receive onPulse events from a Metronome. Through the return value from

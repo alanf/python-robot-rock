@@ -17,52 +17,69 @@ class MusicianDirectory(object):
 	
 	self.musicians = dict()
 	
-	try:
-	    directory = os.listdir('musicians')
+	# Make sure necessary folders are on the system path
+	_thisDir = os.path.split(sys.modules[__name__].__file__)[0]
+	base_path = os.path.join(_thisDir, 'musicians\\')
+	sys.path.append(base_path + 'shared\\')
+	sys.path.append(_thisDir)
+	
+	# Locate the musician directory
+	try: 
+	    directory = os.listdir(base_path)
 	except OSError:
 	    print 'musicians directory not found'
 	    return
-	
+
 	# search directory for musician directories
 	for item in directory:
 	    tags_valid = False
 	    module_valid = False
 	    tags_set = set()
 	    # test whether the file is a valid musician directory, skip if not
-	    if 'musician' not in item or not os.path.isdir('musicians\\'+item):
+	    if 'musician' not in item or not os.path.isdir(base_path + item):
 		continue
-	    musician_directory = os.listdir('musicians\\' + item)
-	    sys.path.append('musicians\\' + item)
-	    
+	    musician_directory = os.listdir(base_path + item)
+	    # append the musician's directory to the system path
+	    sys.path.append(base_path + item + '\\')
 	    # search musician directory for python and info files
 	    for file_name in musician_directory:
+		include = ['.py']
+		exclude = ['.pyc', 'test', '~', '#']
 		# musician info file found
 		if(file_name == 'info.txt'):
-		    f = open('musicians\\' + item + '\\' + file_name, 'r')
+		    f = open(base_path + item + '\\' + file_name, 'r')
 		    line = f.readline()
 		    # need to construct the tags set
 		    if 'tags' in line:
 			tags_valid = True
-		        line = line[line.find(':')+1:len(line)]
+		        line = line.split(':')[1]
 		        line = line.strip()
 		        # parse the tags line, using a comma delimiter
 		        tags = line.split(',')
 		        for tag in tags:
 			    tag = tag.strip()
 			    tags_set.add(tag)
-		elif('.py' in file_name and '.pyc' not in file_name and \
-		    'test' not in file_name):
+		    f.close()
+		elif(all([(i in file_name) for i in include]) and \
+		     not any([(i in file_name) for i in exclude])):
 		    # import the module
-		    module_name = file_name[0:file_name.find('.')]
+		    module_name = file_name.split('.')[0]
+		    print module_name
 		    try:
 		        __import__(module_name)
 		    except ImportError:
-			print 'error importing', module_name
-			continue
+	                print 'error importing', module_name
+		        continue
 		    # discover the constructor method
-		    construct_cmd = 'constructor = sys.modules[module_name].Musician'
+		    constructor = [method for method in dir(sys.modules[module_name]) if \
+		        callable(getattr(sys.modules[module_name], method)) and \
+			method == 'Musician']
+		    print constructor
+		    assert(len(constructor) == 1)
+
+		    constructor = sys.modules[module_name].Musician
 		    try:
-		        exec construct_cmd
+		        #exec construct_cmd
 			module_valid = True
 		    except AttributeError:
 		        print module_name, 'does not have appropriate \

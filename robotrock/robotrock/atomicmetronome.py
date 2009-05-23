@@ -3,7 +3,7 @@
     A flavor of Metronome that operates at small, fixed beats.
 '''
 
-import metronome
+import basemetronome
 from note import Note
 
 # Discrete number of calls per beat. This effectively defines the
@@ -17,13 +17,13 @@ ATOMIC_BEAT = 1.0 / DIVISIONS_PER_QUARTER_NOTE
 # This value directly corresponds to DIVISIONS_PER_QUARTER_NOTE
 ATOMIC_NOTE = Note.note_values.QUARTER_NOTE // DIVISIONS_PER_QUARTER_NOTE
 
-class AtomicMetronome(metronome.Metronome):
+class AtomicMetronome(basemetronome.BaseMetronome):
 	"""An object to convert time into beats with respect to a given tempo.
 	This Metronome will generate onPulse events at a fixed rate.
 
 	Listener objects receive onPulse events from a Metronome."""
 
-	def __init__(self, tempo = metronome.DEFAULT_TEMPO):
+	def __init__(self, tempo = basemetronome.DEFAULT_TEMPO):
 		self.listeners = []
 		self.tempo = tempo
 		self.current_beat = ATOMIC_NOTE
