@@ -7,6 +7,11 @@
 from fluidsynth import Synth
 from dynamics import *
 
+# HACK HACK for release
+import sys
+SOUNDFONT_PATH = sys.prefix + '/robotrockresources/soundfonts/'
+# HACK HACK
+
 # Maximum number of audio channels available
 MAX_CHANNELS  = 16
 # Value for an invalid soundfont reference
@@ -92,7 +97,7 @@ class FluidsynthReceiver(object):
             if sf_filename is None:
                 self.soundfonts[ instrument ] = INVALID_SOUNDFONT
             elif sf_filename not in self.soundfonts:
-                sf = self.synth.sfload( sf_filename ) # INVALID_SOUNDFONT on failure
+                sf = self.synth.sfload( SOUNDFONT_PATH + sf_filename ) # INVALID_SOUNDFONT on failure
                 self.soundfonts[ instrument ] = sf
             # Finally, place in loaded instrument directory
             self.instrument[ instrument ] = ( self.soundfonts[ instrument ], bank, patch )
