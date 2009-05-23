@@ -180,3 +180,6 @@ class HandDrum(MusicianStructured):
                     chance = random.randrange(2*self._time[0])
                     if chance < self._notes:
                         self._addNote(x+.75, self._my_tone)
+			
+def Musician():
+    HandDrum()
