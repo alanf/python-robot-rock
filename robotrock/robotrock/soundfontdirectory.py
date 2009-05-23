@@ -13,11 +13,6 @@
 
 '''
 
-# HACK for release
-import sys
-PATH = sys.prefix + '/robotrockresources/'
-# HACK HACK
-
 def load(filename):
     """Loads the instruments from the given filename and returns a dict object
     that maps instrument names to tuples of form (filename, bank, preset).
@@ -28,7 +23,7 @@ def load(filename):
 
     dir = {}
 
-    f = open(PATH + filename)
+    f = open( filename )
 
     for line in f:
         # Ignore comments
