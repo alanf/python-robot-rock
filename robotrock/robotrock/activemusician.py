@@ -13,8 +13,8 @@ import drumkit
 class ActiveMusician(object):
     def __init__(self):
         self.instrument = 'metronome'
-        self.__energy = 50
-        self.__complexity = 50
+        self._energy = 50
+        self._complexity = 50
         self.changed = False
     
     def compose(self, measure, window_start, window_duration):
@@ -25,19 +25,19 @@ class ActiveMusician(object):
                 
             my_duration = note.Note.note_values.QUARTER_NOTE
             
-            if self.__energy > 60:
+            if self._energy > 60:
                 my_duration = my_duration // 4
-            elif self.__energy > 50:
+            elif self._energy > 50:
                 my_duration = my_duration // 2
-            elif self.__energy < 25:
+            elif self._energy < 25:
                     my_duration = my_duration * 2 // 1
         
             my_start = 0
         
-            if self.__complexity > 50:
+            if self._complexity > 50:
                 note.Note.note_values.EIGHTH_NOTE_TRIPLET
                 my_duration = my_duration * 3 // 2
-            elif self.__complexity > 30:
+            elif self._complexity > 30:
                 start = note.Note.note_values.EIGHTH_NOTE
                 my_duration = my_duration * 3 // 2
         
@@ -53,11 +53,11 @@ class ActiveMusician(object):
                 i += 1
 
     def __setComplexity(self, value):
-        self.__complexity = value
+        self._complexity = value
         self.changed = True
     
     def __setEnergy(self, value):
-        self.__energy = value
+        self._energy = value
         self.changed = True
     
     complexity = property(fset=__setComplexity)

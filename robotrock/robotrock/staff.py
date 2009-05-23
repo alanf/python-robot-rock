@@ -13,8 +13,9 @@ class Staff(object):
     '''
     def __init__(self, **staff_info):
         self.__dict__.update(staff_info)
-        self.measures = ExpandingList(Measure, \
-                        parent=self,)# key=('C', '#', 'maj'), time_signature=(4, 4))
+        # No default measure data is specified, it's up to the conductor to
+        # keep measure data current.
+        self.measures = ExpandingList(Measure, parent=self)
         
 if __name__ == '__main__':
     s = Staff(instrument='Banjo')

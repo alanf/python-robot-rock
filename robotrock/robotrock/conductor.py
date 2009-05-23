@@ -23,13 +23,15 @@ class Conductor(object):
         self.ensemble = []
         self.musician_staffs = {}
         self.song_info = song_info
-        # Abstracting these constructor arguments aids testability.
+        # Abstracting this constructor arguments aids testability.
         self.note_obj = note_obj
+        self.new_musicians = False
     
     def addMusician(self, musician):
         ''' Adds a musician and associates them with a staff, mapped one-to-one. '''
         self.ensemble.append(musician)
         self.musician_staffs[musician] = self.score_marker.addStaff(musician.instrument)
+        self.new_musicians = True
                         
     def removeMusician(self, musician):
         ''' Prevents a musician from writing to the score. '''
@@ -44,11 +46,13 @@ class Conductor(object):
         staff_measures = self.score_marker.staffMeasures()
         measure_position = self.score_marker.measure_position
         
-        # Perform the book keeping of updating the measure info.
+        # Perform the book keeping of getting the latest measure info.
         if measure_position == 0:
+            self.measure_info = self.song_info.measureInfo()
+        if measure_position == 0 or self.new_musicians:
             for (staff, measure) in staff_measures.iteritems():
-                self.__updateMeasureInfo(measure, self.song_info.measureInfo())
-        
+                self.__updateMeasureInfo(measure, self.measure_info)
+                
         # Using a mapping of musician -> staff, staff -> measure,
         # have each musician compose their respective measure.      
         for (musician, staff) in self.musician_staffs.iteritems():
