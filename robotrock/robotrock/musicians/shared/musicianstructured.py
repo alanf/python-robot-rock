@@ -20,7 +20,7 @@ class MusicianStructured(Musician):
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         self._energy = energy
         self._complexity = complexity
-        self._my_tone=38
+        self._my_tone= ("A", 4)
         self._notes = 0
         self.instrument = 'none'
         self._key = key
