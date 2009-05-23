@@ -54,7 +54,9 @@ class RRGuiMain(object):
         self.__mainwindow = RRMainWindow(self)
         self.__mainwindow.show()
         self.logger.debug("Beginning Qt event loop")
-        return self.__app.exec_()
+        result = self.__app.exec_()
+        self.core.halt()
+        return result
     
     def setstage(self, stage):
         if self.__stage is not None:
@@ -102,7 +104,7 @@ class RRGuiMain(object):
             self.logger.debug("Located image: %s" % globalname)
             original = QPixmap(globalname, format)
             if scale is not None:
-                scaled = image.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                scaled = original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 self.__images[image_name] = (scaled, original)
             else:
                 self.__images[image_name] = (original, original)
@@ -113,7 +115,8 @@ class RRGuiMain(object):
     
     def updateImageSize(self, image_name, scale):
         if not self.__images.has_key(image_name):
-            self.logger.warn("Calling update image size on an image not yet loaded..")
+            # No longer a problem to update an image that has not been loaded, musician widgets
+            # update on creation
             self.getImage(image_name, scale)
             return
         
