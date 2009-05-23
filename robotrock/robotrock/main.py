@@ -16,6 +16,7 @@ import realtimeclock
 import score
 import songinfo
 import sys
+import soundfontdirectory
     
 # TEMP BETA: find soundfont source
 import os.path
@@ -24,9 +25,7 @@ if sys.path[0] is not '':
 else:
     PATH = ""
 
-#SOUNDFONT_FILE = sys.prefix + '/robotrockresources/sounds/' + 'HS_R8_Drums.sf2'
-SOUNDFONT_FILE = '../soundfonts/HS_R8_Drums.sf2'
-BASS_FILE = '../soundfonts/JazzAcousticBass.sf2'
+SOUNDFONT_DIRECTORY_FILE = sys.prefix + '/robotrockresources/' + 'soundfonts/basic_set.txt'
 
 def init_core():
     pass
@@ -35,11 +34,7 @@ def init():
     song_info_object = songinfo.SongInfo()
     score_object = score.Score()
     conductor_object = conductor.Conductor(score_object, song_info_object)
-    soundfont_directory = { # New hardcoded format. ;) Will be fixed TONIGHT! - Travis
-        'metronome' : (SOUNDFONT_FILE, 0, 0),
-        'handdrum'  : (SOUNDFONT_FILE, 0, 0),
-        'jazz bass' : (BASS_FILE, 0, 1)
-    }
+    soundfont_directory = soundfontdirectory.load( SOUNDFONT_DIRECTORY_FILE )
     receiver_object = Receiver( soundfont_directory )
     parser_object = Parser(score_object, receiver_object)
     clock_object = realtimeclock.RealtimeClock()
