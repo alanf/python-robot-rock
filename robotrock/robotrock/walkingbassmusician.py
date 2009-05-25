@@ -9,8 +9,10 @@ Copyright (c) 2009 __MyCompanyName__. All rights reserved.
 
 import activemusician
 import note
+import tone
 import dynamics
 import random
+
 
 class WalkingBass(activemusician.ActiveMusician):
     def __init__(self):
@@ -33,24 +35,42 @@ class WalkingBass(activemusician.ActiveMusician):
             notes = self.createSyncopatedRhythm(measure.time_signature[0], \
                     beat_value, \
                     complexity)
-                
+            
+            # The root note is specified by the key signature, and the third piano octave.
+            root = (measure.key_signature[0], 3)
+            minor = measure.key_signature[1] == 'minor'
             for my_note in notes:
                 my_note.dynamic = dynamics.FORTE 
-                if random.random() > complexity:
-                    my_note.tone = ('C', 3)
-                elif random.random() > complexity / 2:
-                    my_note.tone = ('G', 3)
-                elif random.random() > complexity / 3:
-                    my_note.tone = ('E', 3)
-                elif random.random() > complexity / 4:
-                    my_note.tone = ('F', 3)
-                else:
-                    my_note.tone = ('A', 3)
+                my_note.tone = self.chooseTone(root, complexity, minor)
+  
         
             for my_note in notes:
                 my_note.dynamic = dynamics.FORTE
                 measure.addNote(my_note)
 
+    def chooseTone(self, root, complexity, minor=False):
+        # Root note.
+        if random.random() > complexity:
+            return root
+        # The third note.
+        elif random.random() > complexity / 2:
+            if not minor:
+                return (tone.getTone(root, tone.MEDIANT))
+            else:
+                return (tone.getTone(root, tone.MINOR_MEDIANT))
+          # The fifth note.
+        elif random.random() > complexity / 3:
+            return (tone.getTone(root, tone.DOMINANT))
+        # The forth note.
+        elif random.random() > complexity / 4:
+            return (tone.getTone(root, tone.SUBDOMINANT))
+        # The sixth or minor seventh note.
+        else:
+            if not minor:
+                return (tone.getTone(root, tone.SUBMEDIANT))
+            else:
+                return (tone.getTone(root, tone.SUBTONIC))
+        
     def createSyncopatedRhythm(self, beats, base_rhythm, syncopation):
         notes = []
         beat_number = 0

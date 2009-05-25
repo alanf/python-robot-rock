@@ -7,7 +7,7 @@
 
 VALID_KEY = set(['A','A#','Ab','B','B#','Bb','C','C#','Cb',\
         'D','D#','Db','E', 'E#','Eb','F','F#','Fb','G','G#','Gb' ])
-VALID_KEY_TONALITIES = set(['Major', 'Minor'])
+VALID_KEY_TONALITIES = set(['major', 'minor'])
 
 VALID_TIME_NUMERATOR = set([2, 3, 4, 5, 6, 7])
 VALID_TIME_DENOMINATOR = set([2, 4, 8])
@@ -15,7 +15,7 @@ VALID_TIME_DENOMINATOR = set([2, 4, 8])
 class SongInfo(object):
     def __init__(self):
         self.info = {
-                     'key_signature': ('C', 'Major'),
+                     'key_signature': ('C', 'major'),
                      'time_signature': (4, 4),
                     }
                      

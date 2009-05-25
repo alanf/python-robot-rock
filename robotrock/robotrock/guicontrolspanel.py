@@ -109,7 +109,7 @@ class RRTempoSlider(QWidget):
         self.__value_label.setMaximumWidth(50)
         self.__value_label.setAlignment(Qt.AlignHCenter)
         
-        self.connect(self.__slider, SIGNAL('sliderMoved(int)'), self.immediateSliderHandler)
+        self.connect(self.__slider, SIGNAL('sliderMoved(int)'), self.sliderHandler)
         self.connect(self.__slider, SIGNAL('sliderReleased()'), self.sliderHandler)
         self.connect(self.__value_label, SIGNAL('returnPressed()'), self.lineEditHandler)
         
@@ -122,9 +122,6 @@ class RRTempoSlider(QWidget):
         self.sliderHandler()
         
         self.setToolTip("Adjusts the tempo of the song")
-    
-    def immediateSliderHandler(self, val):
-        self.__value_label.setText(str(val))
     
     def sliderHandler(self):
         val = self.__slider.value()
@@ -221,7 +218,7 @@ class RRKeySelector(QWidget):
         
         self.setToolTip("Selects a key signature")
         
-        self.__key = ('C', 'Major')
+        self.__key = ('C', 'major')
         guimain.core.updateKeySignature(self.__key)
         
         convert = lambda c : unicode(c).replace('b', unichr(9837)).replace('#', unichr(9839))
@@ -247,12 +244,11 @@ class RRKeySelector(QWidget):
         self.setLayout(grid)
     
     def keyChangeHandler(self, val):
-        changed = False
         if type(val) == type(0):
             if val == 2:
-                t = 'Minor'
+                t = 'minor'
             else:
-                t = 'Major'
+                t = 'major'
             self.__key = (self.__key[0], t)
         else:
             k = val.replace(QChar(9837), 'b').replace(QChar(9839), '#')

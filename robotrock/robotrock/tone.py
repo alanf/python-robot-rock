@@ -19,6 +19,8 @@ SUBMEDIANT   = 9          # 6th
 SUBTONIC     = 10         # minor 7th
 LEADING_TONE = 11         # major 7th
 
+MINOR_MEDIANT = 3
+
 # Used in tone to value conversion. See getTone().
 _TONE_VALUE = {
 	'C'  :  0, 'B#' : 0,

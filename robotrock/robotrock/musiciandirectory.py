@@ -14,42 +14,6 @@ class MusicianDirectory(object):
     # should contiain a Musician constructor which points to the default
     # constructor
     def __init__(self):
-        
-        # datadir = self.findDataDir()
-        #         sys.path.append(datadir)
-        #         
-        #         contents = os.listdir(datadir)
-        #         
-        #         musicians = []
-        #         
-        #         for entry in contents:
-        #             if os.path.isdir(os.path.join(datadir, entry)) and entry.contains('musician'):
-        #                 musicians.append(entry)
-        #             elif entry == 'shared':
-        #                 sys.path.append(os.path.join(datadir, entry))
-        #             
-        #         
-        #         musicianDict = {}
-        #         
-        #         for m in musicians:
-        #             name , a, b = m.partition('musician')
-        #             musicianDict[name] = (None, None)
-        #             for f in os.listdir(os.path.join(datadir, m)):
-        #                 if f.endswith('.py') and not f.contains('test'):
-        #                     module = f[0:len(f)-3]
-        #                     __import__('musicians.' + m + '.' + module)
-        #                     musicianDict[name][1] = eval('musicians.' + m + '.' + module + '.Musician')
-        #                 elif f == 'info.txt':
-        #                     info = open(os.path.join(datadir, m, f), 'r')
-        #                     line = info.readline()
-        #                     tags = line.split(':')[1].split(',')
-        #                     musicianDict[name][0] = set(tags)
-        #                     
-        #                     print tags
-        #                 
-        #             
-        #         print musicianDict
-        #         
         self.musicians = dict()
         
         join = os.path.join
@@ -111,18 +75,17 @@ class MusicianDirectory(object):
                     except ImportError:
                         print 'error importing', module_name
                         continue
-                    # discover the constructor method
+                    
+                    # Discover the constructor method.
                     constructor = [method for method in dir(sys.modules[module_name]) if \
                         callable(getattr(sys.modules[module_name], method)) and \
                         method == 'Musician']
-                    print constructor
-                    assert(len(constructor) == 1)
-        
-                    constructor = sys.modules[module_name].Musician
+                        
                     try:
                         #exec construct_cmd
-                        module_valid = True
-                    except AttributeError:
+                        assert(len(constructor) == 1)
+                        constructor = sys.modules[module_name].Musician
+                    except AssertionError:
                         print module_name, 'does not have appropriate \
                              constructor named Musician'
                         continue
@@ -147,13 +110,12 @@ class MusicianDirectory(object):
     # that satisfy the specified set of tags
     def filterMusicianList(self, tags):
         
-        list = []
+        result = []
         for k in self.musicians.iterkeys():
            if tags.issubset(self.musicians[k][0]):
-               list.append((k, self.musicians[k][1]))
+               result.append((k, self.musicians[k][1]))
             
-        list.sort()
-        return list           
+        return sorted(result)           
             
             
     # Returns a list of tags that do not have an empty intersection
