@@ -147,12 +147,6 @@ class HandDrum(MusicianStructured):
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
-        # TODO: update these comments
-        #case1: just a few left (less than the number spaces for eighth notes)
-        #case2: some notes (more than eighth spaces, less than 16th
-        #case3: lots of notes (enough to fill 16th)
-        #case4: more notes (more notes than through 16th notes) (not implemented)
-
         # There are enough notes to fill in all of the sixteenth notes, so do so
         if self._notes >= (3*self._time[0]):
             #fill in 16th notes

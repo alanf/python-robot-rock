@@ -95,6 +95,18 @@ class TestAcousticGuitar(unittest.TestCase):
         self.assertTrue(self.compareEnergy(self.last, self.test_measure))
         self.assertTrue(self.compareComplexity(self.lowEbase, self.test_measure))
 
+    # Tests that the chords are going through progressions.
+    def testProgressions(self):
+        self.test_measure.notes = []
+        self.guitar = AcousticGuitar()
+        self.guitar.compose(self.test_measure, 0, 0)
+        # TODO: go through a few iterations of compose (high complexity) to make
+        #   sure chords are being chosen and played correctly
+        
+        #print self._durations.QUARTER_NOTE
+        #for x in range(len(self.test_measure.notes)):
+        #    print (self.test_measure.notes[x].start,self.test_measure.notes[x].tone)
+
 # Helper methods:
     # Counts the number of notes in the given measure.
     def countNotes(self, measure):
