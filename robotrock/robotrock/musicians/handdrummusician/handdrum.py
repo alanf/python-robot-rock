@@ -1,5 +1,5 @@
 ''' handdrum.py
-    TODO: Full explanation of handdrum class definition of a handdrum
+    definition of a handdrum
     Author: Rich Snider <mrsoviet@cs.washington.edu>
 '''
 

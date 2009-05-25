@@ -13,7 +13,7 @@ import chords
 # This is the definition of MusicianStructued, the superclass of how
 #   musicians are recommendedly implemented. Please see pre-existing
 #   musicians and the online API for further information and techniques.
-#Note: One does NOT have to follow this structure to make a working musician.
+# Note: One does NOT have to follow this structure to make a working musician.
 # Note: The default musician is a metronome as defined below (for testing)
 class MusicianStructured(Musician):
 

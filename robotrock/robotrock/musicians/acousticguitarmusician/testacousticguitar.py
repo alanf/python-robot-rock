@@ -98,31 +98,53 @@ class TestAcousticGuitar(unittest.TestCase):
 # Helper methods:
     # Counts the number of notes in the given measure.
     def countNotes(self, measure):
-        return len(measure.notes)
+        return (len(measure.notes)/3)
 
     # Returns whether first contains more notes than second. Both first and
     #   second need to be measures.
     def compareEnergy(self, first, second):
         return self.countNotes(first) > self.countNotes(second)
 
-    # Counts the number of notes not on the main beat in the given measure
-    # Accomplishes this by subtracting the number of on-beats from the total
-    #   number of beats.
-    def countOffnotes(self, measure):
-        onbeats = 0
+    # Calculates the complexity of the given measure. This is determined as the
+    #   sum of how many notes are played that are not on the beat and how many
+    #   on-beat notes are dropped.
+    def countComplexity(self, measure):
+        noteStarts = []
         for x in range(len(measure.notes)):
             note = measure.notes[x]
 
-            # Note's start is a SIXTEENTH_NOTE or greater
+            # Note's start is divisible by a SIXTEENTH_NOTE
             if (note.start % self._durations.SIXTEENTH_NOTE) == 0:
-                onbeats += 1
-        return len(measure.notes) - onbeats
+                # If there is not already a note recorded at this location
+                #   in the measure, then record one
+                if noteStarts.count(note.start) == 0:
+                    noteStarts.append(note.start)
+        result = (len(measure.notes)/3) - len(noteStarts)
+        # If enough notes have been played to consider drops as part of
+        #   complexity, then include drops
+        if (len(measure.notes)/3) > 13:
+           result += (measure.time_signature[0]*4) - len(noteStarts)
+        return result
+
+    # Calculates and returns the number of skipped onbeat notes.
+    def skippedNotes(self, measure):
+        noteStarts = []
+        for x in range(len(measure.notes)):
+            note = measure.notes[x]
+            # Note's start is divisible by a SIXTEENTH_NOTE
+            if (note.start % self._durations.SIXTEENTH_NOTE) == 0:
+                # If there is not already a note recorded at this location
+                #   in the measure, then record one
+                if noteStarts.count(note.start) == 0:
+                    noteStarts.append(note.start)
+        return (measure.time_signature[0]*4) - len(noteStarts)
+            
 
     # Returns whether first is more complex than second. Both first and
     #   second need to be measures.
     def compareComplexity(self, first, second):
-        valueFirst = float(self.countOffnotes(first))/float(self.countNotes(first))
-        valueSecond = float(self.countOffnotes(second))/float(self.countNotes(second))
+        valueFirst = float(self.countComplexity(first))/float(self.countNotes(first))
+        valueSecond = float(self.countComplexity(second))/float(self.countNotes(second))
         return valueFirst >= valueSecond
 
 # Start running the tests. 
