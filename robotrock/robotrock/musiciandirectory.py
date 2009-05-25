@@ -16,6 +16,7 @@ class MusicianDirectory(object):
     def __init__(self):
         self.musicians = dict()
         
+	# Alias for os.path.join
         join = os.path.join
         
         # Make sure necessary folders are on the system path
@@ -82,9 +83,9 @@ class MusicianDirectory(object):
                         method == 'Musician']
                         
                     try:
-                        #exec construct_cmd
                         assert(len(constructor) == 1)
                         constructor = sys.modules[module_name].Musician
+			module_valid = True
                     except AssertionError:
                         print module_name, 'does not have appropriate \
                              constructor named Musician'
@@ -132,4 +133,3 @@ class MusicianDirectory(object):
         
         valid_list.sort()
         return valid_list
-        
