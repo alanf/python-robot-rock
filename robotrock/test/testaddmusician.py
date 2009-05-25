@@ -21,23 +21,30 @@ import songinfo
 class TestAddMusician(unittest.TestCase):
     
     def setUp(self):
-	# Set up all the necessary objects for using a core contorller and conductor
+    # Set up all the necessary objects for using a core contorller and conductor
+        class ClockStub(object):
+            def time(self):
+                return 1.0
+            
+        clock = ClockStub()
         self.metronome = atomicmetronome.AtomicMetronome()
-        self.audio_driver = audiodriver.AudioDriver(self.metronome)
+        self.audio_driver = audiodriver.AudioDriver(clock, self.metronome)
         self.score_object = score.Score()
         self.song_info = songinfo.SongInfo()
+        self.musician_directory = {'foo': 'bar'}
         self.conductor_object = conductor.Conductor(self.score_object, self.song_info)
         self.core_controller = corecontroller.CoreController(self.audio_driver, \
-                self.metronome, self.conductor_object, self.song_info)
+                self.metronome, self.conductor_object, \
+                self.song_info, self.musician_directory)
 
     def testaddMusician(self):
-	# Ensure the ensemble starts as empty
-	self.conductor_object.ensemble = []
-	test_musician = musicianstructured.MusicianStructured()
-	# Add test musician and ensure the conductors ensemble is updated accordingly
-	self.core_controller.addMusician(test_musician)
-	self.assertEquals(self.conductor_object.ensemble, [test_musician])
-	
+        # Ensure the ensemble starts as empty
+        self.conductor_object.ensemble = []
+        test_musician = musicianstructured.MusicianStructured()
+        # Add test musician and ensure the conductors ensemble is updated accordingly
+        self.core_controller.addMusician(test_musician)
+        self.assertEquals(self.conductor_object.ensemble, [test_musician])
+    
 if __name__ == '__main__':
     unittest.main()
 
