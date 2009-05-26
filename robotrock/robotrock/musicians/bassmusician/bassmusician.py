@@ -6,7 +6,10 @@ bassmusician.py
 Simulates a fairly active bass guitarist.
 """
 
+import sys
+sys.path.append('../shared')
 import activemusician
+sys.path.append('../..')
 import note
 import tone
 import dynamics
