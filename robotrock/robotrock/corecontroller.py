@@ -89,7 +89,7 @@ class CoreController():
         tag_set = set()
         for tag in tags:
             tag_set.add(tag)
-        list = self.music_dir.validTags(tags)
+        list = self.music_dir.validTags(tag_set)
         return list
     
   

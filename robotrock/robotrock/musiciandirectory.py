@@ -129,7 +129,8 @@ class MusicianDirectory(object):
         for v in self.musicians.itervalues():
             if tags.issubset(v[0]):
                 for member in (v[0] - tags):
-                    valid_list.append(member)
+		    if member not in valid_list:
+                        valid_list.append(member)
         
         valid_list.sort()
         return valid_list

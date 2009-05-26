@@ -74,6 +74,8 @@ class TestMusicianDirectory(unittest.TestCase):
         self.assertEqual(['acoustic', 'electric'], list)
         list = self.musicDir.validTags(set(['percussion']))
         self.assertEqual([], list)
+	list = self.musicDir.validTags(set([]))
+	self.assertEqual(['acoustic', 'electric', 'percussion', 'string'], list)
         
         
 if __name__ == '__main__':
