@@ -101,7 +101,7 @@ class RRStage(QWidget):
         #self.__guimain.logger.debug("Stage clicked at: %d, %d" % (event.x(), event.y()))
         mwidget = self.__guimain.focused_musician
         if mwidget is not None:
-            mwidget.attemptMove(event.x(), event.y())
+            mwidget.clearFocus()
     
     def resizeEvent(self, event):
         scaleX = float(event.size().width()) / event.oldSize().width()
@@ -135,6 +135,8 @@ class MusicianWidget(QWidget):
         
         self.__energy = 0
         self.__complexity = 0
+        
+        self.__dragPoint = None
         
         if re.match("^[aeiou]", musician.instrument) is not None:
             article = "an"
@@ -240,11 +242,29 @@ class MusicianWidget(QWidget):
         event.accept()
         if event.button() == Qt.RightButton:
             self.close()
+        else:
+            self.__dragPoint = None
     
     def mouseDoubleClickEvent(self, event):
         event.accept()
         self.lower()
         self.clearFocus()
+    
+    def mousePressEvent(self, event):
+        event.accept()
+        #self.__guimain.logger.debug("Mouse press: x:%d, y:%d" % (event.x(), event.y()))
+        if event.button() == Qt.LeftButton:
+            self.__dragPoint = QPoint(event.pos())
+    
+    def mouseMoveEvent(self, event):
+        event.accept()
+        if self.__dragPoint is not None:
+            #self.__guimain.logger.debug("Mouse move: x:%d\ty:%d" % (event.x(), event.y()))
+            #self.__guimain.logger.debug("Drag point is at: x:%d\ty:%d" % (self.__dragPoint.x(), self.__dragPoint.y()))
+            deltaX = event.x() - self.__dragPoint.x()
+            deltaY = event.y() - self.__dragPoint.y()
+            #self.__guimain.logger.debug("DeltaX: %d\tdeltaY:%d" % (deltaX, deltaY))
+            self.attemptMove(self.x() + deltaX + self.width()/2, self.y() + deltaY + self.height()/2)
     
     def focusInEvent(self, event):
         event.accept()

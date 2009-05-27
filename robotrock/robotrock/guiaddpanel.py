@@ -32,5 +32,11 @@ class RRAddPanel(QWidget):
         return musicians[random_idx][1]()
         
     def addHandler(self, checked):
-        self.__guimain.stage.add_musician(self.randomMusician())
+        if dir(self.__guimain.core).__contains__("dummy"):
+            self.__guimain.stage.add_musician(MusicianDummy())
+        else:
+            self.__guimain.stage.add_musician(self.randomMusician())
 
+class MusicianDummy():
+    def __init__(self):
+        self.instrument = "Dummy Musician"

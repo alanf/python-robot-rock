@@ -172,8 +172,10 @@ class CoreControllerDummy():
             value = CoreController.__dict__[key]
             if type(value) == type(lambda:0) and key is not "__init__":
                 self.__dict__[key] = functools.partial(logfunction, key)
-            
-        
+    
+    # Distinguishes this as a dummy
+    def dummy():
+        pass
     
 
 if __name__ == '__main__':
