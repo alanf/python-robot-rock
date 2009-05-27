@@ -14,13 +14,27 @@ class RRAddPanel(QWidget):
         #guimain.logger.debug("Creating add musician panel")
         
         self.__guimain = guimain
+        guimain.logger.debug("Fetching musician list")
+        self.__mlist = guimain.core.filterMusicianList([])
+        if self.__mlist is None:
+            self.__mlist = [("dummy", MusicianDummy)]
+        
+        guimain.logger.debug("Musician list:")
+        guimain.logger.debug(self.__mlist)
         
         hpanel = QHBoxLayout()
         
         addbutton = QPushButton("Add musician")
         addbutton.setToolTip("Adds a musician to the stage")
+        
+        self.__mComboBox = QComboBox()
+        for musician in self.__mlist:
+            self.__mComboBox.addItem(musician[0])
+            guimain.logger.debug("Adding musician: %s" % musician[0])
+        
         self.connect(addbutton, SIGNAL('clicked(bool)'), self.addHandler)
         
+        hpanel.addWidget(self.__mComboBox)
         hpanel.addWidget(addbutton)
         
         self.setLayout(hpanel)
@@ -32,10 +46,7 @@ class RRAddPanel(QWidget):
         return musicians[random_idx][1]()
         
     def addHandler(self, checked):
-        if dir(self.__guimain.core).__contains__("dummy"):
-            self.__guimain.stage.add_musician(MusicianDummy())
-        else:
-            self.__guimain.stage.add_musician(self.randomMusician())
+        self.__guimain.stage.add_musician(self.__mlist[self.__mComboBox.currentIndex()])
 
 class MusicianDummy():
     def __init__(self):

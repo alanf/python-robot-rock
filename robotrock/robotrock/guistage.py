@@ -49,7 +49,7 @@ class RRStage(QWidget):
     
     def add_musician(self, musician):
         #self.__guimain.logger.info("Adding musician: %s" % musician)
-        self.__guimain.core.addMusician(musician)
+        #self.__guimain.core.addMusician(musician)
         mwidget = MusicianWidget(musician, self.__guimain, self)
         self.__mwidgets.append(mwidget)
         mwidget.attemptMove(random.randint(lbspace,self.width()-rtspace), random.randint(lbspace,self.height()-rtspace))
@@ -126,11 +126,13 @@ class RRStage(QWidget):
             
 
 class MusicianWidget(QWidget):
-    def __init__(self, musician, guimain, parent):
+    def __init__(self, musicianTuple, guimain, parent):
         super(MusicianWidget, self).__init__(parent)
         #guimain.logger.debug("Creating musician widget")
+        name, musicianConstructor = musicianTuple
+        
         self.__guimain = guimain
-        self.__musician = musician
+        self.__musician = musicianConstructor()
         self.__stage = parent
         
         self.__energy = 0
@@ -138,12 +140,9 @@ class MusicianWidget(QWidget):
         
         self.__dragPoint = None
         
-        if re.match("^[aeiou]", musician.instrument) is not None:
-            article = "an"
-        else:
-            article = "a"
+        guimain.core.addMusician(self.__musician)
         
-        self.setToolTip("A musician, playing %s %s" % (article, musician.instrument))
+        self.setToolTip("%s, playing %s" % (self.addArticle(name), self.addArticle(self.__musician.instrument)))
         
         size = mwidget_size * min([parent.width(), parent.height()]) / 100
         
@@ -155,6 +154,12 @@ class MusicianWidget(QWidget):
         self.setAttribute(Qt.WA_DeleteOnClose)
         
         self.updateImageSize()
+    
+    def addArticle(self, noun):
+        if re.match("^[aeiou]", noun) is not None:
+            return "an " + noun
+        else:
+            return "a " + noun
     
     def attemptMove(self, x, y):
         validArea = self.__stage.rect().adjusted(lbspace + 1, rtspace, -rtspace, -lbspace+1)

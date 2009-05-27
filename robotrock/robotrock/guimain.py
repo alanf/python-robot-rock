@@ -48,6 +48,8 @@ class RRGuiMain(object):
         self.__app = QApplication(args)
         self.createNotFoundImage()
         
+        self.logger.debug("Done initializing gui..")
+        
     
     def run(self):
         #self.logger.debug("Creating main window")
@@ -90,7 +92,7 @@ class RRGuiMain(object):
         
         localname = os.path.join(self.__parentdir, 'images', image_name)
         if os.path.isfile(localname):
-            self.logger.debug("Located image: %s" % localname)
+            #self.logger.debug("Located image: %s" % localname)
             original = QPixmap(localname, format)
             if scale is not None:
                 scaled = original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -101,7 +103,7 @@ class RRGuiMain(object):
         
         globalname = os.path.join(sys.prefix, 'robotrockresources', 'images', image_name)
         if os.path.isfile(globalname):
-            self.logger.debug("Located image: %s" % globalname)
+            #self.logger.debug("Located image: %s" % globalname)
             original = QPixmap(globalname, format)
             if scale is not None:
                 scaled = original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -172,10 +174,6 @@ class CoreControllerDummy():
             value = CoreController.__dict__[key]
             if type(value) == type(lambda:0) and key is not "__init__":
                 self.__dict__[key] = functools.partial(logfunction, key)
-    
-    # Distinguishes this as a dummy
-    def dummy():
-        pass
     
 
 if __name__ == '__main__':
