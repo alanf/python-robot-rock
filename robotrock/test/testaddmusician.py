@@ -12,7 +12,6 @@ import audiodriver
 import conductor
 import corecontroller
 import atomicmetronome
-import musicianstructured
 import score
 import songinfo
 
@@ -25,7 +24,11 @@ class TestAddMusician(unittest.TestCase):
         class ClockStub(object):
             def time(self):
                 return 1.0
-            
+        
+        class MusicianStub(object):
+            def __init__(self):
+                self.instrument = 'foo'
+        
         clock = ClockStub()
         self.metronome = atomicmetronome.AtomicMetronome()
         self.audio_driver = audiodriver.AudioDriver(clock, self.metronome)
@@ -36,11 +39,12 @@ class TestAddMusician(unittest.TestCase):
         self.core_controller = corecontroller.CoreController(self.audio_driver, \
                 self.metronome, self.conductor_object, \
                 self.song_info, self.musician_directory)
-
+        self.musician = MusicianStub()
+        
     def testaddMusician(self):
         # Ensure the ensemble starts as empty
         self.conductor_object.ensemble = []
-        test_musician = musicianstructured.MusicianStructured()
+        test_musician = self.musician
         # Add test musician and ensure the conductors ensemble is updated accordingly
         self.core_controller.addMusician(test_musician)
         self.assertEquals(self.conductor_object.ensemble, [test_musician])
