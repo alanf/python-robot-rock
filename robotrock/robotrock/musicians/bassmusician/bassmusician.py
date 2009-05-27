@@ -89,7 +89,7 @@ class Bass(activemusician.ActiveMusician):
             
         return notes
                     
-if __name__ == '__main__':
-    wbm = BassMusician()
+def Musician():
+    return Bass()
         
 

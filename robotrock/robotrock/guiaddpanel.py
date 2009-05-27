@@ -7,10 +7,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui  import *
 
 
-from walkingbassmusician import WalkingBass
-from handdrum import HandDrum
-#from musicians.handdrummusician import handdrum
-
 import random
 class RRAddPanel(QWidget):
     def __init__(self, guimain):
@@ -29,8 +25,12 @@ class RRAddPanel(QWidget):
         
         self.setLayout(hpanel)
     
+    def randomMusician(self):
+        musicians = self.__guimain.core.filterMusicianList([])
+        random_idx = int(random.random() * len(musicians))
+        # Musicians are returned as a tuple of (name, constructor).
+        return musicians[random_idx][1]()
+        
     def addHandler(self, checked):
-        if random.random() > 0.5:
-            self.__guimain.stage.add_musician(WalkingBass())
-        else:
-            self.__guimain.stage.add_musician(HandDrum())
+        self.__guimain.stage.add_musician(self.randomMusician())
+
