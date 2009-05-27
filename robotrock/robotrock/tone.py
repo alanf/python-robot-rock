@@ -47,7 +47,8 @@ def getTone(root, semitone):
 
 	note, octave = root
 
-	code = 12 * octave + _TONE_VALUE[ note.upper() ] + semitone
+    # Ensure that we support lower case tones, without making 'Ab' -> 'AB'.
+	code = 12 * octave + _TONE_VALUE[ note[0].upper() + note[1] ] + semitone
 
 	return ( _VALUE_TONE[code % 12] , code / 12 )
 
