@@ -19,12 +19,12 @@ class AcousticGuitar(MusicianStructured):
     #   values and leaves the rest to the super class __init__ method.
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         MusicianStructured.__init__(self, energy, complexity, time, key)
-        self.instrument = 'acousticguitar'
+        self.instrument = 'jazz bass'
         self._my_tone= (key[0], 4)
         self._last_progression = []
         self._this_progression = []
         self._last_index = 0
-        self._this_index = self._time[0] - 3
+        self._this_index = self._time[0] - 3 #starts 3 early for priming purposes
 
     # This method decides if new music needs to be composed on this iteration.
     def _decide(self):
@@ -62,6 +62,8 @@ class AcousticGuitar(MusicianStructured):
         
         # There is a progression to be finished
         if self._this_index > 0:
+            #print self._last_progression
+            #print self._last_index
             # Get the presently playing progression
             listing = chords.Progressions[self._last_progression[self._last_index]]
             # Iterate over the remaining chords in the progression to be finished
