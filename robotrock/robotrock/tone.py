@@ -53,7 +53,6 @@ def getTone(root, semitone):
     else:
         note = note[0].upper()
     
-    print note
     code = 12 * octave + _TONE_VALUE[ note ] + semitone
 
     return ( _VALUE_TONE[code % 12] , code / 12 )
