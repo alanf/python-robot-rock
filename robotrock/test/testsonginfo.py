@@ -11,7 +11,7 @@ class TestSongInfo(unittest.TestCase):
     def setUp(self):
 	self.song_info = songinfo.SongInfo()
 	self.dict = {
-	             'key_signature': ('C', 'Major'),
+	             'key_signature': ('C', 'major'),
 		     'time_signature': (4, 4),
 	            }
 	
@@ -20,7 +20,7 @@ class TestSongInfo(unittest.TestCase):
 	info_dict = self.song_info.measureInfo()
 	self.song_info.info['time_signature'] = (2, 4)
 	self.assertEqual(self.dict, info_dict)
-	self.song_info.info['key_signature'] = ('D#', 'Minor')
+	self.song_info.info['key_signature'] = ('D#', 'minor')
 	self.assertEqual(self.song_info.measureInfo(), self.song_info.info)
 	
 	

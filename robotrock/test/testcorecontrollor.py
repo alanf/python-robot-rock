@@ -91,24 +91,22 @@ class TestCoreController(unittest.TestCase):
         self.assertEqual(self.metronome.tempo, 120)
         self.corecontroller.setTempo(93)
         self.assertEqual(self.metronome.tempo, 93)
-        self.corecontroller.setTempo(40)
-        self.assertEqual(self.metronome.tempo, 40)
-        self.corecontroller.setTempo(210)
-        self.assertEqual(self.metronome.tempo, 210)
-        self.corecontroller.setTempo(215)
-        self.assertEqual(self.metronome.tempo, 215)
+        self.corecontroller.setTempo(180)
+        self.assertEqual(self.metronome.tempo, 180)
+        self.corecontroller.setTempo(76)
+        self.assertEqual(self.metronome.tempo, 76)
 	
 	# Boundary Cases below
-	self.corecontroller.setTempo(360)
-	self.assertEqual(self.metronome.tempo, 360)
-	self.corecontroller.setTempo(361)
-	self.assertEqual(self.metronome.tempo, 360)
-	self.corecontroller.setTempo(0)
-	self.assertEqual(self.metronome.tempo, 0)
-	self.corecontroller.setTempo(-2)
-        self.assertEqual(self.metronome.tempo, 0)
-	self.corecontroller.setTempo(1)
-	self.assertEqual(self.metronome.tempo, 1)
+	self.corecontroller.setTempo(208)
+	self.assertEqual(self.metronome.tempo, 208)
+	self.corecontroller.setTempo(209)
+	self.assertEqual(self.metronome.tempo, 208)
+	self.corecontroller.setTempo(40)
+	self.assertEqual(self.metronome.tempo, 40)
+	self.corecontroller.setTempo(39)
+        self.assertEqual(self.metronome.tempo, 40)
+	self.corecontroller.setTempo(-1)
+	self.assertEqual(self.metronome.tempo, 40)
     
     def testupdateTimeSignature(self):
 	# Test valid inputs
@@ -129,16 +127,16 @@ class TestCoreController(unittest.TestCase):
     
     def testupdateKeySignature(self):
 	# Test valid inptus
-        self.corecontroller.updateKeySignature(('C#', 'Major'))
+        self.corecontroller.updateKeySignature(('C#', 'major'))
         info = self.corecontroller.song_info.measureInfo()
-        self.assertEqual(info['key_signature'], ('C#', 'Major'))
-        self.corecontroller.updateKeySignature(('D', 'Minor'))
+        self.assertEqual(info['key_signature'], ('C#', 'major'))
+        self.corecontroller.updateKeySignature(('D', 'minor'))
         info = self.corecontroller.song_info.measureInfo()
-        self.assertEqual(info['key_signature'], ('D', 'Minor'))
+        self.assertEqual(info['key_signature'], ('D', 'minor'))
 	# Test assertion, ensure no side effects
-        self.corecontroller.updateKeySignature(('C', 'Minor', 'Too long'))
+        self.corecontroller.updateKeySignature(('C', 'minor', 'Too long'))
         info = self.corecontroller.song_info.measureInfo()
-        self.assertEqual(info['key_signature'], ('D', 'Minor'))
+        self.assertEqual(info['key_signature'], ('D', 'minor'))
     
     def testaddMusician(self):
         self.corecontroller.addMusician('Guitar')
