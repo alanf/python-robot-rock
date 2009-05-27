@@ -107,11 +107,11 @@ class TestMusician(unittest.TestCase):
             notelisting = self.musician._plans[x]
             testD = testF = testA = False
             for y in range(len(notelisting)):
-                if notelisting[y].tone == "D":
+                if notelisting[y].tone[0] == "D":
                     testD = True
-                elif notelisting[y].tone == "F#":
+                elif notelisting[y].tone[0] == "F#":
                     testF = True
-                elif notelisting[y].tone == "A":
+                elif notelisting[y].tone[0] == "A":
                     testA = True
             self.assertTrue(testD and testF and testA)
 

@@ -47,7 +47,7 @@ class MusicianStructured(Musician):
     # Note: This structuring of musicians usually ignores window_start and
     #   window_duration, they are mainly for musicians which choose to
     #   compose in real-time. 
-    def compose(self, measure, window_start, window_duration): 
+    def compose(self, measure, window_start, window_duration):
         if not(self._time == measure.time_signature):
             self._time = measure.time_signature
             self._changed = True
@@ -194,7 +194,8 @@ class MusicianStructured(Musician):
         if chordlist == 'augmented':
             listing = Augmented[chord]
         for x in range(len(listing)):
-            self._addNote(location, listing[x])        
+            tone = (listing[x], 4)
+            self._addNote(location, tone)        
 
     # The functions below should be overwritten by the individual musicians.
     # These functions are defined at present to be for a metronome for testing
