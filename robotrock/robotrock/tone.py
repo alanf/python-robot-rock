@@ -23,38 +23,44 @@ MINOR_MEDIANT = 3
 
 # Used in tone to value conversion. See getTone().
 _TONE_VALUE = {
-	'C'  :  0, 'B#' : 0,
-	'C#' :  1, 'Db' : 1,
-	'D'  :  2,
-	'D#' :  3, 'Eb' : 3,
-	'E'  :  4, 'Fb' : 4, 
-	'F'  :  5, 'E#' : 5,
-	'F#' :  6, 'Gb' : 6,
-	'G'  :  7,
-	'G#' :  8, 'Ab' : 8,
-	'A'  :  9,
-	'A#' : 10, 'Bb' : 10,
-	'B'  : 11, 'Cb' : 11
+    'C'  :  0, 'B#' : 0,
+    'C#' :  1, 'Db' : 1,
+    'D'  :  2,
+    'D#' :  3, 'Eb' : 3,
+    'E'  :  4, 'Fb' : 4, 
+    'F'  :  5, 'E#' : 5,
+    'F#' :  6, 'Gb' : 6,
+    'G'  :  7,
+    'G#' :  8, 'Ab' : 8,
+    'A'  :  9,
+    'A#' : 10, 'Bb' : 10,
+    'B'  : 11, 'Cb' : 11
 }
 
 # Used to convert values to tones.  See getTone()
-_VALUE_TONE = [	"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ]
+_VALUE_TONE = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ]
 
 def getTone(root, semitone):
-	"""Gets the tone relative to the given root note.
+    """Gets the tone relative to the given root note.
 
-	Degree is specified in semitones; constants are available."""
+    Degree is specified in semitones; constants are available."""
 
-	note, octave = root
+    note, octave = root
 
     # Ensure that we support lower case tones, without making 'Ab' -> 'AB'.
-	code = 12 * octave + _TONE_VALUE[ note[0].upper() + note[1] ] + semitone
+    if len(note) > 1:
+        note =  note[0].upper() + note[1].lower()
+    else:
+        note = note[0].upper()
+    
+    print note
+    code = 12 * octave + _TONE_VALUE[ note ] + semitone
 
-	return ( _VALUE_TONE[code % 12] , code / 12 )
+    return ( _VALUE_TONE[code % 12] , code / 12 )
 
 def getOctave(tone, degree):
-	"""Gets the relative octave of the given tone.
+    """Gets the relative octave of the given tone.
 
-	Positive values are higher octaves, negative values are lower octaves."""
-	return ( tone[0], tone[1] + degree )
+    Positive values are higher octaves, negative values are lower octaves."""
+    return ( tone[0], tone[1] + degree )
 
