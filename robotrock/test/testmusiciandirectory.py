@@ -38,7 +38,14 @@ def Musician(instrument):
 	return HandDrum
     if instrument == 'metronome':
 	return Metronome
-
+	
+def trimMusicianList(list):
+    new_list = []
+    
+    for i in list:
+	new_list.append((i[0], i[1]))
+	
+    return new_list
 
 class TestMusicianDirectory(unittest.TestCase):
 
@@ -46,22 +53,24 @@ class TestMusicianDirectory(unittest.TestCase):
         self.musicDir = musiciandirectory.MusicianDirectory();
         self.musicDir.musicians = dict( \
 	    acousticguitar=(set(['acoustic','string']), \
-	    Musician('acousticguitar')), \
+	    Musician('acousticguitar'), 'test.png'), \
             electricguitar=(set(['electric','string']), \
-	    Musician('electricguitar')), \
-            handdrum=(set(['percussion']), Musician('handdrum')), \
-            metronome=(set(['percussion']), Musician('metronome')))
+	    Musician('electricguitar'), 'test.png'), \
+            handdrum=(set(['percussion']), Musician('handdrum'), 'test.png'), \
+            metronome=(set(['percussion']), Musician('metronome'), 'test.png'))
 
 
     def testfilterMusicianList(self):
-        list = self.musicDir.filterMusicianList(set(['acoustic']))
+        list = trimMusicianList(self.musicDir.filterMusicianList(set(['acoustic'])))
         self.assertEqual([('acousticguitar', Musician('acousticguitar'))], list)
-        list = self.musicDir.filterMusicianList(set(['percussion']))
+        list = trimMusicianList(self.musicDir.filterMusicianList \
+	    (set(['percussion'])))
         self.assertEqual([('handdrum', Musician('handdrum')), \
 	    ('metronome', Musician('metronome'))], list)
-        list = self.musicDir.filterMusicianList(set(['acoustic', 'percussion']))
+        list = trimMusicianList(self.musicDir.filterMusicianList \
+	    (set(['acoustic', 'percussion'])))
         self.assertEqual([], list)
-        list = self.musicDir.filterMusicianList(frozenset())
+        list = trimMusicianList(self.musicDir.filterMusicianList(frozenset()))
         self.assertEqual([('acousticguitar', Musician('acousticguitar')), \
 	    ('electricguitar', Musician('electricguitar')), \
 	    ('handdrum', Musician('handdrum')),  \

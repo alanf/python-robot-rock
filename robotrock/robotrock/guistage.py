@@ -129,7 +129,7 @@ class MusicianWidget(QWidget):
     def __init__(self, musicianTuple, guimain, parent):
         super(MusicianWidget, self).__init__(parent)
         #guimain.logger.debug("Creating musician widget")
-        name, musicianConstructor = musicianTuple
+        name, musicianConstructor, icon_path = musicianTuple
         
         self.__guimain = guimain
         self.__musician = musicianConstructor()

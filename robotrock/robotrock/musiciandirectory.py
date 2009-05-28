@@ -30,16 +30,14 @@ class MusicianDirectory(object):
             directory = os.listdir(base_path)
         except OSError:
             print 'musicians directory not found'
-            print base_path
             return
         
         # search directory for musician directories
         for item in directory:
             tags_valid = False
             module_valid = False
+	    icon_valid = False
             tags_set = set()
-            
-            print item
             
             # test whether the file is a valid musician directory, skip if not
             if 'musician' not in item or not os.path.isdir(join(base_path, item)):
@@ -51,6 +49,7 @@ class MusicianDirectory(object):
             for file_name in musician_directory:
                 include = ['.py']
                 exclude = ['.pyc', 'test', '~', '#']
+		icon_extensions = ['.png', '.jpg', '.bmp', '.gif']
                 # musician info file found
                 if(file_name == 'info.txt'):
                     f = open(join(base_path, item, file_name), 'r')
@@ -66,11 +65,16 @@ class MusicianDirectory(object):
                             tag = tag.strip()
                             tags_set.add(tag)
                     f.close()
+		elif(any(i in file_name for i in icon_extensions)):
+		    if icon_valid:
+			print 'second image file found, skipped', file_name
+			continue
+		    icon_path = os.path.abspath(join(base_path, item, file_name))
+		    icon_valid = True
                 elif(all([(i in file_name) for i in include]) and \
                      not any([(i in file_name) for i in exclude])):
                     # import the module
                     module_name = file_name.split('.')[0]
-                    print module_name
                     try:
                         __import__(module_name)
                     except ImportError:
@@ -78,12 +82,12 @@ class MusicianDirectory(object):
                         continue
                     
                     # Discover the constructor method.
-                    constructor = [method for method in dir(sys.modules[module_name]) if \
-                        callable(getattr(sys.modules[module_name], method)) and \
-                        method == 'Musician']
+                    #constructor = [method for method in dir(sys.modules[module_name]) if \
+                     #   callable(getattr(sys.modules[module_name], method)) and \
+                      #  method == 'Musician']
                         
                     try:
-                        assert(len(constructor) == 1)
+                        #assert(len(constructor) == 1)
                         constructor = sys.modules[module_name].Musician
 			module_valid = True
                     except AssertionError:
@@ -95,26 +99,28 @@ class MusicianDirectory(object):
             # the musician to the dictionary
             if not tags_valid:
                 print item, 'did not contain proper info.txt with valid tags'
-            if not module_valid:
+            elif not module_valid:
                 print item, 'did not contain valid musician module'
-            if tags_valid and module_valid:
-                self.musicians[module_name] = (tags_set, constructor)
+	    elif not icon_valid:
+		print item, 'did not contain valid icon image'
+            else:
+                self.musicians[module_name] = (tags_set, constructor, icon_path)
         
-        print self.musicians
+        #print self.musicians
     
     
     def findDataDir(self):
         return os.path.join(sys.prefix, 'robotrockresources', 'musicians')
     
     
-    # Returns a list of tuples (musicians, constructor) 
+    # Returns a list of tuples (musicians, constructor, icon path) 
     # that satisfy the specified set of tags
     def filterMusicianList(self, tags):
         
         result = []
         for k in self.musicians.iterkeys():
            if tags.issubset(self.musicians[k][0]):
-               result.append((k, self.musicians[k][1]))
+               result.append((k, self.musicians[k][1], self.musicians[k][2]))
             
         return sorted(result)           
             

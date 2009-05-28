@@ -14,6 +14,8 @@ Specific Musician Directory Layout:
 
 -There should also be an info.txt file. This file contains information about the musician, such as the stylistic tags that it should fall under.
 
+-There should also be an image file containing the icon that will be used for the musician. The currently supported image formats are .png, .jpg, .bmp, .gif
+
 
 info.txt format:
 
