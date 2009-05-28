@@ -16,7 +16,4 @@ class Staff(object):
         # No default measure data is specified, it's up to the conductor to
         # keep measure data current.
         self.measures = ExpandingList(Measure, parent=self)
-        
-if __name__ == '__main__':
-    s = Staff(instrument='Banjo')
 

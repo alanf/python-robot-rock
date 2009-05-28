@@ -23,6 +23,5 @@ class Measure(object):
             return a.start - b.start
         
         return sorted(self.notes, compareNotes)
-        
-if __name__ == '__main__':
-    measure = Measure(key=('C', '#', 'maj'), time=(4, 4), tempo=(120, 'bpm'))
+    
+    
