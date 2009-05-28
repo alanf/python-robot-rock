@@ -18,7 +18,6 @@ class MusicianDirectory(object):
         
         # Alias for os.path.join
         join = os.path.join
-        print 'hello'
         
         # Make sure necessary folders are on the system path
         _thisDir = os.path.split(sys.modules[__name__].__file__)[0]
