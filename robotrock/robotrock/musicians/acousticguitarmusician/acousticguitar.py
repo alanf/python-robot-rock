@@ -156,7 +156,7 @@ class AcousticGuitar(MusicianStructured):
                 self._addChord(x+.5, self._this_progression[x], 'major')
                 self._addChord(x+.75, self._this_progression[x], 'major')
                 
-            # If there are at least as many notes to play as hald of the onbeat
+            # If there are at least as many notes to play as half of the onbeat
             #   notes left to be played, then write at least half and randomly
             #   write the other onbeat notes
             elif self._notes >= 2*(self._time[0]-x):
@@ -198,10 +198,6 @@ class AcousticGuitar(MusicianStructured):
                 if listing.count(x) == 0:
                     self._addChord(x, self._this_progression[int(x-x%1)], 'major')
                 x += .25
-                
-        #listing = chords.Progressions[self._key[0]]
-        #for x in range(len(listing)):
-        #    self._addChord(x, listing[x], 'major')
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):

@@ -7,3 +7,5 @@ harmonica synth : HS_Synth_Collection_I.sf2 0 75
 metronome : HS_R8_Drums.sf2
 handdrum : HS_R8_Drums.sf2
 hi hat : HS_R8_Drums.sf2
+bass drum : HS_R8_Drums.sf2
+	

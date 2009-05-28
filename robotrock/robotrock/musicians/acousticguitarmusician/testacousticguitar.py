@@ -207,7 +207,6 @@ class TestAcousticGuitar(unittest.TestCase):
                     chord = chords.Majors[progression[x-index_start]]
                     if chord.count(measure[y].tone[0]) == 0:
                         result = False
-
         return result
             
 

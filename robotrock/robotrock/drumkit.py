@@ -8,14 +8,14 @@
 # keys should be lower case, values should be tone tuples
 
 DrumKit = {
-	"Acoustic Bass Drum" : 35,
-	"Bass Drum 1" : 36,
+	"Acoustic Bass Drum" : ('B', 2),
+	"Bass Drum 1" : ('C', 3),
 	"Side Stick" : 37,
 	"Acoustic Snare" : 38,
-	"Hand Clap" : 39,
-	"Electric Snare" : 40,
-	"Low Floor Tom" : 41,
-	"closed hi-hat" : ('F#',3),
+	"Hand Clap" : ('D#', 3),
+	"Electric Snare" : ('E', 3),
+	"Low Floor Tom" : ('F', 3),
+	"closed hi-hat" : ('F#', 3),
 	"High Floor Tom" : 43,
 	"Pedal Hi-Hat" : 44,
 	"Low Tom" : 45,

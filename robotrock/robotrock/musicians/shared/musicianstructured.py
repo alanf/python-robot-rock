@@ -58,6 +58,7 @@ class MusicianStructured(Musician):
             self._changed = True
             
         if self._decide():
+            measure.notes = []
             self._write()
             self._print(measure)
 

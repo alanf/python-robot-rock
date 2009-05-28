@@ -33,7 +33,6 @@ class Metronome(MusicianStructured):
         # Note 1 has an accent to distinguish the time signature.
         self._addNote(0, DrumKit['hi wood block'])
         for x in range(1, self._time[0]):
-            print 'Adding note ', x
             self._addNote(x, self._my_tone)
         self._changed = False
 
