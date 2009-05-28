@@ -59,7 +59,8 @@ class Conductor(object):
             if staff in staff_measures.keys() and musician in self.ensemble:
                 musician.compose(staff_measures[staff], \
                         measure_position, \
-                        measure_position + duration)
+                        measure_position + duration,
+                        self.score_marker.score_slices.copy())
         
         self.score_marker.forward(duration)
         
