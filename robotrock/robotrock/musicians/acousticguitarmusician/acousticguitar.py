@@ -19,12 +19,12 @@ class AcousticGuitar(MusicianStructured):
     #   values and leaves the rest to the super class __init__ method.
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         MusicianStructured.__init__(self, energy, complexity, time, key)
-        self.instrument = 'jazz bass'
+        self.instrument = 'acoustic guitar'
         self._my_tone= (key[0], 4)
         self._last_progression = []
         self._this_progression = []
         self._last_index = 0
-        self._this_index = self._time[0] - 3 #starts 3 early for priming purposes
+        self._this_index = self._time[0] - 3 # Starts 3 early for priming purposes
 
     # This method decides if new music needs to be composed on this iteration.
     def _decide(self):
@@ -43,42 +43,50 @@ class AcousticGuitar(MusicianStructured):
         self._dynamics()
         self._changed = False
 
-    # This method determines which chord progression will be used for this measure
+    # This method determines which chord progressions will be used for this measure
     # For simplicity, a given chord is played for a beat. Also, progressions are
     #   assumed to be 3 chords in length, hence the magic number 3 everywhere.
     #   To allow for varying progression lengths, simply replace the 3's with a
     #   variable holding the progression length.
     def _progressions(self):
-        # Assume this is a nw measure, 
-        # Progression is used to determine the order chords were or will be played
+        # Assume this is a new measure, as such, need to make room for this
+        #   measure's progressions.
+        # _last_progression is a list of the chords played in the last measure
+        # _this_progression is a list of the chords to be played this measure
+        #   _this_progression[0] is the chord played from beat 0 to beat 1
+        #   _this_progression[1] is the chord played from beat 1 to beat 2, etc
         self._last_progression = self._this_progression
         self._this_progression = []
-        # Idicies indicate the starts of of chord progressions. For simplicity,
-        #   progressions are assumed to be 3 chords in length. Also, the last index
-        #   + 3 will always be >= the number of beats (self._time[0]).
+        # Indicies indicate the starts of of chord progressions. For simplicity,
+        #   progressions are assumed to be 3 chords in length. Also, the last 
+        #   index + 3 will always be >= the number of beats (self._time[0]).
+        # The indicies are indicies into _last_progression and _this progression
+        #   The chord at that index is the start of a chord progression. For
+        #   simplicity, progressions are assumed to be 3 chords in length. Also,
+        #   the last index + 3 will always be >= the number of beats
+        #   (self._time[0]).
         self._last_index = self._this_index
         self._this_index = (self._this_index + 3) % self._time[0]
-        self._time[0]
         
-        # There is a progression to be finished
+        # The first few chords in this measure are a continuation of a chord
+        #   progression from the last measure, so start this measure with those
+        #   chords. 
         if self._this_index > 0:
-            #print self._last_progression
-            #print self._last_index
-            # Get the presently playing progression
+            # Get the presently playing progression (started in the last measure)
             listing = chords.Progressions[self._last_progression[self._last_index]]
             # Iterate over the remaining chords in the progression to be finished
-            y = 0
             for x in range(3-self._this_index, 3):
                 self._this_progression.append(listing[x])
-                y += 1
-
+                
+        # Choose the chord progressions which will fill out the rest of this
+        #   measure. Once one is chose, add it to _this_progression. If more
+        #   chords need to be played, do it again.
         while self._this_index < self._time[0]:
-            # Choose the next progression, fill it in
             # At high complexity, the core progression should be played 1 of every
             #   4 progressions at minimum. At low complexity it should be the only
             #   progression played.
             chance = random.randrange(1+self._complexity/25)
-            # A random progressoion is to be chosen (not playing the core one)
+            # A random progression is to be chosen (not going to play the core one)
             if chance > 0:
                 # Randomly choose a progression (there are 17 major progressions)
                 chance = random.randrange(17)
@@ -87,15 +95,12 @@ class AcousticGuitar(MusicianStructured):
             # Play the core progression
             else:
                 self._this_progression.extend(chords.Progressions[self._key[0]])
+            # Move the index forward by the length of the chord progression added
             self._this_index += 3
 
-        # Set _this_index to be the last progression index in the measure
-        self._this_index = self._time[0] - (3 - (self._this_index % self._time[0]))
-
-        #listing = chords.Progressions[self._key[0]]
-        #for x in range(len(listing)):
-        #    self._addChord(x, self._this_progression[x], 'major')
-        
+        # Set _this_index to be the start of the last progression played in this
+        #   measure
+        self._this_index = self._time[0] - (3 - (self._this_index % self._time[0]))        
 
     # This method calculates the number of notes to be played in this
     #   measure. This calcluation is based on the energy and complexity
@@ -132,15 +137,59 @@ class AcousticGuitar(MusicianStructured):
             self._dropnotes()
         
 
-    # This method decides the length of each note in the measure. For an
-    #   AcousticGuitar, this is not limited. 
+    # This method decides the length of each note in the measure. For a
+    #   BassDrum, a note should run into the next note and be no more than
+    #   a WHOLE_NOTE in length. 
     def _lengths(self):
-        pass
+        listing = self._plans.keys()
+        listing.sort()
+
+        for x in range(len(listing)):
+            notelisting = self._plans[listing[x]]
+            for y in range(len(notelisting)):
+                if (x+1) < len(listing):
+                    self._setLength(notelisting[y], listing[x+1] - listing[x])
+                else:
+                    self._setLength(notelisting[y], (self._time[0] + 1) - listing[x])
+
 
     # This method decides the dynamics of each note in the measure. Right now,
     #   everything is left to defualt (Forte).
     def _dynamics(self):
         pass
+
+    # This method calculates the length of the given note based on the the given
+    #   dist (distance) to the next note. The length of the note is made as
+    #   long as possible without being longer than dist.
+    def _setLength(self, myNote, dist):
+        if dist >= 4.0:                     #whole note
+            myNote.duration=self._durations.WHOLE_NOTE
+        elif dist == 2.0:                   #half note
+            myNote.duration=self._durations.HALF_NOTE
+        elif dist >= 1.0:                   #quarter note
+            myNote.duration=self._durations.QUARTER_NOTE
+        elif dist == .5:                    #eighth note
+            myNote.duration=self._durations.EIGHTH_NOTE
+        elif dist == .25:                   #sixteenth note
+            myNote.duration=self._durations.SIXTEENTH_NOTE
+        elif dist == .125:                  #32'nd note
+            myNote.duration=self._durations.THIRTYSECOND_NOTE
+        elif dist == .0625:                 #64'th note
+            myNote.duration=self._durations.SIXTYFOURTH_NOTE
+        elif dist == .33:                   #tripolet   
+            myNote.duration=self._durations.EIGHTH_NOTE_TRIPLET
+        elif not(dist % .5):                #divisible by eigth note
+            self._setLength(myNote, dist - .5)
+        elif not(dist % .25):               #divisible by sixteenth note
+            self._setLength(myNote, dist - .25)
+        elif not(dist % .125):              #divisible by 32'nd note
+            self._setLength(myNote, dist - .125)
+        elif not(dist % .0625):             #divisible by 64'th note
+            self._setLength(myNote, dist - .0625)
+        elif not(dist % .33):               #divisible by tripolet
+            self._setLength(myNote, dist - .33)
+        else:#Somehow we fell through, default it to be as short as possible
+            myNote.duration = self._durations.SIXTYFOURTH_NOTE
 
     # This method adds notes to the measure which are on the beat. 
     def _onbeat(self):
@@ -201,7 +250,7 @@ class AcousticGuitar(MusicianStructured):
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
-        for x in range(self._time[0]):
+        '''for x in range(self._time[0]):
             # If there are enough notes to fill in the rest of the notes
             #   to be played, then play them all.
             if self._notes >= 4*(self._time[0]-x):
@@ -221,7 +270,8 @@ class AcousticGuitar(MusicianStructured):
                     self._addChord(x+.625, self._this_progression[x], 'major')
                 chance = random.randrange(1 + self._notes*(100/self._complexity))
                 if chance < self._notes:
-                    self._addChord(x+.875, self._this_progression[x], 'major')
+                    self._addChord(x+.875, self._this_progression[x], 'major')'''
+        pass
         
 
     # This method drops random notes from the measure based on the value
