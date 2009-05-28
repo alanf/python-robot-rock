@@ -1,5 +1,5 @@
 ''' basescoremarker.py
-    Author:
+    Author: Alan Fineberg (af@cs.washington.edu)
     BaseScoreMarker is used to obtain relative note data from a mutable
     location within a Score.
 '''

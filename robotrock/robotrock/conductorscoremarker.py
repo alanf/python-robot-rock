@@ -2,9 +2,10 @@
 # encoding: utf-8
 """
 conductorscoremarker.py
+ConductorScoreMarker is a view of the Score, which contains location
+data and performs any updating necessary to insert new musicians.
 
-Created by Alan Fineberg on 2009-05-19.
-Copyright (c) 2009 __MyCompanyName__. All rights reserved.
+Author: Alan Fineberg (af@cs.washington.edu)
 """
 
 import basescoremarker
