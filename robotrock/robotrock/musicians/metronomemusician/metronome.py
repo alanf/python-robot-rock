@@ -30,6 +30,7 @@ class Metronome(MusicianStructured):
     # This method decides what will be played this iteration.
     # For a metronome, that is a note on every beat and only every beat.
     def _write(self):
+        self._plans = {}
         # Note 1 has an accent to distinguish the time signature.
         self._addNote(0, DrumKit['hi wood block'])
         for x in range(1, self._time[0]):
