@@ -177,7 +177,6 @@ class MusicianWidget(QWidget):
         x = x - self.width()/2
         y = y - self.height()/2
         
-        
         if x > maxX:
             x = maxX
         elif x < minX:
@@ -190,7 +189,6 @@ class MusicianWidget(QWidget):
         
         self.energy = 100 * (x - minX) / (maxX - minX)
         self.complexity = 100 + (-100 * (y-minY))/ (maxY - minY)
-        
         
         self.move(x,y)
     

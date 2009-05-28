@@ -17,7 +17,7 @@ from guimainwindow import RRMainWindow
 guimain = None
 
 class RRGuiMain(object):
-    def __init__(self, args=[], core=None):
+    def __init__(self, args=[], core=None, logging_level=logging.INFO):
         global guimain
         if guimain is not None:
             guimain.logger.critical("Attempted to create two objects of RRGuiMain!")
@@ -25,7 +25,7 @@ class RRGuiMain(object):
         
         guimain = self
         
-        self.setup_logging()
+        self.setup_logging(logging_level)
         self.logger.debug("Initializing GUI...")
         
         if core is None:
@@ -105,7 +105,7 @@ class RRGuiMain(object):
         if image_name is None:
             image_name = 'notfound'
             
-        self.logger.error("Failed to find image: %s" % image_paths)
+        self.logger.error("Failed to find image: name=%s\tpath=%s" % (image_name, image_paths))
         self.__images[image_name] = (self.__notfoundimage, self.__notfoundimage)
                 
     
@@ -174,7 +174,6 @@ class CoreControllerDummy():
             global guimain
             guimain.logger.info("Called %s with args: %s" % (name, str(args)))
         
-        # print CoreController.__dict__
         for key in CoreController.__dict__:
             value = CoreController.__dict__[key]
             if type(value) == type(lambda:0) and key is not "__init__":
@@ -182,5 +181,5 @@ class CoreControllerDummy():
     
 
 if __name__ == '__main__':
-    guiobject = RRGuiMain()
+    guiobject = RRGuiMain(logging_level=logging.DEBUG)
     sys.exit(guiobject.run())
