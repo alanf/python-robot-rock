@@ -17,7 +17,7 @@ class ActiveMusician(object):
         self._complexity = 50
         self.changed = False
     
-    def compose(self, measure, window_start, window_duration):
+    def compose(self, measure, window_start, window_duration, current_score_slice):
         pass
 
     def __setComplexity(self, value):

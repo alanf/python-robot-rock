@@ -26,7 +26,7 @@ class TestBassMusician(unittest.TestCase):
     def testCompose(self):
         self.musician._complexity = 100
         self.musician._energy = 100
-        self.musician.compose(self.measure, 0, 1000)
+        self.musician.compose(self.measure, 0, 1000, None)
         self.assertNotEqual(len(self.measure.notes), 0)
 
     

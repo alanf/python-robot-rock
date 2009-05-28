@@ -21,7 +21,7 @@ class Bass(activemusician.ActiveMusician):
         activemusician.ActiveMusician.__init__(self)
         self.instrument = 'jazz bass'
     
-    def compose(self, measure, window_start, window_duration):
+    def compose(self, measure, window_start, window_duration, current_score_slice):
         if window_start == 0 or self.changed:
             if self.changed:
                 measure.notes = []
@@ -34,7 +34,7 @@ class Bass(activemusician.ActiveMusician):
             if self._energy > 75:
                 beat_value = note.Note.note_values.SIXTEENTH_NOTE
                 
-            notes = self.createSyncopatedRhythm(measure.time_signature[0], \
+            notes = self.createRhythm(measure.time_signature[0], \
                     beat_value, \
                     complexity)
             
@@ -73,7 +73,7 @@ class Bass(activemusician.ActiveMusician):
             else:
                 return (tone.getTone(root, tone.SUBTONIC))
         
-    def createSyncopatedRhythm(self, beats, base_rhythm, syncopation):
+    def createRhythm(self, beats, base_rhythm, syncopation):
         notes = []
         beat_number = 0
         current_start = 0

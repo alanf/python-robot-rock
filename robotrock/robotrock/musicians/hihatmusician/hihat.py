@@ -18,7 +18,7 @@ class HiHat(object):
         self.__complexity = 50
         self.changed = False
     
-    def compose(self, measure, window_start, window_duration):
+    def compose(self, measure, window_start, window_duration, current_score_slice):
         if window_start == 0 or self.changed:
             if self.changed:
                 measure.notes = []
