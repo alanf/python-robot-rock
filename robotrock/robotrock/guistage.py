@@ -95,7 +95,7 @@ class RRStage(QWidget):
         painter.restore()
     
     def sizeHint(self):
-        return QSize(500,300)
+        return QSize(600,400)
     
     def mouseReleaseEvent(self, event):
         #self.__guimain.logger.debug("Stage clicked at: %d, %d" % (event.x(), event.y()))
