@@ -27,12 +27,12 @@ class CoreController():
     
     #Start the audio driver
     def play(self):
-	#print 'playing'
+        #print 'playing'
         self.audio_driver.play()
     
     #Pause the audio driver
     def pause(self):
-	#print 'paused'
+        #print 'paused'
         self.audio_driver.pause()
     
     # Halt the audio driver
@@ -43,14 +43,14 @@ class CoreController():
     # Param: tempo, an integer
     def setTempo(self, tempo):
         tempo = min(MAXIMUM_TEMPO, tempo)
-	tempo = max(MINIMUM_TEMPO, tempo)
+        tempo = max(MINIMUM_TEMPO, tempo)
         self.metronome.tempo = tempo
     
     # Update the time signature
     # Param: time_signature, a 2-tuple of a numerator and denominator
     def updateTimeSignature(self, time_signature):
         if len(time_signature) == 2 and \
-	        time_signature[0] in songinfo.VALID_TIME_NUMERATOR and \
+                time_signature[0] in songinfo.VALID_TIME_NUMERATOR and \
                 time_signature[1] in songinfo.VALID_TIME_DENOMINATOR:
                     self.song_info.info['time_signature'] = time_signature
     
@@ -59,7 +59,7 @@ class CoreController():
     #        See songinfo.py for legal values of the tuple's elements
     def updateKeySignature(self, key_signature):
         if len(key_signature) == 2 and \
-	        key_signature[0] in songinfo.VALID_KEY and \
+                key_signature[0] in songinfo.VALID_KEY and \
                 key_signature[1] in songinfo.VALID_KEY_TONALITIES:
                     self.song_info.info['key_signature'] = key_signature
     

@@ -11,40 +11,40 @@ import sys
 class AcousticGuitar(object):
     
     def __init__(self):
-	pass
+        pass
 
 class ElectricGuitar(object):
     
     def __init__(self):
-	pass
-	
+        pass
+        
 class HandDrum(object):
     
     def __init__(self):
-	pass
+        pass
 
 class Metronome(object):
     
     def __init__(self):
-	pass
-	
-	
+        pass
+        
+        
 def Musician(instrument):
     if instrument == 'acousticguitar':
         return AcousticGuitar
     if instrument == 'electricguitar':
         return ElectricGuitar
     if instrument == 'handdrum':
-	return HandDrum
+        return HandDrum
     if instrument == 'metronome':
-	return Metronome
-	
+        return Metronome
+        
 def trimMusicianList(list):
     new_list = []
     
     for i in list:
-	new_list.append((i[0], i[1]))
-	
+        new_list.append((i[0], i[1]))
+        
     return new_list
 
 class TestMusicianDirectory(unittest.TestCase):
@@ -52,10 +52,10 @@ class TestMusicianDirectory(unittest.TestCase):
     def setUp(self):
         self.musicDir = musiciandirectory.MusicianDirectory();
         self.musicDir.musicians = dict( \
-	    acousticguitar=(set(['acoustic','string']), \
-	    Musician('acousticguitar'), 'test.png'), \
+            acousticguitar=(set(['acoustic','string']), \
+            Musician('acousticguitar'), 'test.png'), \
             electricguitar=(set(['electric','string']), \
-	    Musician('electricguitar'), 'test.png'), \
+            Musician('electricguitar'), 'test.png'), \
             handdrum=(set(['percussion']), Musician('handdrum'), 'test.png'), \
             metronome=(set(['percussion']), Musician('metronome'), 'test.png'))
 
@@ -64,16 +64,16 @@ class TestMusicianDirectory(unittest.TestCase):
         list = trimMusicianList(self.musicDir.filterMusicianList(set(['acoustic'])))
         self.assertEqual([('acousticguitar', Musician('acousticguitar'))], list)
         list = trimMusicianList(self.musicDir.filterMusicianList \
-	    (set(['percussion'])))
+            (set(['percussion'])))
         self.assertEqual([('handdrum', Musician('handdrum')), \
-	    ('metronome', Musician('metronome'))], list)
+            ('metronome', Musician('metronome'))], list)
         list = trimMusicianList(self.musicDir.filterMusicianList \
-	    (set(['acoustic', 'percussion'])))
+            (set(['acoustic', 'percussion'])))
         self.assertEqual([], list)
         list = trimMusicianList(self.musicDir.filterMusicianList(frozenset()))
         self.assertEqual([('acousticguitar', Musician('acousticguitar')), \
-	    ('electricguitar', Musician('electricguitar')), \
-	    ('handdrum', Musician('handdrum')),  \
+            ('electricguitar', Musician('electricguitar')), \
+            ('handdrum', Musician('handdrum')),  \
             ('metronome', Musician('metronome'))], list)
         
     def testvalidTags(self):
@@ -83,8 +83,8 @@ class TestMusicianDirectory(unittest.TestCase):
         self.assertEqual(['acoustic', 'electric'], list)
         list = self.musicDir.validTags(set(['percussion']))
         self.assertEqual([], list)
-	list = self.musicDir.validTags(set([]))
-	self.assertEqual(['acoustic', 'electric', 'percussion', 'string'], list)
+        list = self.musicDir.validTags(set([]))
+        self.assertEqual(['acoustic', 'electric', 'percussion', 'string'], list)
         
         
 if __name__ == '__main__':

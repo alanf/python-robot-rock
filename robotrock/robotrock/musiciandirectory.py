@@ -16,8 +16,9 @@ class MusicianDirectory(object):
     def __init__(self):
         self.musicians = dict()
         
-	# Alias for os.path.join
+        # Alias for os.path.join
         join = os.path.join
+        print 'hello'
         
         # Make sure necessary folders are on the system path
         _thisDir = os.path.split(sys.modules[__name__].__file__)[0]
@@ -28,6 +29,7 @@ class MusicianDirectory(object):
         # Locate the musician directory
         try: 
             directory = os.listdir(base_path)
+            print base_path
         except OSError:
             print 'musicians directory not found'
             return
@@ -36,7 +38,7 @@ class MusicianDirectory(object):
         for item in directory:
             tags_valid = False
             module_valid = False
-	    icon_valid = False
+            icon_valid = False
             tags_set = set()
             
             # test whether the file is a valid musician directory, skip if not
@@ -49,7 +51,7 @@ class MusicianDirectory(object):
             for file_name in musician_directory:
                 include = ['.py']
                 exclude = ['.pyc', 'test', '~', '#']
-		icon_extensions = ['.png', '.jpg', '.bmp', '.gif']
+                icon_extensions = ['.png', '.jpg', '.bmp', '.gif']
                 # musician info file found
                 if(file_name == 'info.txt'):
                     f = open(join(base_path, item, file_name), 'r')
@@ -65,12 +67,14 @@ class MusicianDirectory(object):
                             tag = tag.strip()
                             tags_set.add(tag)
                     f.close()
-		elif(any(i in file_name for i in icon_extensions)):
-		    if icon_valid:
-			print 'second image file found, skipped', file_name
-			continue
-		    icon_path = os.path.abspath(join(base_path, item, file_name))
-		    icon_valid = True
+                # handle the image files in the directory
+                elif(any(i in file_name for i in icon_extensions)):
+                    if icon_valid:
+                        print 'second image file found, skipped', file_name
+                        continue
+                    icon_path = os.path.abspath(join(base_path, item, file_name))
+                    icon_valid = True
+                # handle the actual python module
                 elif(all([(i in file_name) for i in include]) and \
                      not any([(i in file_name) for i in exclude])):
                     # import the module
@@ -81,28 +85,31 @@ class MusicianDirectory(object):
                         print 'error importing', module_name
                         continue
                     
-                    # Discover the constructor method.
-                    #constructor = [method for method in dir(sys.modules[module_name]) if \
-                     #   callable(getattr(sys.modules[module_name], method)) and \
-                      #  method == 'Musician']
+                     #Discover the constructor method.
+                    constructor = [method for method in dir(sys.modules[module_name]) if \
+                        callable(getattr(sys.modules[module_name], method)) and \
+                        method == 'Musician']
                         
                     try:
-                        #assert(len(constructor) == 1)
+                        assert(len(constructor) == 1)
                         constructor = sys.modules[module_name].Musician
-			module_valid = True
+                        module_valid = True
                     except AssertionError:
                         print module_name, 'does not have appropriate \
                              constructor named Musician'
                         continue
                         
-            # if all necessary files were found and were of proper format, add
-            # the musician to the dictionary
+            # If all necessary files were found and were of proper format, add
+            # the musician to the dictionary. Handle a default for icon if none
+            # was found
+            if not icon_valid:
+                print item, 'did not contain valid icon'
+                icon_path = ''
+            
             if not tags_valid:
                 print item, 'did not contain proper info.txt with valid tags'
             elif not module_valid:
                 print item, 'did not contain valid musician module'
-	    elif not icon_valid:
-		print item, 'did not contain valid icon image'
             else:
                 self.musicians[module_name] = (tags_set, constructor, icon_path)
         
@@ -135,7 +142,7 @@ class MusicianDirectory(object):
         for v in self.musicians.itervalues():
             if tags.issubset(v[0]):
                 for member in (v[0] - tags):
-		    if member not in valid_list:
+                    if member not in valid_list:
                         valid_list.append(member)
         
         valid_list.sort()
