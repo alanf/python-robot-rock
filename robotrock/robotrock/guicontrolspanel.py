@@ -149,12 +149,12 @@ class RRTimeSelector(QWidget):
         
         self.__time = (4,4)
         
-        grid.addWidget(QLabel("<b>Time: </b>"), 0,0,2,1,Qt.AlignVCenter | Qt.AlignRight)
+        grid.addWidget(QLabel("<b>Beats per bar: </b>"), 0,0,2,1,Qt.AlignVCenter | Qt.AlignRight)
         grid.addWidget(self.__num, 0,1,Qt.AlignHCenter)
-        grid.addWidget(self.__den, 1,1,Qt.AlignHCenter)
+        #grid.addWidget(self.__den, 1,1,Qt.AlignHCenter)
         
         self.connect(self.__num, SIGNAL('valueChanged(int)'), self.updateTime)
-        self.connect(self.__den, SIGNAL('valueChanged(int)'), self.updateTime)
+        #self.connect(self.__den, SIGNAL('valueChanged(int)'), self.updateTime)
         
         self.setLayout(grid)
     
