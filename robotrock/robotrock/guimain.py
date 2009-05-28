@@ -132,8 +132,8 @@ class RRGuiMain(object):
             self.__images[image_name] = (original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation), original)
         
     
-    def setup_logging(self):
-        logging.basicConfig(level=logging.DEBUG)
+    def setup_logging(self, level=logging.DEBUG):
+        logging.basicConfig(level=level)
         self.__logger = logging.getLogger('robotrock.gui')
     
     def createNotFoundImage(self):

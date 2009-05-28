@@ -41,6 +41,8 @@ class RRAddPanel(QWidget):
         return musicians[random_idx][1]()
         
     def addHandler(self, checked):
+        #self.__guimain.logger.debug(QFileDialog.getSaveFileName(self))
+        
         self.__guimain.stage.add_musician(self.__mlist[self.__mComboBox.currentIndex()])
 
 class MusicianDummy():
