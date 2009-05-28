@@ -13,7 +13,8 @@ NAME = "Robot Rock" # print-friendly name
 
 MY_NAME = 'robotrock' # package name
 
-PKG_DATA = ['musicians/*/*.py', 'musicians/*/*.txt', 'musicians/*.txt']
+PKG_DATA = ['musicians/*/*.py', 'musicians/*/*.txt', 'musicians/*.txt', \
+ 'musicians/*/*.png']
 
 AUTHOR = \
 	"Alan Fineberg, " +\
