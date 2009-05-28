@@ -45,7 +45,7 @@ class HiHat(object):
             total_duration = my_start
             i = 0
             while total_duration < note.Note.note_values.QUARTER_NOTE * 4:
-                myNote = note.Note(tone=drumkit.DrumKit['open hi-hat'], \
+                myNote = note.Note(tone=drumkit.DrumKit['closed hi-hat'], \
                         start=my_start +i*my_duration, \
                         duration=my_duration, \
                         rest=False, dynamic=dynamics.FORTE)
