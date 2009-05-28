@@ -18,7 +18,7 @@ class TestConductor(unittest.TestCase):
                 self.log = log
                 self.instrument = 'Jazz Flute'
             
-            def compose(self, measure, start, duration):
+            def compose(self, measure, start, duration, current_score_slice):
                 self.log.append(self.id)
                 measure.id = self.id
         
