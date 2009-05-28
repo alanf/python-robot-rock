@@ -11,7 +11,7 @@ DrumKit = {
 	"Acoustic Bass Drum" : ('B', 2),
 	"Bass Drum 1" : ('C', 3),
 	"Side Stick" : 37,
-	"Acoustic Snare" : 38,
+	"Acoustic Snare" : ('D', 3),
 	"Hand Clap" : ('D#', 3),
 	"Electric Snare" : ('E', 3),
 	"Low Floor Tom" : ('F', 3),

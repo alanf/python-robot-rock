@@ -28,7 +28,7 @@ class TestMetronome(unittest.TestCase):
     def testCompose(self):
         self.musician = Metronome()
     
-        self.musician.compose(self.test_measure, 0, 0)
+        self.musician.compose(self.test_measure, 0, 0, None)
         self.assertNotEqual([], self.test_measure.notes)
 
         listing = self.musician._plans.keys()

@@ -44,34 +44,34 @@ class TestAcousticGuitar(unittest.TestCase):
     def testReactToChanges(self):
         # base case: energy = 50, complexity = 50
         self.guitar = AcousticGuitar()
-        self.guitar.compose(self.base, 0, 0)
+        self.guitar.compose(self.base, 0, 0, None)
 
         # case 1 (highEbase): energy = 80, complexity = 50
         self.guitar.energy = 80
-        self.guitar.compose(self.highEbase, 0, 0)
+        self.guitar.compose(self.highEbase, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.highEbase, self.base))
         
         # case 2 (lowEbase): energy = 20, complexity = 50
         self.guitar.energy = 20
-        self.guitar.compose(self.lowEbase, 0, 0)
+        self.guitar.compose(self.lowEbase, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.base, self.lowEbase))
 
         # case 3: energy = 50, complexity = 80
         self.guitar.complexity = 80
         self.guitar.energy = 50
-        self.guitar.compose(self.last, 0, 0)
+        self.guitar.compose(self.last, 0, 0, None)
         self.assertTrue(self.compareComplexity(self.last, self.base))
         
         # case 4: energy = 80, complexity = 80
         self.guitar.energy = 80
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.test_measure, self.last))
         self.assertTrue(self.compareComplexity(self.test_measure, self.highEbase))
 
         # case 5: energy = 20, complexity = 80
         self.guitar.energy = 20
         self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.last, self.test_measure))
         self.assertTrue(self.compareComplexity(self.test_measure, self.lowEbase))
 
@@ -79,20 +79,20 @@ class TestAcousticGuitar(unittest.TestCase):
         self.guitar.complexity = 20
         self.guitar.energy = 50
         self.last.notes = []
-        self.guitar.compose(self.last, 0, 0)
+        self.guitar.compose(self.last, 0, 0, None)
         self.assertTrue(self.compareComplexity(self.base, self.last))
         
         # case 7: energy = 80, complexity = 20
         self.guitar.energy = 80
         self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.test_measure, self.last))
         self.assertTrue(self.compareComplexity(self.highEbase, self.test_measure))
         
         # case 8: energy = 20, complexity = 20
         self.guitar.energy = 20
         self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.last, self.test_measure))
         self.assertTrue(self.compareComplexity(self.lowEbase, self.test_measure))
 
@@ -104,27 +104,26 @@ class TestAcousticGuitar(unittest.TestCase):
 
         # First measure
         self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertNotEqual(self.test_measure.notes, [])
         self.assertTrue(self.checkChords([], self.test_measure.notes, 0))
         
-
         # Second measure
         last_measure = self.test_measure
         self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertNotEqual(self.test_measure.notes, [])
 
         # Third measure
         last_measure = self.test_measure
         self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertNotEqual(self.test_measure.notes, [])
 
         # Fourth measure
         last_measure = self.test_measure
         self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0)
+        self.guitar.compose(self.test_measure, 0, 0, None)
         self.assertNotEqual(self.test_measure.notes, [])
 
 # Helper methods:

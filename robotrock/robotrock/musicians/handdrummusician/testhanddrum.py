@@ -43,34 +43,34 @@ class TestHanddrum(unittest.TestCase):
     def testReactToChanges(self):
         # base case: energy = 50, complexity = 50
         self.drum = HandDrum()
-        self.drum.compose(self.base, 0, 0)
+        self.drum.compose(self.base, 0, 0, None)
 
         # case 1 (highEbase): energy = 80, complexity = 50
         self.drum.energy = 80
-        self.drum.compose(self.highEbase, 0, 0)
+        self.drum.compose(self.highEbase, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.highEbase, self.base))
         
         # case 2 (lowEbase): energy = 20, complexity = 50
         self.drum.energy = 20
-        self.drum.compose(self.lowEbase, 0, 0)
+        self.drum.compose(self.lowEbase, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.base, self.lowEbase))
 
         # case 3: energy = 50, complexity = 80
         self.drum.complexity = 80
         self.drum.energy = 50
-        self.drum.compose(self.last, 0, 0)
+        self.drum.compose(self.last, 0, 0, None)
         self.assertTrue(self.compareComplexity(self.last, self.base))
         
         # case 4: energy = 80, complexity = 80
         self.drum.energy = 80
-        self.drum.compose(self.test_measure, 0, 0)
+        self.drum.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.test_measure, self.last))
         self.assertTrue(self.compareComplexity(self.test_measure, self.highEbase))
 
         # case 5: energy = 20, complexity = 80
         self.drum.energy = 20
         self.test_measure.notes = []
-        self.drum.compose(self.test_measure, 0, 0)
+        self.drum.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.last, self.test_measure))
         self.assertTrue(self.compareComplexity(self.test_measure, self.lowEbase))
 
@@ -78,20 +78,20 @@ class TestHanddrum(unittest.TestCase):
         self.drum.complexity = 20
         self.drum.energy = 50
         self.last.notes = []
-        self.drum.compose(self.last, 0, 0)
+        self.drum.compose(self.last, 0, 0, None)
         self.assertTrue(self.compareComplexity(self.base, self.last))
         
         # case 7: energy = 80, complexity = 20
         self.drum.energy = 80
         self.test_measure.notes = []
-        self.drum.compose(self.test_measure, 0, 0)
+        self.drum.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.test_measure, self.last))
         self.assertTrue(self.compareComplexity(self.highEbase, self.test_measure))
         
         # case 8: energy = 20, complexity = 20
         self.drum.energy = 20
         self.test_measure.notes = []
-        self.drum.compose(self.test_measure, 0, 0)
+        self.drum.compose(self.test_measure, 0, 0, None)
         self.assertTrue(self.compareEnergy(self.last, self.test_measure))
         self.assertTrue(self.compareComplexity(self.lowEbase, self.test_measure))
 
