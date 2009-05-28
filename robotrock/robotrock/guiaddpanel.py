@@ -14,13 +14,9 @@ class RRAddPanel(QWidget):
         #guimain.logger.debug("Creating add musician panel")
         
         self.__guimain = guimain
-        guimain.logger.debug("Fetching musician list")
         self.__mlist = guimain.core.filterMusicianList([])
         if self.__mlist is None:
-            self.__mlist = [("dummy", MusicianDummy)]
-        
-        guimain.logger.debug("Musician list:")
-        guimain.logger.debug(self.__mlist)
+            self.__mlist = [("dummy", MusicianDummy, "/Users/tjac0/Documents/UW/CSE/CSE 403/Robot_Rock/cse403/robotrock/images/old_metronome.png")]
         
         hpanel = QHBoxLayout()
         
@@ -30,7 +26,6 @@ class RRAddPanel(QWidget):
         self.__mComboBox = QComboBox()
         for musician in self.__mlist:
             self.__mComboBox.addItem(musician[0])
-            guimain.logger.debug("Adding musician: %s" % musician[0])
         
         self.connect(addbutton, SIGNAL('clicked(bool)'), self.addHandler)
         

@@ -129,8 +129,9 @@ class MusicianWidget(QWidget):
     def __init__(self, musicianTuple, guimain, parent):
         super(MusicianWidget, self).__init__(parent)
         #guimain.logger.debug("Creating musician widget")
-        name, musicianConstructor, icon_path = musicianTuple
+        name, musicianConstructor, imagepath = musicianTuple
         
+        self.__name = name
         self.__guimain = guimain
         self.__musician = musicianConstructor()
         self.__stage = parent
@@ -140,6 +141,7 @@ class MusicianWidget(QWidget):
         
         self.__dragPoint = None
         
+        guimain.loadImage(imagepath, name)
         guimain.core.addMusician(self.__musician)
         
         self.setToolTip("%s, playing %s" % (self.addArticle(name), self.addArticle(self.__musician.instrument)))
@@ -241,7 +243,7 @@ class MusicianWidget(QWidget):
         painter.drawPixmap(inscribed, self.__guimain.getImage(self.getImageName(), inscribed.size()))
     
     def getImageName(self):
-        return "black-guitar-128x128.png"
+        return self.__name
     
     def mouseReleaseEvent(self, event):
         event.accept()

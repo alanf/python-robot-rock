@@ -48,8 +48,6 @@ class RRGuiMain(object):
         self.__app = QApplication(args)
         self.createNotFoundImage()
         
-        self.logger.debug("Done initializing gui..")
-        
     
     def run(self):
         #self.logger.debug("Creating main window")
@@ -85,35 +83,42 @@ class RRGuiMain(object):
         if self.focused_musician is mwidget:
             self.focused_musician = None
     
+    def loadImage(self, image_paths, image_name=None, scale=None, format=None):
+        for path in image_paths.split(":"):
+            if image_name is None:
+                image_name = os.path.basename(path)
+            
+            if not os.path.isfile(path):
+                continue
+            else:
+                
+                original = QPixmap(path, format)
+                
+                if scale is not None:
+                    scaledPic = original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                else:
+                    scaledPic = original
+                
+                self.__images[image_name] = (scaledPic, original)
+                return image_name
+        # end for
+        if image_name is None:
+            image_name = 'notfound'
+            
+        self.logger.error("Failed to find image: %s" % image_paths)
+        self.__images[image_name] = (self.__notfoundimage, self.__notfoundimage)
+                
+    
     def getImage(self, image_name, scale=None, format=None):
         # Try cache first, then local, then global
         if self.__images.has_key(image_name):
             return self.__images[image_name][0]
         
         localname = os.path.join(self.__parentdir, 'images', image_name)
-        if os.path.isfile(localname):
-            #self.logger.debug("Located image: %s" % localname)
-            original = QPixmap(localname, format)
-            if scale is not None:
-                scaled = original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                self.__images[image_name] = (scaled, original)
-            else:
-                self.__images[image_name] = (original, original)
-            return self.__images[image_name][0]
-        
         globalname = os.path.join(sys.prefix, 'robotrockresources', 'images', image_name)
-        if os.path.isfile(globalname):
-            #self.logger.debug("Located image: %s" % globalname)
-            original = QPixmap(globalname, format)
-            if scale is not None:
-                scaled = original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                self.__images[image_name] = (scaled, original)
-            else:
-                self.__images[image_name] = (original, original)
-            return self.__images[image_name][0]
+        self.loadImage(localname + ":" + globalname, image_name, scale, format)
         
-        self.logger.error("Failed to find image: %s" % image_name)
-        return QPixmap(self.__notfoundimage)
+        return self.__images[image_name][0]
     
     def updateImageSize(self, image_name, scale):
         if not self.__images.has_key(image_name):
