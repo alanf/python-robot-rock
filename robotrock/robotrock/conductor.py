@@ -6,6 +6,7 @@
     data up to date using its reference to song_info.
     The onPulse() method is triggered for each metronome pulse.
 '''
+import copy
 import staff
 import note
 import conductorscoremarker
@@ -60,7 +61,7 @@ class Conductor(object):
                 musician.compose(staff_measures[staff], \
                         measure_position, \
                         measure_position + duration,
-                        self.score_marker.score_slices.copy())
+                        copy.copy(self.score_marker.score_slices))
         
         self.score_marker.forward(duration)
         

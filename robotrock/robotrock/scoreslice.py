@@ -36,13 +36,3 @@ class ScoreSlice(object):
         else:
             self.current_index = -1
             return None
-    
-    def copy(self):
-        ''' Creates and returns a new score slice, which won't affect existing 
-            score slices. This is useful to hand off to musicians or anything else
-            which might examine data written to the score. The ScoreSlice is set 
-            to the current measure in the score for convenience.
-        '''
-        score_slices = ScoreSlice(self.staffs)
-        score_slices.current_index = self.current_index
-        return score_slices
