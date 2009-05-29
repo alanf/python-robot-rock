@@ -5,15 +5,17 @@ and a key selector.
 Author: Tim Crossley <tjac0@cs.washington.edu>
 """
 
-
 from PyQt4.QtCore import *
 from PyQt4.QtGui  import *
 
-"""
-A widget containing the play/pause button, tempo slider,
-trash icon, and key changer in a vertical layout.
-"""
+from corecontroller import MAXIMUM_TEMPO, MINIMUM_TEMPO
+from songinfo import VALID_KEY, VALID_KEY_TONALITIES, VALID_TIME_NUMERATOR, VALID_TIME_DENOMINATOR
+
 class RRControlsPanel(QWidget):
+    """
+    A widget containing the play/pause button, tempo slider,
+    trash icon, and key changer in a vertical layout.
+    """
     def __init__(self, guimain):
         super(RRControlsPanel, self).__init__()
         #guimain.logger.debug("Creating controls widget")
@@ -34,6 +36,10 @@ class RRControlsPanel(QWidget):
 
 
 class RRPlayButton(QPushButton):
+    """
+    A button allowing the user to either start or stop
+    music generation.
+    """
     playIcon = None
     pauseIcon = None
     
@@ -57,6 +63,10 @@ class RRPlayButton(QPushButton):
         
     
     def clickHandler(self, checked):
+        """
+        Called when the button is clicked. Toggles between play state
+        and pause state.
+        """
         if self.__playing:
             self.setIcon(RRPlayButton.playIcon)
             self.__guimain.core.pause()
@@ -70,6 +80,10 @@ class RRPlayButton(QPushButton):
 
 
 class RRDeleteIcon(QLabel):
+    """
+    An icon assisting with the deletion of musician widgets.
+    Clicking on this icon will delete the currently selected widget
+    """
     def __init__(self, guimain):
         super(RRDeleteIcon, self).__init__("Delete Musician")
         #guimain.logger.debug("Creating delete icon")
@@ -84,9 +98,13 @@ class RRDeleteIcon(QLabel):
         if self.__guimain.focused_musician is not None:
             self.__guimain.focused_musician.close()
 
-from corecontroller import MAXIMUM_TEMPO, MINIMUM_TEMPO
 
 class RRTempoSlider(QWidget):
+    """
+    A slider widget allowing the user to set the song tempo.
+    Contains a slider, a label, and a line box for direct
+    setting of tempo.
+    """
     def __init__(self, guimain):
         super(RRTempoSlider, self).__init__()
         #guimain.logger.debug("Creating tempo slider")
@@ -124,18 +142,30 @@ class RRTempoSlider(QWidget):
         self.setToolTip("Adjusts the tempo of the song")
     
     def sliderHandler(self):
+        """
+        Handler method is called whenever the slider value changes.
+        Updates the CoreController and the lineEdit
+        """
         val = self.__slider.value()
         self.__guimain.core.setTempo(val)
         self.__value_label.setText(str(val))
     
     def lineEditHandler(self):
+        """
+        Hander method is called whenever the user presses return
+        after editing the lineEdit. Updates the CoreController and
+        the slider.
+        """
         val = int(self.__value_label.text())
         self.__guimain.core.setTempo(val)
         self.__slider.setValue(val)
 
-from songinfo import VALID_KEY, VALID_KEY_TONALITIES, VALID_TIME_NUMERATOR, VALID_TIME_DENOMINATOR
 
 class RRTimeSelector(QWidget):
+    """
+    This widget allows the user to select a time signature for the
+    song. Currently only allows the beats per bar to change.
+    """
     def __init__(self, guimain):
         super(RRTimeSelector, self).__init__()
         self.__guimain = guimain
@@ -149,6 +179,10 @@ class RRTimeSelector(QWidget):
         
         self.__time = (4,4)
         
+        
+        # Uncomment the two lines below to re-enable the denominator selector.
+        #   This functionality is currently disabled, because it is not fully
+        #   implemented in the musicians or the parser.
         grid.addWidget(QLabel("<b>Beats per bar: </b>"), 0,0,2,1,Qt.AlignVCenter | Qt.AlignRight)
         grid.addWidget(self.__num, 0,1,Qt.AlignHCenter)
         #grid.addWidget(self.__den, 1,1,Qt.AlignHCenter)
@@ -170,6 +204,13 @@ class RRTimeSelector(QWidget):
     time = property(fset=settime)
 
 class TimeSpinBox(QSpinBox):
+    """
+    A subclass of QSpinBox that selects its values from a list, and
+    displays them in that order.
+    """
+    
+    # On a side note, Qt makes implementing this particular behavior
+    #  very difficult. I have no idea why, it seems a very useful feature.
     def __init__(self, values, guimain):
         super(TimeSpinBox, self).__init__()
         
@@ -190,6 +231,12 @@ class TimeSpinBox(QSpinBox):
         self.setValue(self.__values[self.__index])
     
     def stepBy(self, val):
+        """
+        Given a step value (such as 1 if the user pressed the up arrow, or -1
+        if the user pressed the down arrow), adjusts the SpinBox to display the
+        next value.
+        Overrides QSpinBox.stepBy()
+        """
         self.__index = self.__index + val
         self.setMinimum(self.__min)
         self.setMaximum(self.__max)
@@ -200,6 +247,14 @@ class TimeSpinBox(QSpinBox):
         self.updateValue()
     
     def validate(self, potential, pos):
+        """
+        Checks to see if the current value in the box is valid.
+        Returns a tuple of type (validity, cursor position)
+        where validity is one of:
+        QValidator.Acceptable   - The value is legal and valid
+        QValidator.Intermediate - The value could be legal, if more was added
+        QValidator.Invalid      - The value can never be valid
+        """
         good_vals = [str(x) for x in self.__values]
         result = QValidator.Invalid
         for v in good_vals:
@@ -212,6 +267,11 @@ class TimeSpinBox(QSpinBox):
     
 
 class RRKeySelector(QWidget):
+    """
+    A widget allowing the user to select a musical key for the program.
+    Allows a choice of [A,B,C,D,E,F,G], each with sharp and flat versions,
+    as well as an option to make any key a minor key.
+    """
     def __init__(self, guimain):
         super(RRKeySelector, self).__init__()
         self.__guimain = guimain
@@ -221,6 +281,8 @@ class RRKeySelector(QWidget):
         self.__key = ('C', 'major')
         guimain.core.updateKeySignature(self.__key)
         
+        # Converts 'b' to the unicode flat symbol,
+        #  '#' to the unicode sharp symbol
         convert = lambda c : unicode(c).replace('b', unichr(9837)).replace('#', unichr(9839))
         
         grid = QGridLayout()
@@ -244,13 +306,21 @@ class RRKeySelector(QWidget):
         self.setLayout(grid)
     
     def keyChangeHandler(self, val):
+        """
+        Handles key changes originating from either the drop down list
+        of keys or the checkbox for major/minor option.
+        """
         if type(val) == type(0):
+            # Change was from checkbox
             if val == 2:
                 t = 'minor'
             else:
                 t = 'major'
             self.__key = (self.__key[0], t)
         else:
+            # Change was from drop down menu
+            
+            # Converts from unicode symbols back into 'b' and '#'
             k = val.replace(QChar(9837), 'b').replace(QChar(9839), '#')
             self.__key = (str(k), self.__key[1])
         

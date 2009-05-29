@@ -1,5 +1,6 @@
 """
-The stage on which the musicians are added, moved around, and deleted.
+This component displays information about the currently
+selected musician widget.
 Author: Tim Crossley <tjac0@cs.washington.edu>
 """
 
@@ -9,7 +10,15 @@ from PyQt4.QtGui  import *
 import functools
 
 class RRMusicianInfoPanel(QWidget):
+    """
+    This widget displays information about the currently
+    selected musician widget.
+    """
     def __init__(self, guimain):
+        """
+        Creates a new info panel, given a reference to the
+        guimain object.
+        """
         super(RRMusicianInfoPanel, self).__init__()
         self.__guimain = guimain
         
@@ -29,6 +38,11 @@ class RRMusicianInfoPanel(QWidget):
         guimain.setInfoPanel(self)
     
     def focusChanged(self, mwidget):
+        """
+        Called by the guimain whenever the focused musician widget
+        changes. If mwidget is None, the info panel displays its
+        default 'no musician selected' message.
+        """
         if mwidget is not None:
             self.__mwidget_detail.setEnergy(mwidget.energy)
             self.__mwidget_detail.setComplexity(mwidget.complexity)
@@ -42,6 +56,10 @@ class RRMusicianInfoPanel(QWidget):
 
 
 class RRMWidgetDetail(QWidget):
+    """
+    This widget directly displays information about a musician
+    widget. It is used as a subcomponent of RRMusicianInfoPanel.
+    """
     def __init__(self, guimain):
         super(RRMWidgetDetail, self).__init__()
         

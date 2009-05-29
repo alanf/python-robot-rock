@@ -15,8 +15,11 @@ class RRAddPanel(QWidget):
         
         self.__guimain = guimain
         self.__mlist = guimain.core.filterMusicianList([])
+        
         if self.__mlist is None:
-            self.__mlist = [("dummy", MusicianDummy, "/Users/tjac0/Documents/UW/CSE/CSE 403/Robot_Rock/cse403/robotrock/images/old_metronome.png")]
+            # If we get here, then we're running under a fake CoreController.
+            # Add the dummy musician so the GUI can still test things out.
+            self.__mlist = [("dummy", lambda:MusicianDummy(guimain), "/Users/tjac0/Documents/UW/CSE/CSE 403/Robot_Rock/cse403/robotrock/images/old_metronome.png")]
         
         hpanel = QHBoxLayout()
         
@@ -34,17 +37,25 @@ class RRAddPanel(QWidget):
         
         self.setLayout(hpanel)
     
-    def randomMusician(self):
-        musicians = self.__guimain.core.filterMusicianList([])
-        random_idx = int(random.random() * len(musicians))
-        # Musicians are returned as a tuple of (name, constructor).
-        return musicians[random_idx][1]()
-        
-    def addHandler(self, checked):
-        #self.__guimain.logger.debug(QFileDialog.getSaveFileName(self))
-        
+    def addHandler(self, checked):        
         self.__guimain.stage.add_musician(self.__mlist[self.__mComboBox.currentIndex()])
 
-class MusicianDummy():
-    def __init__(self):
+class MusicianDummy(object):
+    """
+    Used in GUI debugging, this dummy class acts like a musician object
+    to certain Gui classes (like MusicianWidget).
+    """
+    def __init__(self, guimain):
+        self.__guimain = guimain
         self.instrument = "Dummy Musician"
+    
+    def setEnergy(self, val):
+        #self.__guimain.logger.debug("Energy set to: %d" % val)
+        pass
+    
+    def setComplexity(self, val):
+        #self.__guimain.logger.debug("Complexity set to %d" % val)
+        pass
+    
+    energy = property(fset=setEnergy)
+    complexity = property(fset=setComplexity)

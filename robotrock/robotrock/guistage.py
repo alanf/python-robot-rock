@@ -1,5 +1,6 @@
 """
-The stage on which the musicians are added, moved around, and deleted.
+The stage on which the musicians are added,
+moved around, and deleted.
 Author: Tim Crossley <tjac0@cs.washington.edu>
 """
 
@@ -32,6 +33,12 @@ mwidget_size = 20
 
 
 class RRStage(QWidget):
+    """
+    This is the area on which musician widgets are added,
+    moved around, and deleted. It draws the energy/complexity
+    axis space, and restricts musician widget movement to within
+    that space.
+    """
     def __init__(self, guimain):
         super(RRStage, self).__init__()
         #guimain.logger.debug("Creating Stage widget")
@@ -48,6 +55,15 @@ class RRStage(QWidget):
         guimain.stage = self
     
     def add_musician(self, musician):
+        """
+        Adds a musician to the stage, given a tuple of the type:
+        (musician name, constructor function, path to icon)
+        
+        This is the tuple type returned by CoreController.filterMusicianList()
+        
+        Informs the CoreController of the new musician (by way of the musician
+        widget constructor).
+        """
         #self.__guimain.logger.info("Adding musician: %s" % musician)
         #self.__guimain.core.addMusician(musician)
         mwidget = MusicianWidget(musician, self.__guimain, self)
@@ -57,16 +73,33 @@ class RRStage(QWidget):
         mwidget.show()
     
     def remove_musician(self, mwidget):
+        """
+        Removes the given musician widget from the list
+        of all musician widgets.
+        IMPORTANT:
+          This method does not delete the underlying musician widget,
+          nor does it delete the musician from the CoreController.
+          
+          To delete a musician, call MusicianWidget.close(),
+          which will in turn call this method.
+        """
         self.__mwidgets.remove(mwidget)
     
     
     def paintEvent(self, event=None):
+        """
+        Overrides base QWidget paint handler, in order to paint
+        the background and axes.
+        """
         painter = QPainter(self)
         
         self.paint_background(painter, event)
         self.paint_axes(painter, event)
     
     def paint_background(self, painter, event):
+        """
+        Paints the stage background, given a QPainter object.
+        """
         painter.setBrush(background_brush)
         painter.setPen(background_pen)
         
@@ -74,7 +107,12 @@ class RRStage(QWidget):
         painter.drawRect(area)
     
     def paint_axes(self, painter, event):
+        """
+        Paints the energy/complexity axes, given a QPainter object.
+        """
         painter.save()
+        
+        # bottomRect encloses the space directly below the x axis (energy)
         bottomRect = self.rect().adjusted(lbspace,self.rect().height() - lbspace, -rtspace, -txtspace)
         painter.setPen(Qt.black)
         
@@ -83,32 +121,52 @@ class RRStage(QWidget):
         
         painter.drawLine(bottomRect.topRight() + vdist, bottomRect.topRight() - vdist)
         
+        # leftRect encloses the space directly to the left of the y axis (complexity)
         leftRect = self.rect().adjusted(txtspace, rtspace, lbspace - self.rect().width(), -lbspace + 1)
         painter.drawLine(leftRect.topRight(), leftRect.bottomRight())
         painter.drawLine(leftRect.topRight() + hdist, leftRect.topRight() - hdist)
         
+        # Rotate the painter in order to draw text
         painter.rotate(-90)
+        # RotatedLeftRect is the same as leftRect in screen coordinates, but adjusted for
+        #  a rotated origin.
         rotatedLeftRect = QRect(-leftRect.height() - leftRect.y(), leftRect.x(), leftRect.height(), leftRect.width())
         
         painter.drawText(rotatedLeftRect, Qt.AlignHCenter | Qt.AlignTop,"Complexity")
         
+        # un-rotate the painter
         painter.restore()
     
     def sizeHint(self):
+        # default size
         return QSize(600,400)
     
     def mouseReleaseEvent(self, event):
+        """
+        Overrides default QWidget method to defocus musician widgets
+        if the user clicks on an empty place on the stage.
+        """
+        event.accept()
         #self.__guimain.logger.debug("Stage clicked at: %d, %d" % (event.x(), event.y()))
         mwidget = self.__guimain.focused_musician
         if mwidget is not None:
             mwidget.clearFocus()
     
     def resizeEvent(self, event):
+        """
+        Overrides default QWidget.resizeEvent(). Moves all musician widgets with the
+        resizing, so that they remain in approximately the same energy/complexity region.
+        """
         scaleX = float(event.size().width()) / event.oldSize().width()
         scaleY = float(event.size().height()) / event.oldSize().height()
         
         size = mwidget_size * min([event.size().width(), event.size().height()]) / 100
         
+        # Resize timer allows for all musician widgets to resize their icons after
+        # a resize occurs. Icons are not updated instantly, in order to reduce
+        # computation (as resize events occur frequently when the window is being
+        # resized). Instead, icons are updated after the resize timer fires, which
+        # resets on each resize event.
         self.__resizeTimer.start()
         
         for mwidget in self.__mwidgets:
@@ -126,7 +184,19 @@ class RRStage(QWidget):
             
 
 class MusicianWidget(QWidget):
+    """
+    A musician widget is the graphical display of a single
+    musician object. It contains methods for moving on the
+    stage, for custom painting, for being dragged on the stage,
+    and for smart deletion.
+    """
     def __init__(self, musicianTuple, guimain, parent):
+        """
+        Creates a new Musician widget, given a tuple of the type:
+        (musician name, constructor function, path to icon).
+        Creates the underlying musician object via the constructor,
+        and adds it to the CoreController.
+        """
         super(MusicianWidget, self).__init__(parent)
         #guimain.logger.debug("Creating musician widget")
         name, musicianConstructor, imagepath = musicianTuple
@@ -164,6 +234,13 @@ class MusicianWidget(QWidget):
             return "a " + noun
     
     def attemptMove(self, x, y):
+        """
+        Attempts to move this musician widget to the given coordinates.
+        If the coordinates would be outside the allowed area, the widget
+        is restricted to the allowed area.
+        Changes the underlying musician's energy and complexity to reflect
+        the new position.
+        """
         validArea = self.__stage.rect().adjusted(lbspace + 1, rtspace, -rtspace, -lbspace+1)
         
         x = int(round(x))
@@ -216,6 +293,10 @@ class MusicianWidget(QWidget):
     complexity = property(getcomplexity, setcomplexity)
     
     def paintEvent(self, event):
+        """
+        Overrides QWidget.paintEvent() to allow for custom painting.
+        Paints a background, a border, and a custom icon.
+        """
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         
@@ -231,11 +312,17 @@ class MusicianWidget(QWidget):
         self.paintInstrument(event, painter)
     
     def updateImageSize(self):
+        """
+        Updates this widget's icon size to reflect its current size.
+        """
         inscribed = self.rect().adjusted(10,10,-10,-10)
         self.__guimain.updateImageSize(self.getImageName(), inscribed.size())
         self.update()
     
     def paintInstrument(self, event, painter):
+        """
+        Paints this widgets custom icon.
+        """
         inscribed = self.rect().adjusted(10,10,-10,-10)
         
         painter.drawPixmap(inscribed, self.__guimain.getImage(self.getImageName(), inscribed.size()))
@@ -244,6 +331,11 @@ class MusicianWidget(QWidget):
         return self.__name
     
     def mouseReleaseEvent(self, event):
+        """
+        Overrides QWidget.mouseReleaseEvent() in order to implement
+        draggable icons. Closes and deletes this musician if right
+        clicked.
+        """
         event.accept()
         if event.button() == Qt.RightButton:
             self.close()
@@ -251,17 +343,30 @@ class MusicianWidget(QWidget):
             self.__dragPoint = None
     
     def mouseDoubleClickEvent(self, event):
+        """
+        Overrides QWidget.mouseDoubleClickEvent(). Moves this
+        widget to the back of the stage and deselects it.
+        """
         event.accept()
         self.lower()
         self.clearFocus()
     
     def mousePressEvent(self, event):
+        """
+        Overrides QWidget.mousePressEvent(). Starts a drag if
+        clicked with the left mouse button.
+        """
         event.accept()
         #self.__guimain.logger.debug("Mouse press: x:%d, y:%d" % (event.x(), event.y()))
         if event.button() == Qt.LeftButton:
             self.__dragPoint = QPoint(event.pos())
     
     def mouseMoveEvent(self, event):
+        """
+        Overrides QWidget.mouseMoveEvent(). This method is only
+        called when a mouse button is down and the mouse is moving.
+        Moves this widget with the mouseMoveEvent to implement dragging.
+        """
         event.accept()
         if self.__dragPoint is not None:
             #self.__guimain.logger.debug("Mouse move: x:%d\ty:%d" % (event.x(), event.y()))

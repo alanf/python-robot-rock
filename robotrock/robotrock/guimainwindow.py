@@ -1,5 +1,5 @@
 """
-The stage on which the musicians are added, moved around, and deleted.
+The main window for the RobotRock GUI.
 Author: Tim Crossley <tjac0@cs.washington.edu>
 """
 
@@ -13,7 +13,15 @@ from guicontrolspanel import RRControlsPanel
 from guimusicianinfopanel import RRMusicianInfoPanel
 
 class RRMainWindow(QMainWindow):
+    """
+    The main window for the RobotRock GUI. Creates subcomponents
+    RRStage, RRAddPanel, RRControlsPanel, and RRMusicianInfoPanel
+    """
     def __init__(self, guimain, flags=Qt.WindowFlags()):
+        """
+        Creates a new mainwindow, given a reference to the guimain
+        object and with the specified window flags.
+        """
         super(RRMainWindow, self).__init__(None, flags)
         #self.setWindowState(Qt.WindowFullScreen)
         #self.setFocus()

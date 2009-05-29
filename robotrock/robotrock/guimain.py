@@ -17,7 +17,20 @@ from guimainwindow import RRMainWindow
 guimain = None
 
 class RRGuiMain(object):
+    """
+    This class controls and coordinates many aspects of the GUI, 
+    as well as acting as the entry point. Clients creating the gui
+    must create exactly one new RRGuiMain object, then begin the Qt
+    event loop by calling RRGuiMain.run().
+    """
     def __init__(self, args=[], core=None, logging_level=logging.INFO):
+        """
+        Creates a new instance of RRGuiMain. This constructor must be called
+        at most once per application (defined as a python interpreter).
+        args          - a list of arguments to give to Qt
+        core          - a reference to the CoreController
+        logging_level - the default logging level to use
+        """
         global guimain
         if guimain is not None:
             guimain.logger.critical("Attempted to create two objects of RRGuiMain!")
@@ -50,6 +63,12 @@ class RRGuiMain(object):
         
     
     def run(self):
+        """
+        Creates the top level window and begins the Qt event loop.
+        This method takes over the current thread, and does not return
+        until Qt believes the application to have quit.
+        Stops the CoreController via halt() after exiting event loop.
+        """
         #self.logger.debug("Creating main window")
         self.__mainwindow = RRMainWindow(self)
         self.__mainwindow.show()
@@ -59,6 +78,10 @@ class RRGuiMain(object):
         return result
     
     def setstage(self, stage):
+        """
+        Internal gui method, sets the stage to the given argument.
+        Should be called at most once.
+        """
         if self.__stage is not None:
             self.logger.error("Stage is being set multiple times!")
         else:
@@ -70,6 +93,13 @@ class RRGuiMain(object):
         return self.__stage
     
     def setfocusedmusician(self, mwidget):
+        """
+        Internal gui method. Sets the globally focused musician
+        widget, and alerts the information panel of the change.
+        Ideally, this would alert the infopanel via a signal,
+        but RRGuiMain cannot subclass QObject (as it is created
+        before the QApplication is created).
+        """
         if self.__focusedmusician is not mwidget:
             self.__focusedmusician = mwidget
             if self.__infopanel is not None:
@@ -84,6 +114,17 @@ class RRGuiMain(object):
             self.focused_musician = None
     
     def loadImage(self, image_paths, image_name=None, scale=None, format=None):
+        """
+        Internal gui method. Given a colon seperated list of images as
+        absolute paths, attempts to look up the image in each path.
+        If found, stops searching and associates that image with the given
+        image name (at the given scale and format).
+        If no image is found, associates the default notfoundimage with the
+        given image name.
+        Returns the name associated with the image.
+        Will raise error on attempting to load a non-image file, even
+        if there is a valid image file later in the list.
+        """
         for path in image_paths.split(":"):
             if image_name is None:
                 image_name = os.path.basename(path)
@@ -110,17 +151,32 @@ class RRGuiMain(object):
                 
     
     def getImage(self, image_name, scale=None, format=None):
-        # Try cache first, then local, then global
+        """
+        Internal gui method.
+        Returns the image associated with the given image name, at the
+        previously set scale. If the image name is unkown, attempts to look
+        that image up in first the global install area, then the local area.
+        The image returned is NOT guarranteed to be at the specified scale.
+        Instead, if scale must be correct, first call updateImageSize(name, scale)
+        """
+        # Try cache first, then global, then local
         if self.__images.has_key(image_name):
             return self.__images[image_name][0]
         
         localname = os.path.join(self.__parentdir, 'images', image_name)
         globalname = os.path.join(sys.prefix, 'robotrockresources', 'images', image_name)
-        self.loadImage(localname + ":" + globalname, image_name, scale, format)
+        self.loadImage(globalname + ":" + localname, image_name, scale, format)
         
         return self.__images[image_name][0]
     
     def updateImageSize(self, image_name, scale):
+        """
+        Internal gui method. Updates the image associated with image_name
+        to be the given size. If image_name is unknown, looks up the image
+        via the getImage(...) method.
+        This method is safe to call multiple times with the same size, no
+        extraneous computation will be done.
+        """
         if not self.__images.has_key(image_name):
             # No longer a problem to update an image that has not been loaded, musician widgets
             # update on creation
@@ -137,6 +193,10 @@ class RRGuiMain(object):
         self.__logger = logging.getLogger('robotrock.gui')
     
     def createNotFoundImage(self):
+        """
+        Creates the default 'image not found' image, which
+        is displayed if an image is not found.
+        """
         self.__notfoundimage = QPixmap(128,128)
         painter = QPainter(self.__notfoundimage)
         adjusted_rect = self.__notfoundimage.rect().adjusted(0,0,-1,-1)
@@ -169,6 +229,13 @@ class RRGuiMain(object):
 from corecontroller import CoreController
 import functools
 class CoreControllerDummy():
+    """
+    Useful only for GUI debugging, this class creates a copy of the
+    CoreController class, where every method simply logs that method
+    call and the arguments passed.
+    
+    Used so that the GUI can be run without any other working components.
+    """
     def __init__(self):
         def logfunction(name, *args):
             global guimain
