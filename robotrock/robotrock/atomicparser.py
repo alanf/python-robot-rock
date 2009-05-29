@@ -14,16 +14,16 @@ class AtomicParser(basemetronome.Listener):
 	ATOMIC_NOTE.
 	"""
 
-	def __init__(self, score, receiver):
+	def __init__(self, score, receivers):
 		"""Constructor for an AtomicParser object.
 
 		score is a Score object for which the parser reads notes from.
 
-		receiver is a Receiver object to handle note events.
+		receiver is a list of Receiver objects to handle note events.
 		"""
 
-		# the coupled receiver...
-		self.receiver = receiver
+		# the coupled receivers...
+		self.receivers = receivers
 
 		self.score_marker = ScoreMarker( score )
 		
@@ -53,7 +53,12 @@ class AtomicParser(basemetronome.Listener):
 
 		# Fire off current events to receiver.
 		for event in self.current_events():
-			self.receiver.handle( event[-1] )
+			for R in self.receivers:
+				R.handle( event[-1] )
+
+		# Signal end of frame
+		for R in self.receivers:
+			R.onEndOfFrame( elapsed_beats )
 
 		# advance marker
 		self.score_marker.forward( elapsed_beats )
@@ -66,11 +71,13 @@ class AtomicParser(basemetronome.Listener):
 
 	def onPlay(self):
 		"Forward signal to receiver."
-		self.receiver.onPlay()
+		for R in self.receivers:
+			R.onPlay()
 
 	def onPause(self):
 		"Forward signal to receiver."
-		self.receiver.onPause()
+		for R in self.receivers:
+			R.onPause()
 
 	def process_notes( self, staff, notes ):
 		"Turn notes into receiver events."

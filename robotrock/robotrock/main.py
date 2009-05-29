@@ -7,6 +7,7 @@
 from atomicmetronome import AtomicMetronome as Metronome
 from atomicparser import AtomicParser as Parser
 from fsreceiver import FluidsynthReceiver as Receiver
+from wavereceiver import WaveReceiver
 import audiodriver
 import conductor
 import corecontroller
@@ -36,7 +37,9 @@ def init():
     conductor_object = conductor.Conductor(score_object, song_info_object)
     soundfont_directory = soundfontdirectory.load( SOUNDFONT_DIRECTORY_FILE )
     receiver_object = Receiver( soundfont_directory )
-    parser_object = Parser(score_object, receiver_object)
+#    recorder_object = WaveReceiver( soundfont_directory )
+#    recorder_object.recordFile( "test.wav" ) # TEMP
+    parser_object = Parser(score_object, [receiver_object ])#, recorder_object])
     clock_object = realtimeclock.RealtimeClock()
     metronome_object = Metronome()
     metronome_object.addListener(conductor_object)
@@ -48,7 +51,11 @@ def init():
         metronome_object, conductor_object, song_info_object, \
 	musician_directory_object)
     gui_object = guimain.RRGuiMain([], core_controller_object)
-    sys.exit(gui_object.run())
+    ret_val = gui_object.run()
+#    recorder_object.stopRecording() # TEMP
+    audio_driver_object.halt()
+    audio_driver_object.join() # wait for driver to finish
+    sys.exit( ret_val )
     print 'initializing gui modules'
     
 if __name__ == '__main__':
