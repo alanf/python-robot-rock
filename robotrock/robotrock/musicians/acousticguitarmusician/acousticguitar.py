@@ -1,4 +1,4 @@
-''' acousticguitar2.py
+''' acousticguitar.py
     definition of an acoustic guitar
     Author: Rich Snider <mrsoviet@cs.washington.edu
 '''
@@ -13,9 +13,9 @@ import dynamics
 import chords
 
 # This is the definition of an acoustic guitar
-class AcousticGuitar2(MusicianStructured):
+class AcousticGuitar(MusicianStructured):
 
-    # Initialization of a AcousticGuitar2. Initializes AcousticGuitar2 specific
+    # Initialization of a AcousticGuitar. Initializes AcousticGuitar2 specific
     #   values and leaves the rest to the super class __init__ method.
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         MusicianStructured.__init__(self, energy, complexity, time, key)
@@ -288,4 +288,4 @@ class AcousticGuitar2(MusicianStructured):
 
 # Returns the construtor for the AcousticGuitar2		
 def Musician():
-    return AcousticGuitar2()
+    return AcousticGuitar()
