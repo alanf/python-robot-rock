@@ -12,6 +12,7 @@ hi hat : Ruckus_Acoustic_Drums.sf2
 jazz bass : JazzAcousticBass.sf2 0 1 # Use the less raspy bass
 metronome : HS_R8_Drums.sf2
 mid tom : Ruckus_Acoustic_Drums.sf2
+ride cymbal : Ruckus_Acoustic_Drums.sf2
 snare drum : Ruckus_Acoustic_Drums.sf2
 trumpet : JL_Trumpet.sf2
 wah synth : HS_Synth_Collection_I.sf2
