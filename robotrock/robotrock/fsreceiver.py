@@ -112,7 +112,8 @@ class FluidsynthReceiver(object):
         return True
 
     def unregisterStaff(self, staff):
-        "Unregisters a staff from the synthesizer."
+        """Unregisters a staff from the synthesizer.  Allows its resource to be
+        reused by other staffs."""
 
         # Reject if not registered
         if staff not in self.registered_staffs:
@@ -153,4 +154,14 @@ class FluidsynthReceiver(object):
             self.synth.noteon( channel, midi_note, midi_vel )
         elif type == "Note off":
             self.synth.noteoff( channel, midi_note )
+
+    def onPlay(self):
+        "Does nothing."
+        pass
+
+    def onPause(self):
+        "Turn all notes off."
+        for ch in xrange(MAX_CHANNELS):
+            for n in xrange(128):
+                self.synth.noteoff( ch, n )
 

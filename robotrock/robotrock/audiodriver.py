@@ -54,8 +54,10 @@ class AudioDriver(Thread):
     def play(self):
         "Begin metronome onPulse event generation."
         self.playing = True
+        self.m.onPlay()
 
     def pause(self):
         "Stop metronome onPulse event generation."
         self.playing = False
+        self.m.onPause()
 

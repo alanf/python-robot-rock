@@ -7,8 +7,9 @@ from scoremarker import ScoreMarker
 from parser import *
 
 from atomicmetronome import ATOMIC_NOTE
+import basemetronome
 
-class AtomicParser(object):
+class AtomicParser(basemetronome.Listener):
 	"""Parses a Score and emits events at a fixed interval as defined by
 	ATOMIC_NOTE.
 	"""
@@ -62,6 +63,14 @@ class AtomicParser(object):
 		# returns the next time the parser is actually needed... take
 		# it or leave it.
 		return ATOMIC_NOTE
+
+	def onPlay(self):
+		"Forward signal to receiver."
+		self.receiver.onPlay()
+
+	def onPause(self):
+		"Forward signal to receiver."
+		self.receiver.onPause()
 
 	def process_notes( self, staff, notes ):
 		"Turn notes into receiver events."

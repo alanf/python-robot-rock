@@ -10,8 +10,9 @@ import copy
 import staff
 import note
 import conductorscoremarker
+import basemetronome
 
-class Conductor(object):
+class Conductor(basemetronome.Listener):
     def __init__(self, score, song_info, note_obj=note.Note):
         ''' 
         Create a conductor with a score, and a pointer to the current song

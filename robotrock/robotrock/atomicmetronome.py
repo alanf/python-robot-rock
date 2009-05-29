@@ -50,3 +50,13 @@ class AtomicMetronome(basemetronome.BaseMetronome):
 
 		self.current_beat %= ATOMIC_BEAT
 
+	def onPlay(self):
+		"Pass play signal to all listeners."
+		for L in self.listeners:
+			L.onPlay()
+
+	def onPause(self):
+		"Pass pause signal to all listeners."
+		for L in self.listeners:
+			L.onPause()
+
