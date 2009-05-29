@@ -217,7 +217,7 @@ class AcousticGuitar2(MusicianStructured):
         while self._notes > 0 and y < 20:
             listing = self._plans.keys()
             y += 1
-            for x in self._time[0]:
+            for x in range(self._time[0]):
                 # There is no note here
                 if listing.count(x) == 0:
                     # Randomly add a note here

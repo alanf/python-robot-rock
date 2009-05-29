@@ -1,5 +1,5 @@
-''' crashcymbal.py
-    definition of a crashcymbal
+''' woodblock.py
+    definition of a woodblock
     Author: Rich Snider <mrsoviet@cs.washington.edu>
 '''
 
@@ -12,15 +12,15 @@ import note
 import dynamics
 from drumkit import DrumKit
 
-# This is the definition of a CrashCymbal
-class CrashCymbal(MusicianStructured):
+# This is the definition of a WoodBlock
+class WoodBlock(MusicianStructured):
 
-    # Initialization of a CrashCymbal. Initializes CrashCymbal specific values and
+    # Initialization of a WoodBlock. Initializes WoodBlock specific values and
     #   leaves the rest to the super class __init__ method.
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
         MusicianStructured.__init__(self, energy, complexity, time, key)
-        self.instrument = 'crash cymbal'
-        self._my_tone=DrumKit["crash cymbal 1"]
+        self.instrument = 'woodblock'
+        self._my_tone=DrumKit["hi wood block"]
 
     # This method decides if new music needs to be composed on this iteration.
     def _decide(self):
@@ -29,7 +29,7 @@ class CrashCymbal(MusicianStructured):
 
     # This method decides what will be played this iteration. This method
     #   assumes the whole measure needs to be rebuilt, so it does so.
-    # For a CrashCymbal, this is done by playing mainly on-beat notes (as able)
+    # For a WoodBlock, this is done by playing mainly on-beat notes (as able)
     #   and filling in with random off-beat notes as allowed by complexity.
     def _write(self):
         self._plans = {}
@@ -54,11 +54,11 @@ class CrashCymbal(MusicianStructured):
         #   More energy means more notes, and so does more complexity. But a
         #   high complexity and low energy shouldnt add too many notes. To
         #   do this, both energy and complexity need to be in the numerator;
-        #   also, something needs to be in the denominator. 200 is found to be
+        #   also, something needs to be in the denominator. 100 is found to be
         #   the correct denominator because complexity == 100, energy == 0, only
         #   one note is added. However, at complexity == 100, energy == 100, the
-        #   number of notes increases by half as much.
-        self._offnotes = (self._complexity/(200/notes))
+        #   number of notes is increased by half again as much.
+        self._offnotes = int(self._complexity/(200/notes))
         # Modulates the number of notes based on the time signature. 
         notes = notes * self._time[0] / self._time[1]
         self._offnotes = self._offnotes * self._time[0] / self._time[1]
@@ -74,7 +74,7 @@ class CrashCymbal(MusicianStructured):
             self._offbeat()
 
     # This method decides the length of each note in the measure. For a
-    #   CrashCymbal, a note should run into the next note and be no more than
+    #   WoodBlock, a note should run into the next note and be no more than
     #   a QUARTER_NOTE in length. 
     def _lengths(self):
         listing = self._plans.keys()
@@ -152,7 +152,7 @@ class CrashCymbal(MusicianStructured):
                     # Randomly add a note here
                     chance = random.randrange(1 + self._notes * 2)
                     if chance < self._notes:
-                        self._addNote(x, self._my_tone)   
+                        self._addNote(x, self._my_tone)    
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
@@ -177,8 +177,8 @@ class CrashCymbal(MusicianStructured):
                 if self._notes > 0 and listing.count(x) and x:
                     chance = random.randrange(1 + self._notes * 4)
                     if chance < self._notes:
-                        self._addNote(x-.5, self._my_tone)
+                        self._addNote(x-.5, self._my_tone) 
                         
-# Returns the construtor for the CrashCymbal		
+# Returns the construtor for the WoodBlock		
 def Musician():
-    return CrashCymbal()
+    return WoodBlock()
