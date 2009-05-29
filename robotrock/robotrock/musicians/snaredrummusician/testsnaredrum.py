@@ -103,7 +103,7 @@ class TestSnaredrum(unittest.TestCase):
     # Returns whether first contains more notes than second. Both first and
     #   second need to be measures.
     def compareEnergy(self, first, second):
-        return self.countNotes(first) > self.countNotes(second)
+        return self.countNotes(first) >= self.countNotes(second)
 
     # Counts the number of notes not on the main beat in the given measure
     # Accomplishes this by subtracting the number of on-beats from the total

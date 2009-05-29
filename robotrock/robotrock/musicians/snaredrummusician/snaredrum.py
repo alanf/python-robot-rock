@@ -147,16 +147,47 @@ class SnareDrum(MusicianStructured):
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
-        '''while self._notes > 0:
+        listing = self._plans.keys()
+        y = 0
+        # Do it until all notes are added, or hae done it too many times
+        while self._notes > 0 and y < 20:
+            y += 1
             # Randomly add lagging eighths
-            for x 
+            for x in range(self._time[0]):
+                # There are notes left and this is a beat, so give it a chance.
+                if self._notes > 0 and listing.count(x):
+                    chance = random.randrange(1 + self._notes * 2)
+                    if chance < self._notes:
+                        self._addNote(x+.5, self._my_tone) 
             
             # Randomly add leading thirty seconds
+            '''for x in range(self._time[0]):
+                # There are notes left, this is a beat, and it is not beat 0,
+                #   so give it a chance. Needs to not be beat 0 because leading
+                #   notes are being added.
+                if self._notes > 0 and listing.count(x) and x:
+                    chance = random.randrange(1 + self._notes * 2)
+                    if chance < self._notes:
+                        self._addNote(x-.125, self._my_tone) 
 
             # Randomly add lagging thirty seconds
+            for x in range(self._time[0]):
+                # There are notes left and this is a beat, so give it a chance
+                if self._notes > 0 and listing.count(x):
+                    chance = random.randrange(1 + self._notes * 4)
+                    if chance < self._notes:
+                        self._addNote(x+.125, self._my_tone) '''
 
             # Randomly add leading eighths
-            '''
+            for x in range(self._time[0]):
+                # There are notes left, this is a beat, and it is not beat 0,
+                #   so give it a chance. Needs to not be beat 0 because leading
+                #   notes are being added.
+                if self._notes > 0 and listing.count(x) and x:
+                    chance = random.randrange(1 + self._notes * 4)
+                    if chance < self._notes:
+                        self._addNote(x-.5, self._my_tone) 
+            
 
         
         pass
