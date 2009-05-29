@@ -4,14 +4,14 @@ blowed bottle : HS_Synth_Collection_I.sf2 0 5
 crash cymbal : Ruckus_Acoustic_Drums.sf2
 drum kit : HS_R8_Drums.sf2
 fingered bass : trb62.sf2
-floor tom : HS_R8_Drums.sf2
+floor tom : Ruckus_Acoustic_Drums.sf2
 handdrum : HS_R8_Drums.sf2
 harmonica synth : HS_Synth_Collection_I.sf2 0 75
-high tom : HS_R8_Drums.sf2
+high tom : Ruckus_Acoustic_Drums.sf2
 hi hat : Ruckus_Acoustic_Drums.sf2
 jazz bass : JazzAcousticBass.sf2 0 1 # Use the less raspy bass
 metronome : HS_R8_Drums.sf2
-mid tom : HS_R8_Drums.sf2
+mid tom : Ruckus_Acoustic_Drums.sf2
 snare drum : Ruckus_Acoustic_Drums.sf2
 trumpet : JL_Trumpet.sf2
 wah synth : HS_Synth_Collection_I.sf2
