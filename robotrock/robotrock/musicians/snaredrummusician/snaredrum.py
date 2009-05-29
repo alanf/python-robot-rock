@@ -186,11 +186,7 @@ class SnareDrum(MusicianStructured):
                 if self._notes > 0 and listing.count(x) and x:
                     chance = random.randrange(1 + self._notes * 4)
                     if chance < self._notes:
-                        self._addNote(x-.5, self._my_tone) 
-            
-
-        
-        pass
+                        self._addNote(x-.5, self._my_tone)
                         
 # Returns the construtor for the SnareDrum		
 def Musician():
