@@ -101,7 +101,9 @@ class AcousticGuitar(MusicianStructured):
 
         # Set _this_index to be the start of the last progression played in this
         #   measure
-        self._this_index = self._time[0] - (3 - (self._this_index % self._time[0]))        
+        if self._this_index >= self._time[0]:
+            self._this_index -= 3
+        #self._this_index = self._time[0] - (3 - (self._this_index % self._time[0]))        
 
     # This method calculates the number of notes to be played in this
     #   measure. This calcluation is based on the energy and complexity
