@@ -114,7 +114,7 @@ class MusicianDirectory(object):
         return constructor
         
     def filterMusicianList(self, tags):
-        ''' Returns a list of tuples (musicians, constructor, icon path) 
+        ''' Returns a list of MusicianMetadata objects 
             that satisfy the specified set of tags
         '''
         result = []
