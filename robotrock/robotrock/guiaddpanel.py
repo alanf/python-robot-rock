@@ -28,7 +28,7 @@ class RRAddPanel(QWidget):
         
         self.__mComboBox = QComboBox()
         for musician in self.__mlist:
-            self.__mComboBox.addItem(musician[0])
+            self.__mComboBox.addItem(musician.name)
         
         self.connect(addbutton, SIGNAL('clicked(bool)'), self.addHandler)
         

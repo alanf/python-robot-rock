@@ -190,7 +190,7 @@ class MusicianWidget(QWidget):
     stage, for custom painting, for being dragged on the stage,
     and for smart deletion.
     """
-    def __init__(self, musicianTuple, guimain, parent):
+    def __init__(self, musician_metadata, guimain, parent):
         """
         Creates a new Musician widget, given a tuple of the type:
         (musician name, constructor function, path to icon).
@@ -199,11 +199,10 @@ class MusicianWidget(QWidget):
         """
         super(MusicianWidget, self).__init__(parent)
         #guimain.logger.debug("Creating musician widget")
-        name, musicianConstructor, imagepath = musicianTuple
         
-        self.__name = name
+        self.__name = musician_metadata.name
         self.__guimain = guimain
-        self.__musician = musicianConstructor()
+        self.__musician = musician_metadata.constructor()
         self.__stage = parent
         
         self.__energy = 0
@@ -211,10 +210,11 @@ class MusicianWidget(QWidget):
         
         self.__dragPoint = None
         
-        guimain.loadImage(imagepath, name)
+        guimain.loadImage(musician_metadata.icon_path, self.__name)
         guimain.core.addMusician(self.__musician)
         
-        self.setToolTip("%s, playing %s" % (self.addArticle(name), self.addArticle(self.__musician.instrument)))
+        self.setToolTip("%s, playing %s" % (self.addArticle(self.__name), \
+			self.addArticle(self.__musician.instrument)))
         
         size = mwidget_size * min([parent.width(), parent.height()]) / 100
         
