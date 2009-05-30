@@ -39,6 +39,7 @@ class MusicianDirectory(object):
         thisDir = os.path.split(sys.modules[__name__].__file__)[0]
         base_path = os.path.join(thisDir, musicians_dir)
         sys.path.append(os.path.join(base_path, shared_dir))
+	sys.path.append(thisDir)
 
         return base_path
     
