@@ -59,7 +59,7 @@ REQUIREMENTS = ['pyQt']
 
 URL = "http://www.assembla.com/wiki/show/cse403"
 
-VERSION = "0.1-FC"
+VERSION = "0.5-RC"
 
 setup(
 	# project 
