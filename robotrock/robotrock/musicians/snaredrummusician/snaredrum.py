@@ -108,6 +108,8 @@ class SnareDrum(MusicianStructured):
             myNote.duration=self._durations.SIXTYFOURTH_NOTE
         elif dist == .33:                   #tripolet   
             myNote.duration=self._durations.EIGHTH_NOTE_TRIPLET
+        elif dist == 0:                     #Base case
+            myNote.duration = self._durations.QUARTER_NOTE
         elif not(dist % .5):                #divisible by eigth note
             self._setLength(myNote, dist - .5)
         elif not(dist % .25):               #divisible by sixteenth note
