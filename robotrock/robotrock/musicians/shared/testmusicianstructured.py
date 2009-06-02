@@ -79,17 +79,24 @@ class TestMusician(unittest.TestCase):
     #   completely.
     def testCompose(self):
         self.musician = MusicianStructured()
-    
+
+        # Compose a measure
         self.musician.compose(self.test_measure, 0, 0, None)
         self.assertNotEqual([], self.test_measure.notes)
 
+        # Check that all of the notes in _plans show up in the measure
+        #   in the proper place (in time).
+        # Iterate over _plans
         listing = self.musician._plans.keys()
         for x in listing:
             self.assertTrue(x >= 0)
+            # Iterate over notes at this point in the measure
             notelisting = self.musician._plans[x]
             for y in range(len(notelisting)):
                 test = False
+                # Iterate over the notes printed to the measure
                 for z in range(len(self.test_measure.notes)):
+                    # Check that the note in _plans is in the measure
                     if self.test_measure.notes[z] == notelisting[y]:
                         test = True
                 self.assertNotEqual(test, False)
@@ -98,15 +105,22 @@ class TestMusician(unittest.TestCase):
     def testChords(self):
         self.musician = MusicianStructured()
         self.musician._plans = {}
-        self.musician._addChord(0, 'D', 'major')
+
+        
+
+        
+        self.musician._addChord(0, ('D',4), 'major')
         self.assertNotEqual({}, self.musician._plans)
 
+        # Iterate over _plans
         listing = self.musician._plans.keys()
         for x in listing:
             self.assertTrue(x >= 0)
+            # Iterate over the notes at this point in the measure
             notelisting = self.musician._plans[x]
             testD = testF = testA = False
             for y in range(len(notelisting)):
+                # Check that all the notes in the chord are present
                 if notelisting[y].tone[0] == "D":
                     testD = True
                 elif notelisting[y].tone[0] == "F#":

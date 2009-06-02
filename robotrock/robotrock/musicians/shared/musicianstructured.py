@@ -7,28 +7,29 @@ import sys
 from musician import Musician
 sys.path.append('../..')
 import note
+import tone
 import dynamics
 import chords
 
 # This is the definition of MusicianStructued, the superclass of how
-#   musicians are recommendedly implemented. Please see pre-existing
+#   musicians are recommended to be implemented. Please see pre-existing
 #   musicians and the online API for further information and techniques.
 # Note: One does NOT have to follow this structure to make a working musician.
-# Note: The default musician is a metronome as defined below (for testing)
+# Note: The default musician is a metronome as defined below (for testing).
 class MusicianStructured(Musician):
 
     # Initialization of the data most to all musicians need
     def __init__(self, energy=50, complexity=50, time = (4,4), key = ('B', 'major')):
-        self._energy = energy
-        self._complexity = complexity
-        self._my_tone= ("A", 4)
-        self._notes = 0
-        self.instrument = 'none'
-        self._key = key
-        self._time = time
-        self._plans = {}
-        self._durations = note.Note.note_values
-        self._changed = True
+        self._energy = energy           # Energy of the musician
+        self._complexity = complexity   # Complexity of the musician
+        self._my_tone= ("A", 4)         # Default tone of the musican
+        self._notes = 0                 # Count of notes to be played
+        self.instrument = 'none'        # Name of this musician
+        self._key = key                 # Key signature of this musician
+        self._time = time               # Time signature of this musician
+        self._plans = {}                # Internal note storage
+        self._durations = note.Note.note_values     # Shortcut to note values
+        self._changed = True            # Boolean to keep track of recent changes
         # If a change is made to relevant variables, _changed should be set
         #   to True, otherwise _changed should be False. This is not a
         #   requirement, but a suggestion.        
@@ -48,18 +49,26 @@ class MusicianStructured(Musician):
     #   window_duration, they are mainly for musicians which choose to
     #   compose in real-time. 
     def compose(self, measure, window_start, window_duration, current_score_slice):
+        # There is a change in the time signature
         if not(self._time == measure.time_signature):
             self._time = measure.time_signature
             self._changed = True
+        # There is a change in the key signature
         if not(self._key == measure.key_signature):
             self._key = measure.key_signature
             self._changed = True
+        # This is a new measure
         if measure.notes == [] or window_start == 0:
             self._changed = True
-            
+
+        # Decide if the measure should be rewritten, then do so if needed.
         if self._decide():
+            # Clear the notes determined so far
             measure.notes = []
+            self._plans = {}
+            # Fill in the measure
             self._write()
+            # Write to the measure
             self._print(measure)
 
     # This method prints from _plans to the given measure. _plans is the
@@ -187,16 +196,26 @@ class MusicianStructured(Musician):
     # Note: This method uses _addNote to add notes to _plans
     def _addChord(self, location, chord, chordlist):
         self._notes += 2
-        listing = chords.Majors[chord]
-        if chordlist == 'minor':
-            listing = Minors[chord]
-        if chordlist == 'diminished':
-            listing = Diminished[chord]
-        if chordlist == 'augmented':
-            listing = Augmented[chord]
+        #listing = chords.Majors[chord]
+        listing = []
+        if chordlist == 'major':
+            listing.append(chord)
+            listing.append(tone.getTone(chord, tone.MEDIANT))
+            listing.append(tone.getTone(chord, tone.DOMINANT))
+        elif chordlist == 'minor':
+            listing.append(chord)
+            listing.append(tone.getTone(chord, tone.MINOR_MEDIANT))
+            listing.append(tone.getTone(chord, tone.DOMINANT))
+        #elif chordlist == 'diminished':
+        #     listing = chords.Diminished[chord]
+        #elif chordlist == 'augmented':
+        #    listing = chords.Augmented[chord]
+        else:
+           return -1
         for x in range(len(listing)):
-            tone = (listing[x], 4)
-            self._addNote(location, tone)        
+            tone2 = listing[x]
+            self._addNote(location, tone2)
+        return 1
 
     # The functions below should be overwritten by the individual musicians.
     # These functions are defined at present to be for a metronome for testing

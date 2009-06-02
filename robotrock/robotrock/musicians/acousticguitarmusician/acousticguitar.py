@@ -204,7 +204,7 @@ class AcousticGuitar(MusicianStructured):
             # If there are at least as many notes left to play as onbeat notes
             #   left to be played, then write all onbeat notes
             if self._notes >= (self._time[0]-x):
-                self._addChord(x, self._this_progression[x], 'major')
+                self._addChord(x, (self._this_progression[x], 4), 'major')
                 
             # If there are at least as many notes to play as half of the onbeat
             #   notes left to be played, then write at least half and randomly
@@ -212,7 +212,7 @@ class AcousticGuitar(MusicianStructured):
             elif self._notes >= (self._time[0]-x) / 2:
                 # Put notes on odd beats (1,3,5,etc which are 0,2,4 etc in _plans)
                 if not(x % 2):
-                    self._addChord(x, self._this_progression[x], 'major')
+                    self._addChord(x, (self._this_progression[x], 4), 'major')
 
         # There are still notes to be played that should be onbeat notes
         y = 0   # Prevents loop from going to long
@@ -225,7 +225,7 @@ class AcousticGuitar(MusicianStructured):
                     # Randomly add a note here
                     chance = random.randrange(1 + self._notes * 2)
                     if chance < self._notes:
-                        self._addChord(x, self._this_progression[x], 'major')
+                        self._addChord(x, (self._this_progression[x], 4), 'major')
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
@@ -235,13 +235,13 @@ class AcousticGuitar(MusicianStructured):
             
             # There are enough notes to fill through sixteenth notes
             if self._notes >= 3*(self._time[0]-x):
-                self._addChord(x+.25, self._this_progression[x], 'major')
-                self._addChord(x+.5, self._this_progression[x], 'major')
-                self._addChord(x+.75, self._this_progression[x], 'major')
+                self._addChord(x+.25, (self._this_progression[x], 4), 'major')
+                self._addChord(x+.5, (self._this_progression[x], 4), 'major')
+                self._addChord(x+.75, (self._this_progression[x], 4), 'major')
                 
             # There are enough notes to play all eighth notes
             elif self._notes >= (self._time[0]-x):
-                self._addChord(x+.5, self._this_progression[x], 'major')
+                self._addChord(x+.5, (self._this_progression[x], 4), 'major')
 
         # There are still offbeat notes left to be played
         y = 0   # Prevents loop from going to long
@@ -252,13 +252,13 @@ class AcousticGuitar(MusicianStructured):
                 # Randomly add notes
                 chance = random.randrange(1 + self._notes * 4)
                 if chance < self._notes and listing.count(x+.25) == 0:
-                    self._addChord(x+.25, self._this_progression[x], 'major')
+                    self._addChord(x+.25, (self._this_progression[x], 4), 'major')
                 chance = random.randrange(1 + self._notes * 2)
                 if chance < self._notes and listing.count(x+.5) == 0:
-                    self._addChord(x+.5, self._this_progression[x], 'major')
+                    self._addChord(x+.5, (self._this_progression[x], 4), 'major')
                 chance = random.randrange(1 + self._notes * 4)
                 if chance < self._notes and listing.count(x+.75) == 0:
-                    self._addChord(x+.75, self._this_progression[x], 'major')        
+                    self._addChord(x+.75, (self._this_progression[x], 4), 'major')        
 
     # This method drops random notes from the measure based on the value
     #   of complexity.
