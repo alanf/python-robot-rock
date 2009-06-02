@@ -6,7 +6,10 @@
 '''
 
 import unittest
+import sys
 from musicianstructured import MusicianStructured
+sys.path.append('../..')
+import tone
 
 # This is the definition of the test suite for the MusicianStructured class.
 #   All of the functionality of a musician is tested here (such as adding
@@ -106,28 +109,28 @@ class TestMusician(unittest.TestCase):
         self.musician = MusicianStructured()
         self.musician._plans = {}
 
-        
+        for key in tone._TONE_VALUE.keys():
+            self.musician._addChord(0, (key,4), 'major')
+            self.assertNotEqual({}, self.musician._plans)
 
-        
-        self.musician._addChord(0, ('D',4), 'major')
-        self.assertNotEqual({}, self.musician._plans)
-
-        # Iterate over _plans
-        listing = self.musician._plans.keys()
-        for x in listing:
-            self.assertTrue(x >= 0)
-            # Iterate over the notes at this point in the measure
-            notelisting = self.musician._plans[x]
-            testD = testF = testA = False
-            for y in range(len(notelisting)):
-                # Check that all the notes in the chord are present
-                if notelisting[y].tone[0] == "D":
-                    testD = True
-                elif notelisting[y].tone[0] == "F#":
-                    testF = True
-                elif notelisting[y].tone[0] == "A":
-                    testA = True
-            self.assertTrue(testD and testF and testA)
+            # Iterate over _plans
+            #listing = 
+            for x in self.musician._plans.keys():
+                self.assertTrue(x >= 0)
+                # Iterate over the notes at this point in the measure
+                notelisting = self.musician._plans[x]
+                test1 = test2 = test3 = False
+                for y in range(len(notelisting)):
+                    # Check that all the notes in the chord are present
+                    if notelisting[y].tone[0] == key:
+                        test1 = True
+                    elif notelisting[y].tone[0] == tone.getTone((key, 4), tone.MEDIANT)[0]:
+                        test2 = True
+                    elif notelisting[y].tone[0] == tone.getTone((key, 4), tone.DOMINANT)[0]:
+                        test3 = True
+                self.assertTrue(test1)
+                self.assertTrue(test2)
+                self.assertTrue(test3)
 
 # Start running the tests. 
 if __name__ == '__main__':
