@@ -36,7 +36,7 @@ class AudioDriver(Thread):
         sleep_time = last_time % 1.0
         while self.running:
             current_time = self.clock.time()
-            sleep_time += last_time - current_time
+            sleep_time += current_time % 1.0
             if self.playing:
                 self.m.advance( current_time - last_time )
             else:
