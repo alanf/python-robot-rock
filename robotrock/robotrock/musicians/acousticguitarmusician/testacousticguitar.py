@@ -10,7 +10,6 @@ import unittest
 from acousticguitar import AcousticGuitar
 sys.path.append('../..')
 import note
-import chords
 
 # This is the test suite for the AcousticGuitar
 class TestAcousticGuitar(unittest.TestCase):
@@ -96,36 +95,6 @@ class TestAcousticGuitar(unittest.TestCase):
         self.assertTrue(self.compareEnergy(self.last, self.test_measure))
         self.assertTrue(self.compareComplexity(self.lowEbase, self.test_measure))
 
-    # Tests that the chords are going through progressions.
-    def testProgressions(self):
-        self.guitar = AcousticGuitar(energy = 80, complexity = 80)
-        self.assertEqual(self.guitar._energy, 80)
-        self.assertEqual(self.guitar._complexity, 80)
-
-        # First measure
-        self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0, None)
-        self.assertNotEqual(self.test_measure.notes, [])
-        self.assertTrue(self.checkChords([], self.test_measure.notes, 0))
-        
-        # Second measure
-        last_measure = self.test_measure
-        self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0, None)
-        self.assertNotEqual(self.test_measure.notes, [])
-
-        # Third measure
-        last_measure = self.test_measure
-        self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0, None)
-        self.assertNotEqual(self.test_measure.notes, [])
-
-        # Fourth measure
-        last_measure = self.test_measure
-        self.test_measure.notes = []
-        self.guitar.compose(self.test_measure, 0, 0, None)
-        self.assertNotEqual(self.test_measure.notes, [])
-
 # Helper methods:
     # Counts the number of notes in the given measure.
     def countNotes(self, measure):
@@ -162,74 +131,7 @@ class TestAcousticGuitar(unittest.TestCase):
     def compareComplexity(self, first, second):
         valueFirst = float(self.countComplexity(first))/float(self.countNotes(first))
         valueSecond = float(self.countComplexity(second))/float(self.countNotes(second))
-        return valueFirst >= valueSecond
-
-    # Returns if the given measure(s) are written with proper chord progressions.
-    #   That is, it returns True if there are no violations of chord progressions
-    #   and False if it finds a violation of a chord progression. last_measure is
-    #   the old measure composed, in case it contains part of a running chord
-    #   progression. It is assumed that last_measure has already been checked and
-    #   is correct. measure is the most recently composed measure, the one being
-    #   checked. index is the start of the most recently known chord. For this test,
-    #   it is assumed that the time signature is 4/4, so an index of 0 or 1 means
-    #   that last_measure can be ignored, and an index of 2 or 3 means part of the
-    #   chord is in the last_measure. Note, check chord only checks one chord
-    #   progression, so there will need to be mulitple calls on checkChord for each
-    #   measure composed.
-    # Note: last_measure and measure are note lists.
-    # Note: passing in [] for last_measure indicates that the chord progression
-    #   starts in measure
-    def checkChords(self, last_measure, measure, index):
-        # Find the leading chord of the chord progression being played
-        chord = self.getChord(last_measure, measure, index)
-        if not(chord):
-            return False
-        progression = chords.Progressions[chord]
-        index_start = index
-        index_end = (index+2) % 4
-        # Index is into measure
-        if (index <= 1 or last_measure == []):
-            if index_end > 3:
-                index_end = 3
-        # Index is into last_measure
-        else:
-            index_start = 0
-            index_end = (index+2) % 4
-        
-        result = True
-        # Check that all notes within the progression follow the progression
-        for x in range(index_start, index_end + 1):
-            # Iterate over all notes
-            for y in range(len(measure)):
-                # The chord for this note is known, check it
-                if (measure[y].start / self._durations.QUARTER_NOTE) == x:
-                    chord = chords.Majors[progression[x-index_start]]
-                    if chord.count(measure[y].tone[0]) == 0:
-                        result = False
-        return result
-            
-
-    # Returns the leading chord of the present chord progression. Returns false
-    #   if one is not found.
-    def getChord(self, last_measure, measure, index):
-        # If the start of the chord is in measure
-        if index <= 1 or last_measure == []:
-            # Iterate through all notes until a note with the start chord is found
-            for x in range(len(measure)):
-                if (measure[x].start / self._durations.QUARTER_NOTE) == index:
-                    return measure[x].tone[0]
-            else:
-                return False
-        # If the start of the chord is in last_measure
-        else:
-            # Iterate through all notes until a note with the start chord is found
-            for x in range(len(last_measure)):
-                if (last_measure[x].start / self._durations.QUARTER_NOTE) == index:
-                       return last_measure[x].tone[0]
-            else:
-                return False
-            
-        
+        return valueFirst >= valueSecond       
 
 # Start running the tests. 
 if __name__ == '__main__':

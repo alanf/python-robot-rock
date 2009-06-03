@@ -9,7 +9,6 @@ sys.path.append('../..')
 import note
 import tone
 import dynamics
-import chords
 
 # This is the definition of MusicianStructued, the superclass of how
 #   musicians are recommended to be implemented. Please see pre-existing
@@ -196,7 +195,6 @@ class MusicianStructured(Musician):
     # Note: This method uses _addNote to add notes to _plans
     def _addChord(self, location, chord, chordlist):
         self._notes += 2
-        #listing = chords.Majors[chord]
         listing = []
         if chordlist == 'major':
             listing.append(chord)
@@ -206,10 +204,6 @@ class MusicianStructured(Musician):
             listing.append(chord)
             listing.append(tone.getTone(chord, tone.MINOR_MEDIANT))
             listing.append(tone.getTone(chord, tone.DOMINANT))
-        #elif chordlist == 'diminished':
-        #     listing = chords.Diminished[chord]
-        #elif chordlist == 'augmented':
-        #    listing = chords.Augmented[chord]
         else:
            return -1
         for x in range(len(listing)):
