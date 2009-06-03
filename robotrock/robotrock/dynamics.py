@@ -21,7 +21,7 @@ PIANO      = calc_dynamic( 0.625  )
 MEZZOPIANO = calc_dynamic( 0.6875 )
 MEZZOFORTE = calc_dynamic( 0.75   )
 FORTE      = calc_dynamic( 0.875  )
-FORISSIMO  = calc_dynamic( 0.9375 )
+FORTISSIMO  = calc_dynamic( 0.9375 )
 # louder
 
 DEFAULT_DYNAMIC = MEZZOFORTE
