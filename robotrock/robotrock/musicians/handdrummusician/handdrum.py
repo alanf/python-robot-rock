@@ -21,6 +21,7 @@ class HandDrum(MusicianStructured):
         MusicianStructured.__init__(self, energy, complexity, time, key)
         self.instrument = 'handdrum'
         self._my_tone=DrumKit["High Tom"]
+        self._offnotes = 0
 
     # This method decides if new music needs to be composed on this iteration.
     def _decide(self):
@@ -58,9 +59,10 @@ class HandDrum(MusicianStructured):
         #   the correct denominator because complexity == 100, energy == 0, only
         #   one note is added. However, at complexity == 100, energy == 100, 8
         #   notes are added.
-        notes = notes+(self._complexity/(100/notes))
+        self._offnotes = self._complexity/(100/notes)
         # Modulates the number of notes based on the time signature. 
         notes = notes * self._time[0] / self._time[1]
+        self._offnotes = self._offnotes * self._time[0] / self._time[1]
         return notes
 
     # This method decides the start locations of all the notes in the to be
@@ -68,6 +70,7 @@ class HandDrum(MusicianStructured):
     #   off-beat notes. 
     def _locations(self):
         self._onbeat()
+        self._notes = self._offnotes
         self._offbeat()
 
     # This method decides the length of each note in the measure. For a
@@ -125,9 +128,15 @@ class HandDrum(MusicianStructured):
     # This method adds notes to the measure which are on the beat.
     def _onbeat(self):
 
+        # There are enough notes to play all onbeat notes, so play them.        
+        if self._notes>=self._time[0]*2:
+            for x in range(self._time[0]):
+                self._addNote(x, self._my_tone)
+                self._addNote(x+.5, self._my_tone)
+                
         # There are more notes left to play than there are beats, so fill
         #   up all of the beats. 
-        if self._notes>=self._time[0]:
+        elif self._notes>=self._time[0]:
             for x in range(self._time[0]):
                 self._addNote(x, self._my_tone)
 
@@ -140,21 +149,24 @@ class HandDrum(MusicianStructured):
                     #   do so.
                     if self._notes>=(self._time[0]-x):
                         self._addNote(x, self._my_tone)
-                    # There are not enough notes to fill in remaining beats,
-                    #   so randomly choose if this beat will have a note.
-                    else:
-                        chance = random.randrange(self._time[0])
-                        if chance < self._notes:
-                            self._addNote(x, self._my_tone)            
+        # There are still notes left, so play them.
+        while self._notes > 0:
+            listing = self._plans.keys()
+            for x in range(self._time[0]):
+                chance = random.randrange(self._time[0])
+                if chance < self._notes and not(listing.count(x)):
+                    self._addNote(x, self._my_tone)
+                chance = random.randrange(self._time[0]*4)
+                if chance < self._notes and not(listing.count(x+.5)):
+                    self._addNote(x+.5, self._my_tone)
 
     # This method adds notes to the measure which are off the beat.
     def _offbeat(self):
         # There are enough notes to fill in all of the sixteenth notes, so do so
-        if self._notes >= (3*self._time[0]):
+        if self._notes >= (2*self._time[0]):
             #fill in 16th notes
             for x in range(self._time[0]):
                 self._addNote(x+.25, self._my_tone)
-                self._addNote(x+.5, self._my_tone)
                 self._addNote(x+.75, self._my_tone)
 
         # There are not enough notes to fill in all sixteenth notes, so we can
@@ -164,28 +176,27 @@ class HandDrum(MusicianStructured):
             for x in range(self._time[0]):
                 # There are enough notes to fill in remaining sixteenth notes,
                 #   so do so.
-                if 0 < self._notes>=(self._time[0]-x):
+                if self._notes>=((self._time[0]-x)*2):
                     # e of the beat
                     self._addNote(x+.25, self._my_tone)
-                    # & of the beat
-                    self._addNote(x+.5, self._my_tone)
                     # a of the beat
                     self._addNote(x+.75, self._my_tone)
-                # There are not enough notes to fill in remaining sixteenth notes,
-                #   so randomly choose if this beat will have some sixteenth notes.
-                else:
-                    # e of the beat
-                    chance = random.randrange(2*self._time[0])
-                    if chance < self._notes:
-                        self._addNote(x+.25, self._my_tone)
-                    # & of the beat
-                    chance = random.randrange(2*self._time[0])
-                    if chance < self._notes:
-                        self._addNote(x+.5, self._my_tone)
-                    # a of the beat
-                    chance = random.randrange(2*self._time[0])
-                    if chance < self._notes:
-                        self._addNote(x+.75, self._my_tone)
+        # There are extra notes to be played, so randomly play them.
+        while self._notes > 0:
+            listing = self._plans.keys()
+            for x in range(self._time[0]):
+                # e of the beat
+                chance = random.randrange(4*self._time[0])
+                if chance < self._notes and not(listing.count(x+.25)):
+                    self._addNote(x+.25, self._my_tone)
+                # & of the beat
+                chance = random.randrange(self._time[0])
+                if chance < self._notes and not(listing.count(x+.5)):
+                    self._addNote(x+.5, self._my_tone)
+                # a of the beat
+                chance = random.randrange(4*self._time[0])
+                if chance < self._notes and not(listing.count(x+.75)):
+                    self._addNote(x+.75, self._my_tone)
                         
 # Returns the construtor for the HandDrum		
 def Musician():
