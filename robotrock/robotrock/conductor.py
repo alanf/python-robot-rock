@@ -54,10 +54,11 @@ class Conductor(basemetronome.Listener):
         if measure_position == 0 or self.new_musicians:
             for (staff, measure) in staff_measures.iteritems():
                 self.__updateMeasureInfo(measure, self.measure_info)
-                
+
+        musician_staffs_copy = copy.copy(self.musician_staffs)
         # Using a mapping of musician -> staff, staff -> measure,
         # have each musician compose their respective measure.      
-        for (musician, staff) in self.musician_staffs.iteritems():
+        for (musician, staff) in musician_staffs_copy.iteritems():
             if staff in staff_measures.keys() and musician in self.ensemble:
                 musician.compose(staff_measures[staff], \
                         measure_position, \
