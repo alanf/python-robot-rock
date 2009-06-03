@@ -1,1 +1,2 @@
+name: String Bass
 tags: bass

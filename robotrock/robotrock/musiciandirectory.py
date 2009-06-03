@@ -59,17 +59,21 @@ class MusicianDirectory(object):
             if self.isInfoFile(file_name):
 		# Read meta data line by line from the file.
                 f = open(os.path.join(directory, file_name), 'r')
-                tags = self.getTags(f)
+                info = self.getInfo(f)
                 f.close()
             elif self.isIconFile(file_name):
                 icon_path = os.path.join(directory, file_name)
             elif self.isMusicianModule(file_name):
                 module_name = file_name.split('.')[0]
                 constructor = self.getConstructor(module_name)
+	
+	# Ugly, use module name as default name if none was found in info.txt
+	if info[1] == '':
+	    info = (info[0], module_name)
                 
-        if tags is not None and constructor is not None and icon_path is not None:
-            return musicianmetadata.MusicianMetadata(module_name, \
-	    		tags, constructor, icon_path)
+        if info is not None and constructor is not None and icon_path is not None:
+            return musicianmetadata.MusicianMetadata(info[1], \
+	    		info[0], constructor, icon_path)
         return None
     
     def isInfoFile(self, file_name):
@@ -92,18 +96,24 @@ class MusicianDirectory(object):
 	return all([(i in file_name) for i in include]) and \
             not any([(i in file_name) for i in exclude])
     
-    def getTags(self, info):
-	''' The tags are metadata describing musician characteristics. '''
+    def getInfo(self, info):
+	''' Returns a tuple (tags, name) of information about the musician.
+	    The tags are metadata describing musician characteristics.
+	    The name is the display name of the musician in the application
+	'''
 	tags_set = set()
-	for line in info:
-	    line = info.readline()
+	name = ''
+	# Grab the lines of the file and look at each one for info keywords
+	lines = info.readlines()
+	for line in lines:
 	    if 'tags' in line:
 		line = line.split(':')[1]
 		tags = line.strip().split(',')
 		for tag in tags:
 		    tags_set.add(tag.strip())
-		    
-        return tags_set
+	    elif 'name' in line:
+		name = line.split(':')[1].strip()
+        return (tags_set, name)
 
     def getConstructor(self, module_name):
         ''' Use instrospection to get the Musician's constructor function. '''

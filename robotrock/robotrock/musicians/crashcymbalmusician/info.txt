@@ -1,1 +1,2 @@
+name: Crash Cymbal
 tags: percussion, drumset

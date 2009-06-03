@@ -1,1 +1,2 @@
+name: High Tom
 tags: percussion, drumset

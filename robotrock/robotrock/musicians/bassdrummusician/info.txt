@@ -1,1 +1,2 @@
+name: Bass Drum
 tags: percussion,drumset,bass

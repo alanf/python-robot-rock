@@ -12,12 +12,12 @@ Specific Musician Directory Layout:
 
 -The python file must contain a method called Musician() that returns the constructor for the musician.
 
--There should also be an info.txt file. This file contains information about the musician, such as the stylistic tags that it should fall under.
-
 -There should also be an image file containing the icon that will be used for the musician.
 The icon must be named icon.xxx, where xxx is the file format suffix. The currently supported image formats are .png, .jpg, .bmp, .gif
 
+-There should also be an info.txt file. This file contains information about the musician, such as the stylistic tags that it should fall under.
 
 info.txt format:
 
+name: display name
 tags: tag1,tag2,tag3...tagn

@@ -1,1 +1,2 @@
+name: Ride Cymbal
 tags: percussion, drumset

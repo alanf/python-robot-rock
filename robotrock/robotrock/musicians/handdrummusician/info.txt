@@ -1,1 +1,2 @@
+name: Hand Drum
 tags: percussion, drumset

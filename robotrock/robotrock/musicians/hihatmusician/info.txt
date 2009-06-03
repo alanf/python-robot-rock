@@ -1,1 +1,2 @@
+name: Hi-Hat
 tags: percussion, drumset

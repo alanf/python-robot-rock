@@ -1,1 +1,2 @@
+name: Wood Block
 tags: percussion,woodblock
