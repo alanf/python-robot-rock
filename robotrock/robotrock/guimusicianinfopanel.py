@@ -44,10 +44,7 @@ class RRMusicianInfoPanel(QWidget):
         default 'no musician selected' message.
         """
         if mwidget is not None:
-            self.__mwidget_detail.setEnergy(mwidget.energy)
-            self.__mwidget_detail.setComplexity(mwidget.complexity)
-            self.connect(mwidget, SIGNAL("energyChanged"), self.__mwidget_detail.setEnergy)
-            self.connect(mwidget, SIGNAL("complexityChanged"), self.__mwidget_detail.setComplexity)
+            self.__mwidget_detail.setMWidget(mwidget)
             self.layout().setCurrentIndex(1)
         else:
             self.layout().setCurrentIndex(0)
@@ -55,26 +52,32 @@ class RRMusicianInfoPanel(QWidget):
 
 
 
-class RRMWidgetDetail(QWidget):
+class RRMWidgetDetail(QGroupBox):
     """
     This widget directly displays information about a musician
     widget. It is used as a subcomponent of RRMusicianInfoPanel.
     """
     def __init__(self, guimain):
-        super(RRMWidgetDetail, self).__init__()
+        super(RRMWidgetDetail, self).__init__("Musician Detail")
         
         grid = QGridLayout()
-        grid.addWidget(QLabel("<b><i>Musician Detail </i></b>"),0,0,1,2, Qt.AlignHCenter|Qt.AlignTop)
-        grid.addWidget(QLabel("Energy: "),1,0,Qt.AlignRight)
-        grid.addWidget(QLabel("Complexity: "),2,0,Qt.AlignRight)
+        #grid.addWidget(QLabel("<b><i>Musician Detail </i></b>"),0,0,1,2, Qt.AlignHCenter|Qt.AlignTop)
+        grid.addWidget(QLabel("Energy: "),0,0,Qt.AlignRight)
+        grid.addWidget(QLabel("Complexity: "),1,0,Qt.AlignRight)
         
         self.__energyField = QLabel()
         self.__energyField.setMaximumWidth(50)
-        grid.addWidget(self.__energyField, 1,1,Qt.AlignLeft)
+        grid.addWidget(self.__energyField, 0,1,Qt.AlignLeft)
         
         self.__complexityField = QLabel()
         self.__complexityField.setMaximumWidth(50)
-        grid.addWidget(self.__complexityField, 2,1,Qt.AlignLeft)
+        grid.addWidget(self.__complexityField, 1,1,Qt.AlignLeft)
+        
+        self.__deleteButton = QPushButton("Delete Musician")
+        self.__deleteButton.setToolTip("Deletes the currently selected musician")
+        #self.__deleteButton.setIconSize(QSize(50,50))
+        #self.__deleteButton.setIcon(QIcon(guimain.getImage("delete-128x128.png", QSize(50,50))))
+        grid.addWidget(self.__deleteButton, 2,0,1,2,Qt.AlignHCenter | Qt.AlignTop)
         
         self.setLayout(grid)
     
@@ -83,4 +86,12 @@ class RRMWidgetDetail(QWidget):
     
     def setComplexity(self, val):
         self.__complexityField.setText(str(val))
+    
+    def setMWidget(self, mwidget):
+        self.setTitle("%s detail" % mwidget.getImageName())
+        self.setEnergy(mwidget.energy)
+        self.setComplexity(mwidget.complexity)
+        self.connect(mwidget, SIGNAL("energyChanged"), self.setEnergy)
+        self.connect(mwidget, SIGNAL("complexityChanged"), self.setComplexity)
+        self.connect(self.__deleteButton, SIGNAL("clicked(bool)"), mwidget.close)
 

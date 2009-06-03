@@ -23,7 +23,7 @@ class RRGuiMain(object):
     must create exactly one new RRGuiMain object, then begin the Qt
     event loop by calling RRGuiMain.run().
     """
-    def __init__(self, args=[], core=None, logging_level=logging.INFO):
+    def __init__(self, args=[], core=None, logging_filename=os.path.join(sys.prefix, 'robotrockresources', 'guilog.log'), logging_level=logging.DEBUG):
         """
         Creates a new instance of RRGuiMain. This constructor must be called
         at most once per application (defined as a python interpreter).
@@ -38,7 +38,7 @@ class RRGuiMain(object):
         
         guimain = self
         
-        self.setup_logging(logging_level)
+        self.setup_logging(logging_filename, logging_level)
         self.logger.debug("Initializing GUI...")
         
         if core is None:
@@ -188,8 +188,8 @@ class RRGuiMain(object):
             self.__images[image_name] = (original.scaled(scale, Qt.KeepAspectRatio, Qt.SmoothTransformation), original)
         
     
-    def setup_logging(self, level=logging.DEBUG):
-        logging.basicConfig(level=level)
+    def setup_logging(self, filename, level):
+        logging.basicConfig(filename=filename, level=level)
         self.__logger = logging.getLogger('robotrock.gui')
     
     def createNotFoundImage(self):

@@ -68,6 +68,7 @@ class RRStage(QWidget):
         #self.__guimain.core.addMusician(musician)
         mwidget = MusicianWidget(musician, self.__guimain, self)
         self.__mwidgets.append(mwidget)
+        self.__guimain.logger.debug(self.list_to_str())
         mwidget.attemptMove(random.randint(lbspace,self.width()-rtspace), random.randint(lbspace,self.height()-rtspace))
         
         mwidget.show()
@@ -84,6 +85,10 @@ class RRStage(QWidget):
           which will in turn call this method.
         """
         self.__mwidgets.remove(mwidget)
+        self.__guimain.logger.debug(self.list_to_str())
+    
+    def list_to_str(self):
+        return [str(item) for item in self.__mwidgets]
     
     
     def paintEvent(self, event=None):
@@ -183,13 +188,14 @@ class RRStage(QWidget):
             mwidget.updateImageSize()
             
 
+count = 0
 class MusicianWidget(QWidget):
     """
     A musician widget is the graphical display of a single
     musician object. It contains methods for moving on the
     stage, for custom painting, for being dragged on the stage,
     and for smart deletion.
-    """
+    """    
     def __init__(self, musician_metadata, guimain, parent):
         """
         Creates a new Musician widget, given a tuple of the type:
@@ -198,6 +204,11 @@ class MusicianWidget(QWidget):
         and adds it to the CoreController.
         """
         super(MusicianWidget, self).__init__(parent)
+        global count
+        count = count + 1
+        guimain.logger.debug("Count = %d" % count)
+        self.num = count
+        
         #guimain.logger.debug("Creating musician widget")
         
         self.__name = musician_metadata.name
@@ -213,8 +224,7 @@ class MusicianWidget(QWidget):
         guimain.loadImage(musician_metadata.icon_path, self.__name)
         guimain.core.addMusician(self.__musician)
         
-        self.setToolTip("%s, playing %s" % (self.addArticle(self.__name), \
-			self.addArticle(self.__musician.instrument)))
+        self.setToolTip("%s" % self.addArticle(self.__name))
         
         size = mwidget_size * min([parent.width(), parent.height()]) / 100
         
@@ -228,10 +238,10 @@ class MusicianWidget(QWidget):
         self.updateImageSize()
     
     def addArticle(self, noun):
-        if re.match("^[aeiou]", noun) is not None:
-            return "an " + noun
+        if re.match("^[aeiou]", noun, re.IGNORECASE) is not None:
+            return "An " + noun
         else:
-            return "a " + noun
+            return "A " + noun
     
     def attemptMove(self, x, y):
         """
@@ -338,6 +348,7 @@ class MusicianWidget(QWidget):
         """
         event.accept()
         if event.button() == Qt.RightButton:
+            self.__guimain.logger.debug("%s: rt-clicked" % str(self))
             self.close()
         else:
             self.__dragPoint = None
@@ -390,6 +401,7 @@ class MusicianWidget(QWidget):
         self.__guimain.unfocusmusician(self)
     
     def closeEvent(self, event):
+        self.__guimain.logger.debug("Deleting: %s" % str(self))
         self.__guimain.core.removeMusician(self.__musician)
         self.__stage.remove_musician(self)
         event.accept()
@@ -408,5 +420,14 @@ class MusicianWidget(QWidget):
             self.clearFocus()
         elif event.key() == Qt.Key_Delete or event.key() == Qt.Key_Backspace:
             self.close()
+    
+    def __str__(self):
+        return "MW: %d" % self.num
+    
+    def __eq__(self, o):
+        return self.num == o.num
+    
+    def __ne__(self, o):
+        return not (self == o)
 
         

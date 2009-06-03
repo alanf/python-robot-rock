@@ -19,7 +19,7 @@ class RRAddPanel(QWidget):
         if self.__mlist is None:
             # If we get here, then we're running under a fake CoreController.
             # Add the dummy musician so the GUI can still test things out.
-            self.__mlist = [("dummy", lambda:MusicianDummy(guimain), "/Users/tjac0/Documents/UW/CSE/CSE 403/Robot_Rock/cse403/robotrock/images/old_metronome.png")]
+            self.__mlist = []#[("dummy", lambda:MusicianDummy(guimain), "/Users/tjac0/Documents/UW/CSE/CSE 403/Robot_Rock/cse403/robotrock/images/old_metronome.png")]
         
         hpanel = QHBoxLayout()
         
@@ -27,6 +27,7 @@ class RRAddPanel(QWidget):
         addbutton.setToolTip("Adds a musician to the stage")
         
         self.__mComboBox = QComboBox()
+        self.__mComboBox.setToolTip("Selects a musician type")
         for musician in self.__mlist:
             self.__mComboBox.addItem(musician.name)
         

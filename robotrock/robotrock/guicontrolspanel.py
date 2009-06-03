@@ -29,7 +29,7 @@ class RRControlsPanel(QWidget):
         vpanel.addWidget(RRTempoSlider(guimain), 0, Qt.AlignHCenter)
         vpanel.addWidget(RRPlayButton(guimain), 0, Qt.AlignHCenter)
         
-        vpanel.addWidget(RRDeleteIcon(guimain), 0, Qt.AlignHCenter)
+        #vpanel.addWidget(RRDeleteIcon(guimain), 0, Qt.AlignHCenter)
         self.setLayout(vpanel)
         
     
@@ -139,7 +139,7 @@ class RRTempoSlider(QWidget):
         
         self.sliderHandler()
         
-        self.setToolTip("Adjusts the tempo of the song")
+        self.setToolTip("Adjusts the tempo(speed) of the song")
     
     def sliderHandler(self):
         """
@@ -170,7 +170,7 @@ class RRTimeSelector(QWidget):
         super(RRTimeSelector, self).__init__()
         self.__guimain = guimain
         
-        self.setToolTip("Selects a time signature")
+        self.setToolTip("Selects how many quarter notes are in a single measure")
         
         grid = QGridLayout()
         
@@ -183,8 +183,8 @@ class RRTimeSelector(QWidget):
         # Uncomment the two lines below to re-enable the denominator selector.
         #   This functionality is currently disabled, because it is not fully
         #   implemented in the musicians or the parser.
-        grid.addWidget(QLabel("<b>Beats per bar: </b>"), 0,0,2,1,Qt.AlignVCenter | Qt.AlignRight)
-        grid.addWidget(self.__num, 0,1,Qt.AlignHCenter)
+        grid.addWidget(QLabel("<b>Beats per bar: </b>"), 0,0,Qt.AlignVCenter | Qt.AlignRight)
+        grid.addWidget(self.__num, 1,0,Qt.AlignHCenter)
         #grid.addWidget(self.__den, 1,1,Qt.AlignHCenter)
         
         self.connect(self.__num, SIGNAL('valueChanged(int)'), self.updateTime)
