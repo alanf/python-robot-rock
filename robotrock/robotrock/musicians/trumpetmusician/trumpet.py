@@ -61,27 +61,27 @@ class Trumpet(activemusician.ActiveMusician):
 		
     def chooseTone(self, root, complexity, minor=False):
 	# Root note.
-	rand = random.random()
-        if rand > complexity:
-            return root
-        # The third note.
-        elif rand > complexity / 2:
-            if not minor:
-                return (tone.getTone(root, tone.MEDIANT))
-            else:
-                return (tone.getTone(root, tone.MINOR_MEDIANT))
-        # The fifth note.
-        elif rand > complexity / 3:
-            return (tone.getTone(root, tone.DOMINANT))
-        # The forth note.
-        elif rand > complexity / 4:
-            return (tone.getTone(root, tone.SUBDOMINANT))
-        # The sixth or minor seventh note.
-        else:
-            if not minor:
-                return (tone.getTone(root, tone.SUBMEDIANT))
-            else:
-                return (tone.getTone(root, tone.SUBTONIC))
+	rand = random.random() * complexity
+	if rand < .20:
+	    return root
+	# The third note.
+	elif rand < .40:
+	    if not minor:
+		return (tone.getTone(root, tone.MEDIANT))
+	    else:
+		return (tone.getTone(root, tone.MINOR_MEDIANT))
+	# The fifth note.
+	elif rand < .60:
+	    return (tone.getTone(root, tone.DOMINANT))
+	# The forth note.
+	elif rand < .80:
+	    return (tone.getTone(root, tone.SUBDOMINANT))
+	# The sixth or minor seventh note.
+	else:
+	    if not minor:
+		return (tone.getTone(root, tone.SUBMEDIANT))
+	    else:
+		return (tone.getTone(root, tone.SUBTONIC))
     
     def createRhythm(self, beats, base_rhythm):
 	notes = []
@@ -90,48 +90,48 @@ class Trumpet(activemusician.ActiveMusician):
 	measure_length = note.Note.note_values.QUARTER_NOTE * beats
 	
 	while current_start <= measure_length:
-	    length_rand = random.random()
+	    length_rand = random.random() * self._complexity / 100.0
 	    offbeat_rand = random.random() * self._complexity / 100.0
 	    
 	    current_notes = []
 	    
 	    # Determine the rhythmic sequence of notes
 	    # Comments in reference to a base rhythm of quarter note
+	    # Rest
+	    if length_rand < .16:
+		#current_notes.append(note.Note(duration=base_rhythm, \
+		#		start=current_start, rest=True))
+		duration = base_rhythm
 	    # Half note
-	    if length_rand > .83:
+	    elif length_rand < .33:
 		current_notes.append(note.Note(duration=base_rhythm * 2, \
 				start=current_start))
 		duration = base_rhythm * 2
-	    # Dotted quarter note
-	    elif length_rand > .67:
-		current_notes.append(note.Note(duration=base_rhythm * 3 / 2, \
-				start=current_start))
-		duration = base_rhythm * 3 / 2
 	    # Quarter note
-	    elif length_rand > .50:
+	    elif length_rand < .50:
 		current_notes.append(note.Note(duration=base_rhythm, \
 				start=current_start))
 		duration = base_rhythm
+	    # Dotted Quarter note
+	    elif length_rand < .67:
+		current_notes.append(note.Note(duration=base_rhythm * 3 / 2, \
+				start=current_start))
+		duration = base_rhythm * 3 / 2
 	    # Eighth note pair
-	    elif length_rand > .33:
+	    elif length_rand < .83:
 		current_notes.append(note.Note(duration=base_rhythm / 2, \
 				start=current_start))
 		current_notes.append(note.Note(duration=base_rhythm / 2, \
 				start=current_start + base_rhythm / 2))
 		duration = base_rhythm
 	    # Eighth note triplets
-	    elif length_rand > .16:
+	    else:# length_rand > .16:
 		current_notes.append(note.Note(duration=base_rhythm / 3, \
 				start=current_start))
 		current_notes.append(note.Note(duration=base_rhythm / 3, \
 				start=current_start + base_rhythm / 3))
 		current_notes.append(note.Note(duration=base_rhythm / 3, \
 				start=current_start + 2 * base_rhythm / 3))
-		duration = base_rhythm
-	    # Rest
-	    else:
-		current_notes.append(note.Note(duration=base_rhythm, \
-				start=current_start, rest=True))
 		duration = base_rhythm
 	    
 	    if current_start + duration <= measure_length:
