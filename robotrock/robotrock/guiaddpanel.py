@@ -46,7 +46,7 @@ class RRAddPanel(QWidget):
             self.__addbutton.setEnabled(False)
     
     def enableButton(self):
-        if self.__guimain.stage.numMWidgets() < 16:
+        if self.__guimain.stage.numMWidgets() <= 16:
             self.__addbutton.setEnabled(True)
     
 
