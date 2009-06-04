@@ -13,7 +13,7 @@ SOUNDFONT_PATH = sys.prefix + '/robotrockresources/soundfonts/'
 # HACK HACK
 
 # Maximum number of audio channels available
-MAX_CHANNELS  = 64
+MAX_CHANNELS  = 16
 # Value for an invalid soundfont reference
 INVALID_SOUNDFONT = -1
 # Gain for fluidsynth
