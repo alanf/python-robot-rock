@@ -13,6 +13,8 @@ class RRAddPanel(QWidget):
         super(RRAddPanel, self).__init__()
         #guimain.logger.debug("Creating add musician panel")
         
+        guimain.addpanel = self
+        
         self.__guimain = guimain
         self.__mlist = guimain.core.filterMusicianList([])
         
@@ -23,23 +25,30 @@ class RRAddPanel(QWidget):
         
         hpanel = QHBoxLayout()
         
-        addbutton = QPushButton("Add musician")
-        addbutton.setToolTip("Adds a musician to the stage")
+        self.__addbutton = QPushButton("Add musician")
+        self.__addbutton.setToolTip("Adds a musician to the stage")
         
         self.__mComboBox = QComboBox()
         self.__mComboBox.setToolTip("Selects a musician type")
         for musician in self.__mlist:
             self.__mComboBox.addItem(musician.name)
         
-        self.connect(addbutton, SIGNAL('clicked(bool)'), self.addHandler)
+        self.connect(self.__addbutton, SIGNAL('clicked(bool)'), self.addHandler)
         
         hpanel.addWidget(self.__mComboBox)
-        hpanel.addWidget(addbutton)
+        hpanel.addWidget(self.__addbutton)
         
         self.setLayout(hpanel)
     
-    def addHandler(self, checked):        
+    def addHandler(self, checked):
         self.__guimain.stage.add_musician(self.__mlist[self.__mComboBox.currentIndex()])
+        if self.__guimain.stage.numMWidgets() >= 16: #TODO make this a constant somewhere
+            self.__addbutton.setEnabled(False)
+    
+    def enableButton(self):
+        if self.__guimain.stage.numMWidgets() < 16:
+            self.__addbutton.setEnabled(True)
+    
 
 class MusicianDummy(object):
     """

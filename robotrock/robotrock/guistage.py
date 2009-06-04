@@ -68,7 +68,6 @@ class RRStage(QWidget):
         #self.__guimain.core.addMusician(musician)
         mwidget = MusicianWidget(musician, self.__guimain, self)
         self.__mwidgets.append(mwidget)
-        self.__guimain.logger.debug(self.list_to_str())
         mwidget.attemptMove(random.randint(lbspace,self.width()-rtspace), random.randint(lbspace,self.height()-rtspace))
         
         mwidget.show()
@@ -85,7 +84,6 @@ class RRStage(QWidget):
           which will in turn call this method.
         """
         self.__mwidgets.remove(mwidget)
-        self.__guimain.logger.debug(self.list_to_str())
     
     def list_to_str(self):
         return [str(item) for item in self.__mwidgets]
@@ -186,9 +184,13 @@ class RRStage(QWidget):
     def updateImages(self):
         for mwidget in self.__mwidgets:
             mwidget.updateImageSize()
-            
+        
+    
+    def numMWidgets(self):
+        return len(self.__mwidgets)
+    
 
-count = 0
+mwidget_count = 0
 class MusicianWidget(QWidget):
     """
     A musician widget is the graphical display of a single
@@ -204,10 +206,10 @@ class MusicianWidget(QWidget):
         and adds it to the CoreController.
         """
         super(MusicianWidget, self).__init__(parent)
-        global count
-        count = count + 1
-        guimain.logger.debug("Count = %d" % count)
-        self.num = count
+        global mwidget_count
+        mwidget_count = mwidget_count + 1
+        guimain.logger.debug("Musician widget count = %d" % mwidget_count)
+        self.num = mwidget_count
         
         #guimain.logger.debug("Creating musician widget")
         
@@ -348,7 +350,6 @@ class MusicianWidget(QWidget):
         """
         event.accept()
         if event.button() == Qt.RightButton:
-            self.__guimain.logger.debug("%s: rt-clicked" % str(self))
             self.close()
         else:
             self.__dragPoint = None
@@ -401,7 +402,7 @@ class MusicianWidget(QWidget):
         self.__guimain.unfocusmusician(self)
     
     def closeEvent(self, event):
-        self.__guimain.logger.debug("Deleting: %s" % str(self))
+        self.__guimain.addpanel.enableButton()
         self.__guimain.core.removeMusician(self.__musician)
         self.__stage.remove_musician(self)
         event.accept()
