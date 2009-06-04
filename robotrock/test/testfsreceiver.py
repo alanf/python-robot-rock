@@ -10,6 +10,7 @@ import sys
 sys.path.append( "../robotrock" )
 
 import fsreceiver
+import basefsreceiver
 Receiver = fsreceiver.FluidsynthReceiver
 from tone import *
 from dynamics import *
@@ -67,7 +68,7 @@ class TestFSReceiver(unittest.TestCase):
         # ...and have "Invalid" soundfont association
         sf, bank, patch = r.instrument[ staff.instrument ]
 
-        self.assertEqual( fsreceiver.INVALID_SOUNDFONT, sf )
+        self.assertEqual( basefsreceiver.INVALID_SOUNDFONT, sf )
 
         r.synth.delete()
 
