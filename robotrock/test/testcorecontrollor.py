@@ -39,13 +39,23 @@ class TestCoreController(unittest.TestCase):
             
             def __init__(self):
                 self.ensemble = []
+                self.musician_staffs = {}
                 
             def addMusician(self, musician):
                 self.ensemble.append(musician)
+                self.musician_staffs[musician] = None
             
             def removeMusician(self, musician):
                 self.ensemble.remove(musician)
-                
+               
+        class Parser(object):
+
+            def registerStaff(self, staff):
+                return True
+ 
+            def unregisterStaff(self, staff):
+                return True
+
         class MusicianDirectory(object):
             
             def __init__(self):
@@ -72,9 +82,10 @@ class TestCoreController(unittest.TestCase):
         self.audio_driver = AudioDriver()
         self.song_info = songinfo.SongInfo()
         self.conductor = Conductor()
+        self.parser = Parser()
         self.musiciandirectory = MusicianDirectory()
         self.corecontroller = corecontroller.CoreController(self.audio_driver, \
-                self.metronome, self.conductor, self.song_info, \
+                self.metronome, self.parser, self.conductor, self.song_info, \
                 self.musiciandirectory)
     def testplay(self):
         self.corecontroller.play()
@@ -146,6 +157,11 @@ class TestCoreController(unittest.TestCase):
     
     def testremoveMusician(self):
         self.conductor.ensemble = ['Piano', 'Guitar', 'Drum']
+        self.conductor.musician_staffs = { 
+                                         'Piano': None,
+                                         'Guitar': None,
+                                         'Drum': None
+                                         }   
         self.corecontroller.removeMusician('Guitar')
         self.assertEqual(self.conductor.ensemble, ['Piano', 'Drum'])
         self.corecontroller.removeMusician('Drum')

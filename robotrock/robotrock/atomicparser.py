@@ -79,6 +79,16 @@ class AtomicParser(basemetronome.Listener):
 		for R in self.receivers:
 			R.onPause()
 
+	def registerStaff(self, staff):
+		"Let receivers know that staff is to be registered."
+		for R in self.receivers:
+			R.registerStaff( staff )
+
+	def unregisterStaff(self, staff):
+		"Let receivers know that staff is to be unregistered."
+		for R in self.receivers:
+			R.unregisterStaff( staff )
+
 	def process_notes( self, staff, notes ):
 		"Turn notes into receiver events."
 			# FIXME After BETA release

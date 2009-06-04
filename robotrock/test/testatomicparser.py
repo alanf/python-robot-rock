@@ -22,6 +22,8 @@ class DebugReceiver(object):
 		self.events = []
 	def handle(self, event):
 		self.events.append( event )
+	def onEndOfFrame(self, t):
+		pass
 
 class TestAtomicParser(unittest.TestCase):
 
@@ -40,7 +42,7 @@ class TestAtomicParser(unittest.TestCase):
 		measure.addNote( n )
 
 		# Create testing parser
-		parser = AtomicParser( score=score, receiver=receiver )
+		parser = AtomicParser( score=score, receivers = [ receiver ] )
 
 		# Parse a QUARTER_NOTE's worth of the score and compare output.
 		for i in xrange( note.NoteValues().QUARTER_NOTE / ATOMIC_NOTE ):
@@ -60,7 +62,7 @@ class TestAtomicParser(unittest.TestCase):
 		score = Score()
 		receiver = DebugReceiver()
 
-		parser = AtomicParser( score = score, receiver = receiver )
+		parser = AtomicParser( score = score, receivers = [ receiver ] )
 
 		# Test a whole note's worth of score.
 		for i in xrange( note.NoteValues().WHOLE_NOTE / ATOMIC_NOTE ):
@@ -76,7 +78,7 @@ class TestAtomicParser(unittest.TestCase):
 
 		receiver = DebugReceiver()
 
-		parser = AtomicParser( score = Score(), receiver = receiver )
+		parser = AtomicParser( score = Score(), receivers = [ receiver ] )
 
 		# Test a whole note's worth of score.
 		for i in xrange( note.NoteValues().WHOLE_NOTE / ATOMIC_NOTE ):
@@ -101,7 +103,7 @@ class TestAtomicParser(unittest.TestCase):
 		measure.addNote( note.Note(start=2*qn, tone=('G',4), duration=qn, dynamic=MEZZOFORTE) )
 		measure.addNote( note.Note(start=3*qn, tone=('A',4), duration=qn, dynamic=MEZZOFORTE) )
 
-		parser = AtomicParser( score = score, receiver = receiver )
+		parser = AtomicParser( score = score, receivers = [ receiver ] )
 
 		# Test a whole note's worth of score.
 		for i in xrange( note.NoteValues().WHOLE_NOTE / ATOMIC_NOTE ):

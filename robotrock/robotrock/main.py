@@ -48,7 +48,7 @@ def init():
     audio_driver_object.start()
     musician_directory_object = musiciandirectory.MusicianDirectory()
     core_controller_object = corecontroller.CoreController(audio_driver_object, \
-        metronome_object, conductor_object, song_info_object, \
+        metronome_object, parser_object, conductor_object, song_info_object, \
 	musician_directory_object)
     gui_object = guimain.RRGuiMain([], core_controller_object)
     ret_val = gui_object.run()

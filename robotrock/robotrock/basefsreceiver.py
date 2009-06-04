@@ -51,6 +51,7 @@ def dynamicToMIDICode(dynamic):
     value /= MAXIMUM_DYNAMIC_VALUE - MINIMUM_DYNAMIC_VALUE
     return int(127 * value)
 
+
 class BaseFluidsynthReceiver(object):
     "A Receiver using Fluidsynth on the backend."
 
@@ -68,6 +69,11 @@ class BaseFluidsynthReceiver(object):
 
         # Maps each instrument to a LOADED soundfont, bank, patch
         self.instrument = {}
+
+    def turnOffNotesInChannel(self, channel):
+        "Turns off playing all notes for the given channel."
+        for n in xrange(128):
+            self.synth.noteoff( channel, n )
 
     def registerStaff(self, staff):
         "Registers a staff for inclusion into the synthesizer."
@@ -120,6 +126,9 @@ class BaseFluidsynthReceiver(object):
         # Give back resource
         self.available_channels.append( self.registered_staffs[staff] )
 
+        # Turn off all notes for this channel
+        self.turnOffNotesInChannel( self.registered_staffs[staff] )
+        
         # Remove!
         self.registered_staffs.pop( staff )
 
@@ -134,14 +143,9 @@ class BaseFluidsynthReceiver(object):
 
         channel = self.registered_staffs.get( staff, -1 )
 
-        # HACK HACK HACK HACK HACK
-        # Auto register unknown musicians
-        if channel == -1:
-            self.registerStaff( staff )
-            channel = self.registered_staffs.get( staff, -1 )
-        # HACK HACK HACK HACK HACK
-
         # Bail if staff doesn't have a channel
+        # Note that pending "Note on" events from recently unregistered staffs
+        # will fall out here.
         if channel == -1:
             return
 
@@ -160,8 +164,7 @@ class BaseFluidsynthReceiver(object):
     def onPause(self):
         "Turn all notes off."
         for ch in xrange(MAX_CHANNELS):
-            for n in xrange(128):
-                self.synth.noteoff( ch, n )
+            self.turnOffNotesInChannel( ch )
 
     def onEndOfFrame(self, elapsed_beats):
         """Opportunity signal for receiver to operate at end of a frame.

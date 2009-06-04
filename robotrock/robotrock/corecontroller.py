@@ -16,10 +16,11 @@ MAXIMUM_TEMPO = 208
 class CoreController():
 
 
-    def __init__(self, audio_driver, metronome, conductor, songInfo, \
+    def __init__(self, audio_driver, metronome, parser, conductor, songInfo, \
         musician_directory):
         #Do initialization stuff
         self.metronome = metronome
+        self.parser = parser
         self.audio_driver = audio_driver
         self.conductor = conductor
         self.song_info = songInfo
@@ -67,12 +68,14 @@ class CoreController():
     # Param: musician, the musician to be added
     def addMusician(self, musician):
         self.conductor.addMusician(musician)
+        self.parser.registerStaff( self.conductor.musician_staffs[musician] )
         
     # Removes the provided musician from the ensemble, if musician is
     # present in ensemble
     # Param: musician, the musician to be removed
     def removeMusician(self, musician):
         if musician in self.conductor.ensemble:
+            self.parser.unregisterStaff( self.conductor.musician_staffs[musician] )
             self.conductor.removeMusician(musician)
         
     # Returns a list of musicians that satisfy the provided tags

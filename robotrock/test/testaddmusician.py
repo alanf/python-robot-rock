@@ -14,7 +14,8 @@ import corecontroller
 import atomicmetronome
 import score
 import songinfo
-
+import atomicparser
+import fsreceiver
 
 
 class TestAddMusician(unittest.TestCase):
@@ -34,10 +35,12 @@ class TestAddMusician(unittest.TestCase):
         self.audio_driver = audiodriver.AudioDriver(clock, self.metronome)
         self.score_object = score.Score()
         self.song_info = songinfo.SongInfo()
+        self.receiver = fsreceiver.FluidsynthReceiver({})
+        self.parser = atomicparser.AtomicParser(self.score_object, [self.receiver])
         self.musician_directory = {'foo': 'bar'}
         self.conductor_object = conductor.Conductor(self.score_object, self.song_info)
         self.core_controller = corecontroller.CoreController(self.audio_driver, \
-                self.metronome, self.conductor_object, \
+                self.metronome, self.parser, self.conductor_object, \
                 self.song_info, self.musician_directory)
         self.musician = MusicianStub()
         
