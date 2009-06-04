@@ -89,8 +89,8 @@ class Trumpet(activemusician.ActiveMusician):
 	measure_length = note.Note.note_values.QUARTER_NOTE * beats
 	
 	while current_start <= measure_length:
-	    length_rand = random.random() * self._complexity / 100.0
-	    offbeat_rand = random.random() * self._complexity / 100.0
+	    length_rand = random.random() * max(33, self._complexity) / 100.0
+	    offbeat_rand = random.random() * max(33, self._complexity) / 100.0
 	    
 	    current_notes = []
 	    
