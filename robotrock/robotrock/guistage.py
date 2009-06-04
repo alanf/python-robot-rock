@@ -66,6 +66,7 @@ class RRStage(QWidget):
         """
         #self.__guimain.logger.info("Adding musician: %s" % musician)
         #self.__guimain.core.addMusician(musician)
+        self.__guimain.logger.debug(self.list_to_str())
         mwidget = MusicianWidget(musician, self.__guimain, self)
         self.__mwidgets.append(mwidget)
         mwidget.attemptMove(random.randint(lbspace,self.width()-rtspace), random.randint(lbspace,self.height()-rtspace))
@@ -84,6 +85,7 @@ class RRStage(QWidget):
           which will in turn call this method.
         """
         self.__mwidgets.remove(mwidget)
+        self.__guimain.logger.debug(self.list_to_str())
     
     def list_to_str(self):
         return [str(item) for item in self.__mwidgets]
@@ -401,11 +403,17 @@ class MusicianWidget(QWidget):
         self.update()
         self.__guimain.unfocusmusician(self)
     
-    def closeEvent(self, event):
+    #def closeEvent(self, event):
+        
+        #event.accept()
+    
+    # Overrides QWidget.close()
+    def close(self):
+        self.__guimain.logger.debug("Deleting %d" % self.num)
         self.__guimain.addpanel.enableButton()
         self.__guimain.core.removeMusician(self.__musician)
         self.__stage.remove_musician(self)
-        event.accept()
+        QWidget.close(self)
     
     def keyPressEvent(self, event):
         # Key press hander: move if arrow keys, delete if delete/backspace key, lose focus if escape key

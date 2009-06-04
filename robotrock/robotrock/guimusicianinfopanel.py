@@ -60,6 +60,8 @@ class RRMWidgetDetail(QGroupBox):
     def __init__(self, guimain):
         super(RRMWidgetDetail, self).__init__("Musician Detail")
         
+        self.__guimain = guimain
+        
         grid = QGridLayout()
         #grid.addWidget(QLabel("<b><i>Musician Detail </i></b>"),0,0,1,2, Qt.AlignHCenter|Qt.AlignTop)
         grid.addWidget(QLabel("Energy: "),0,0,Qt.AlignRight)
@@ -79,6 +81,10 @@ class RRMWidgetDetail(QGroupBox):
         #self.__deleteButton.setIcon(QIcon(guimain.getImage("delete-128x128.png", QSize(50,50))))
         grid.addWidget(self.__deleteButton, 2,0,1,2,Qt.AlignHCenter | Qt.AlignTop)
         
+        self.__mwidget = None
+        
+        self.__del_set = set([])
+        
         self.setLayout(grid)
     
     def setEnergy(self, val):
@@ -88,10 +94,19 @@ class RRMWidgetDetail(QGroupBox):
         self.__complexityField.setText(str(val))
     
     def setMWidget(self, mwidget):
+        self.__mwidget = mwidget
         self.setTitle("%s detail" % mwidget.getImageName())
         self.setEnergy(mwidget.energy)
         self.setComplexity(mwidget.complexity)
         self.connect(mwidget, SIGNAL("energyChanged"), self.setEnergy)
         self.connect(mwidget, SIGNAL("complexityChanged"), self.setComplexity)
-        self.connect(self.__deleteButton, SIGNAL("clicked(bool)"), mwidget.close)
+        self.connect(self.__deleteButton, SIGNAL("clicked(bool)"), self.deleteButton)
+    
+    def deleteButton(self, ignore):
+        if self.__mwidget is not None and self.__mwidget.num not in self.__del_set:
+            self.__del_set.add(self.__mwidget.num)
+            self.__guimain.logger.debug("Delete button clicked for musician: %d" % self.__mwidget.num)
+            self.__mwidget.close()
+        
+    
 
