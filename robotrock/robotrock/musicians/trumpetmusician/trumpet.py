@@ -5,7 +5,6 @@
 '''
 
 import activemusician
-import chords
 import dynamics
 import note
 import random
